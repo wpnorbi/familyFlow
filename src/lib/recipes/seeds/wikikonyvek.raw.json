@@ -1,0 +1,230 @@
+[
+  {
+    "slug": "paprikas-csirke-nokedlivel",
+    "title": "Paprikás csirke nokedlivel",
+    "chapter": "Valódi magyar szakácskönyv",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Val%C3%B3di_magyar_szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 70,
+    "protein": "csirke",
+    "summary": "Klasszikus paprikás csirke tejfölös szafttal és puha nokedlivel, hétvégi főzéshez.",
+    "ingredients": ["Csirkecomb", "Vöröshagyma", "Pirospaprika", "Tejföl", "Liszt", "Tojás"],
+    "instructions": [
+      "Dinszteld meg a hagymát, húzd le a tűzről és keverd bele a pirospaprikát.",
+      "Add hozzá a csirkét, sózd, majd kevés vízzel fedő alatt párold puhára.",
+      "A végén habarj bele tejfölt, hogy selymes paprikás szaftot kapj.",
+      "Frissen szaggatott nokedlivel tálald."
+    ],
+    "tags": ["házias", "vasárnapi", "maradékbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "lecsos-csirkemell",
+    "title": "Lecsós csirkemell",
+    "chapter": "Szakácskönyv/Főételek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 25,
+    "protein": "csirke",
+    "summary": "Gyors hétköznapi csirkés fogás lecsóalappal és sok szafttal.",
+    "ingredients": ["Csirkemell", "Paprika", "Paradicsom", "Vöröshagyma", "Fokhagyma", "Rizs"],
+    "instructions": [
+      "A hagymát futtasd meg kevés olajon, majd add hozzá a paprikát és a paradicsomot.",
+      "Forgasd bele a csíkokra vágott csirkemellet, és pirítsd fehéredésig.",
+      "Sózd, borsozd, és néhány perc alatt főzd szaftosra.",
+      "Rizzsel vagy friss kenyérrel tálald."
+    ],
+    "tags": ["csirke", "gyerekbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "mustaros-csirkemell-serpenyoben",
+    "title": "Mustáros csirkemell serpenyőben",
+    "chapter": "Szakácskönyv/Főételek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 15,
+    "protein": "csirke",
+    "summary": "Villámgyors serpenyős csirkemell mustáros, tejszínes szafttal.",
+    "ingredients": ["Csirkemell", "Mustár", "Tejszín", "Fokhagyma", "Vaj", "Petrezselyem"],
+    "instructions": [
+      "A csirkemellcsíkokat forró serpenyőben pirítsd körbe.",
+      "Keverd hozzá a fokhagymát és a mustárt, majd röviden süsd össze.",
+      "Öntsd fel kevés tejszínnel és forrald sűrűre.",
+      "Petrezselyemmel megszórva tálald."
+    ],
+    "tags": ["gyors", "krémes", "csirke"],
+    "servings": 4
+  },
+  {
+    "slug": "fokhagymas-csirkecsikok-rizzsel",
+    "title": "Fokhagymás csirkecsíkok rizzsel",
+    "chapter": "Szakácskönyv/Gyors ételek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 15,
+    "protein": "csirke",
+    "summary": "Serpenyőben készülő csirkecsíkok fokhagymával és pergős rizzsel.",
+    "ingredients": ["Csirkemell", "Fokhagyma", "Rizs", "Vaj", "Olívaolaj", "Petrezselyem"],
+    "instructions": [
+      "A csirkemellet csíkozd fel és sózd be.",
+      "Vaj és olaj keverékén pirítsd meg a húst a fokhagymával együtt.",
+      "Közben főzd meg a rizst enyhén sós vízben.",
+      "Petrezselyemmel és a rizzsel együtt tálald."
+    ],
+    "tags": ["gyors", "kamrabarát", "csirke"],
+    "servings": 4
+  },
+  {
+    "slug": "csirkes-rizs-serpenyoben",
+    "title": "Csirkés rizs serpenyőben",
+    "chapter": "Szakácskönyv/Gyors ételek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv",
+    "category": "Egytálétel",
+    "duration": 30,
+    "protein": "csirke",
+    "summary": "Egyserpenyős csirkés rizs zöldségekkel, kevés mosogatással.",
+    "ingredients": ["Csirkemell", "Rizs", "Zöldborsó", "Sárgarépa", "Vöröshagyma", "Paprika"],
+    "instructions": [
+      "Pirítsd meg a hagymát és a csirkekockákat.",
+      "Add hozzá a zöldségeket és a megmosott rizst.",
+      "Öntsd fel kétszeres mennyiségű folyadékkal, majd fedő alatt párold készre.",
+      "Pihentesd pár percig, hogy pergős legyen."
+    ],
+    "tags": ["egytálétel", "gyors", "2 napra elég"],
+    "servings": 4
+  },
+  {
+    "slug": "rantott-csirkemell-burgonyapurevel",
+    "title": "Rántott csirkemell burgonyapürével",
+    "chapter": "Valódi magyar szakácskönyv",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Val%C3%B3di_magyar_szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 45,
+    "protein": "csirke",
+    "summary": "Ropogós rántott csirkemell krémes krumplipürével, biztos családi kedvenc.",
+    "ingredients": ["Csirkemell", "Liszt", "Tojás", "Zsemlemorzsa", "Burgonya", "Vaj"],
+    "instructions": [
+      "Vékonyra klopfold a csirkemellet, majd sózd be.",
+      "Panírozd lisztbe, tojásba és morzsába.",
+      "Forró olajban süsd aranybarnára.",
+      "Burgonyapürével és savanyúsággal tálald."
+    ],
+    "tags": ["gyerekbarát", "klasszikus", "maradékbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "gulyasleves",
+    "title": "Gulyásleves",
+    "chapter": "Szakácskönyv/Levesek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Levesek",
+    "category": "Leves",
+    "duration": 85,
+    "protein": "marha",
+    "summary": "Tartalmas magyar gulyásleves marhahússal, burgonyával és paprikás lével.",
+    "ingredients": ["Marhalábszár", "Vöröshagyma", "Pirospaprika", "Burgonya", "Sárgarépa", "Kömény"],
+    "instructions": [
+      "Pirítsd meg a hagymát, majd szórd meg pirospaprikával.",
+      "Forgasd bele a marhahúst és a fűszereket.",
+      "Öntsd fel vízzel, és lassan főzd puhára.",
+      "A végén add hozzá a burgonyát és a zöldségeket."
+    ],
+    "tags": ["leves", "magyaros", "2 napra elég"],
+    "servings": 6
+  },
+  {
+    "slug": "tojasos-nokedli",
+    "title": "Tojásos nokedli fejes salátával",
+    "chapter": "Valódi magyar szakácskönyv",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Val%C3%B3di_magyar_szak%C3%A1csk%C3%B6nyv",
+    "category": "Főétel",
+    "duration": 25,
+    "protein": "vegetáriánus",
+    "summary": "Gyors, egyszerű és olcsó magyar klasszikus ecetes salátával.",
+    "ingredients": ["Liszt", "Tojás", "Só", "Fejes saláta", "Ecet", "Cukor"],
+    "instructions": [
+      "Keverj nokedlitésztát lisztből, tojásból és vízből.",
+      "Szaggasd forró sós vízbe, majd szűrd le.",
+      "Serpenyőben forgasd össze felvert tojással.",
+      "Ecetes-cukros salátával kínáld."
+    ],
+    "tags": ["gyors", "vegetáriánus", "kamrabarát"],
+    "servings": 4
+  },
+  {
+    "slug": "zoldborsofozelek",
+    "title": "Zöldborsófőzelék",
+    "chapter": "Szakácskönyv/Főzelékek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv",
+    "category": "Főzelék",
+    "duration": 25,
+    "protein": "vegetáriánus",
+    "summary": "Tejesen, kaporral vagy petrezselyemmel készülő zöldborsófőzelék gyors napokra.",
+    "ingredients": ["Zöldborsó", "Tej", "Liszt", "Vaj", "Petrezselyem", "Só"],
+    "instructions": [
+      "Kevés vajon párold meg a borsót.",
+      "Szórd meg liszttel és öntsd fel tejjel vagy vízzel.",
+      "Főzd össze selymesre, közben kevergesd.",
+      "Petrezselyemmel vagy kaporral ízesítsd."
+    ],
+    "tags": ["gyors", "vegetáriánus", "gyerekbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "toltott-paprika",
+    "title": "Töltött paprika paradicsommártással",
+    "chapter": "Valódi magyar szakácskönyv",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Val%C3%B3di_magyar_szak%C3%A1csk%C3%B6nyv",
+    "category": "Egytálétel",
+    "duration": 65,
+    "protein": "sertés",
+    "summary": "Szaftos töltött paprika darált hússal és selymes paradicsommártással.",
+    "ingredients": ["Paprika", "Darált sertés", "Rizs", "Vöröshagyma", "Paradicsomlé", "Liszt"],
+    "instructions": [
+      "Keverd össze a darált húst a rizzsel és a fűszerekkel.",
+      "Töltsd meg vele a paprikákat.",
+      "Paradicsomos alaplében főzd puhára.",
+      "Sűrítsd a mártást, majd a paprikákkal együtt tálald."
+    ],
+    "tags": ["házias", "2 napra elég", "maradékbarát"],
+    "servings": 5
+  },
+  {
+    "slug": "rakott-krumpli",
+    "title": "Rakott krumpli kolbásszal",
+    "chapter": "Valódi magyar szakácskönyv",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Val%C3%B3di_magyar_szak%C3%A1csk%C3%B6nyv",
+    "category": "Egytálétel",
+    "duration": 75,
+    "protein": "egyéb",
+    "summary": "Réteges rakott krumpli kolbásszal, tojással és tejföllel, nagy adagban.",
+    "ingredients": ["Burgonya", "Tojás", "Kolbász", "Tejföl", "Só", "Bors"],
+    "instructions": [
+      "Főzd elő a burgonyát és a tojást.",
+      "Karikázd fel őket, majd kolbásszal és tejföllel rétegezd tepsibe.",
+      "A tetejére is kerüljön tejföl.",
+      "Süsd aranybarnára."
+    ],
+    "tags": ["egytálétel", "2 napra elég", "hétvégi"],
+    "servings": 6
+  },
+  {
+    "slug": "jokai-bableves",
+    "title": "Jókai bableves",
+    "chapter": "Szakácskönyv/Levesek",
+    "sourceUrl": "https://hu.wikibooks.org/wiki/Szak%C3%A1csk%C3%B6nyv/Levesek",
+    "category": "Leves",
+    "duration": 90,
+    "protein": "sertés",
+    "summary": "Tartalmas bableves füstölt hússal, zöldségekkel és tejföllel.",
+    "ingredients": ["Szárazbab", "Füstölt hús", "Sárgarépa", "Vöröshagyma", "Tejföl", "Pirospaprika"],
+    "instructions": [
+      "A beáztatott babot kezdd el főzni a füstölt hússal együtt.",
+      "Add hozzá a zöldségeket és a hagymás-paprikás alapot.",
+      "Főzd puhára, majd tejfölös habarással sűrítsd.",
+      "Friss kenyérrel tálald."
+    ],
+    "tags": ["leves", "2 napra elég", "házias"],
+    "servings": 6
+  }
+]

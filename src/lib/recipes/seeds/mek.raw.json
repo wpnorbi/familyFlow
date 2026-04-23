@@ -1,0 +1,230 @@
+[
+  {
+    "slug": "sertesporkolt-tarhonyaval",
+    "title": "Sertéspörkölt tarhonyával",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 75,
+    "protein": "sertés",
+    "summary": "Szaftos sertéspörkölt hagymaalappal és pergős tarhonyával.",
+    "ingredients": ["Sertéslapocka", "Vöröshagyma", "Pirospaprika", "Paprika", "Paradicsom", "Tarhonya"],
+    "instructions": [
+      "A hagymát dinszteld meg, majd keverd bele a pirospaprikát.",
+      "Add hozzá a sertéshúst és pirítsd fehéredésig.",
+      "Kevés vízzel fedő alatt párold puhára.",
+      "Külön főzött tarhonyával tálald."
+    ],
+    "tags": ["házias", "sertés", "2 napra elég"],
+    "servings": 5
+  },
+  {
+    "slug": "borsos-tokany",
+    "title": "Borsos tokány galuskával",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 30,
+    "protein": "sertés",
+    "summary": "Csíkokra vágott sertéshús borsosan, hagymával és kevés tejföllel összefőzve.",
+    "ingredients": ["Sertéshús", "Vöröshagyma", "Bors", "Mustár", "Tejföl", "Galuska"],
+    "instructions": [
+      "Pirítsd meg a hagymát, majd add hozzá a csíkokra vágott húst.",
+      "Borsozd meg bőven és keverd hozzá a mustárt.",
+      "Kevés vízzel párold készre.",
+      "A végén tejföllel selymesítsd, majd galuskával tálald."
+    ],
+    "tags": ["gyors", "sertés", "szaftos"],
+    "servings": 4
+  },
+  {
+    "slug": "brassoi-apropecsenye",
+    "title": "Brassói aprópecsenye",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 30,
+    "protein": "sertés",
+    "summary": "Fokhagymás sertéstarja sült burgonyakockákkal, gyors vacsorának is jó.",
+    "ingredients": ["Sertéstarja", "Burgonya", "Fokhagyma", "Majoránna", "Olaj", "Petrezselyem"],
+    "instructions": [
+      "A felkockázott burgonyát süsd vagy pirítsd elő.",
+      "Közben a húskockákat forró serpenyőben süsd meg.",
+      "Fokhagymával és majoránnával ízesítsd.",
+      "Forgasd össze a burgonyával, majd petrezselyemmel tálald."
+    ],
+    "tags": ["gyors", "sertés", "gyerekbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "hagymas-sertesszelet",
+    "title": "Hagymás sertésszelet",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 15,
+    "protein": "sertés",
+    "summary": "Pirított hagymával és szafttal készülő sertésszelet egyszerű körettel.",
+    "ingredients": ["Sertéskaraj", "Vöröshagyma", "Liszt", "Olaj", "Só", "Bors"],
+    "instructions": [
+      "A hússzeleteket enyhén klopfold ki és sózd be.",
+      "Serpenyőben süsd meg őket mindkét oldalon.",
+      "Külön karamellizáld a hagymát, majd kevés liszttel szaftot készíts.",
+      "A hússal együtt röviden forrald össze."
+    ],
+    "tags": ["gyors", "sertés", "kamrabarát"],
+    "servings": 4
+  },
+  {
+    "slug": "mezes-mustaros-tarja",
+    "title": "Mézes-mustáros tarja",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 15,
+    "protein": "sertés",
+    "summary": "Édeskés-mustáros pácban sült tarja serpenyőben vagy sütőben befejezve.",
+    "ingredients": ["Sertéstarja", "Mustár", "Méz", "Fokhagyma", "Olaj", "Burgonya"],
+    "instructions": [
+      "Keverj pácot mézből, mustárból és reszelt fokhagymából.",
+      "Forgasd bele a hússzeleteket és hagyd röviden állni.",
+      "Serpenyőben pirítsd meg mindkét oldalukat.",
+      "Körettel együtt tálald."
+    ],
+    "tags": ["gyors", "sertés", "sütő"],
+    "servings": 4
+  },
+  {
+    "slug": "paprikas-krumpli",
+    "title": "Paprikás krumpli",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Egytálétel",
+    "duration": 30,
+    "protein": "egyéb",
+    "summary": "Egyszerű paprikás krumpli kolbásszal vagy hús nélkül is működő hétköznapi étel.",
+    "ingredients": ["Burgonya", "Vöröshagyma", "Pirospaprika", "Kolbász", "Paprika", "Paradicsom"],
+    "instructions": [
+      "Pirítsd meg a hagymát és húzd le a tűzről.",
+      "Keverd bele a pirospaprikát, majd add hozzá a burgonyát és a zöldségeket.",
+      "Öntsd fel kevés vízzel és főzd puhára.",
+      "Kolbásszal együtt még pár percig rotyogtasd."
+    ],
+    "tags": ["egytálétel", "gyors", "kamrabarát"],
+    "servings": 4
+  },
+  {
+    "slug": "lencsefozelek",
+    "title": "Lencsefőzelék",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főzelék",
+    "duration": 45,
+    "protein": "vegetáriánus",
+    "summary": "Mustáros-tejfölös lencsefőzelék, ami másnapra is jól tartja magát.",
+    "ingredients": ["Lencse", "Babérlevél", "Vöröshagyma", "Tejföl", "Mustár", "Liszt"],
+    "instructions": [
+      "A lencsét főzd puhára babérlevéllel.",
+      "Készíts világos rántást vagy habarást.",
+      "Keverd a lencséhez a tejföllel és a mustárral együtt.",
+      "Lassan forrald össze."
+    ],
+    "tags": ["főzelék", "maradékbarát", "2 napra elég"],
+    "servings": 5
+  },
+  {
+    "slug": "paradicsomleves-betutesttaval",
+    "title": "Paradicsomleves betűtésztával",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Leves",
+    "duration": 25,
+    "protein": "vegetáriánus",
+    "summary": "Édeskés-savanykás paradicsomleves gyerekbarát betűtésztával.",
+    "ingredients": ["Paradicsompüré", "Víz", "Cukor", "Zeller", "Betűtészta", "Só"],
+    "instructions": [
+      "A paradicsomalapot keverd el vízzel és a fűszerekkel.",
+      "Forrald össze, hogy kisimuljon az íze.",
+      "A betűtésztát külön vagy a levesben főzd puhára.",
+      "Melegen tálald."
+    ],
+    "tags": ["leves", "gyors", "gyerekbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "karfiolleves",
+    "title": "Karfiolleves",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Leves",
+    "duration": 30,
+    "protein": "vegetáriánus",
+    "summary": "Könnyű karfiolleves répával és zöldfűszerekkel, hétköznapi ebédhez.",
+    "ingredients": ["Karfiol", "Sárgarépa", "Vöröshagyma", "Petrezselyem", "Tejföl", "Liszt"],
+    "instructions": [
+      "A zöldségeket tedd fel főni enyhén sós vízben.",
+      "Amikor megpuhultak, készíts tejfölös habarást.",
+      "Sűrítsd be vele a levest és forrald össze.",
+      "Petrezselyemmel megszórva tálald."
+    ],
+    "tags": ["leves", "vegetáriánus", "házias"],
+    "servings": 4
+  },
+  {
+    "slug": "turos-csusza",
+    "title": "Túrós csusza",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 25,
+    "protein": "vegetáriánus",
+    "summary": "Krémes túrós csusza tejföllel, gyors húsmentes opcióként.",
+    "ingredients": ["Szélesmetélt", "Túró", "Tejföl", "Vaj", "Só"],
+    "instructions": [
+      "Főzd ki a tésztát sós vízben.",
+      "Keverd össze vajjal, túróval és tejföllel.",
+      "Sütőben röviden össze is sütheted.",
+      "Frissen tálald."
+    ],
+    "tags": ["gyors", "vegetáriánus", "gyerekbarát"],
+    "servings": 4
+  },
+  {
+    "slug": "kaposztas-teszta",
+    "title": "Káposztás tészta",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Főétel",
+    "duration": 30,
+    "protein": "vegetáriánus",
+    "summary": "Párolt káposztával összeforgatott tészta, borsosan és egyszerűen.",
+    "ingredients": ["Káposzta", "Tészta", "Cukor", "Olaj", "Só", "Bors"],
+    "instructions": [
+      "Reszeld le a káposztát és sózd be rövid időre.",
+      "Kevés cukorral és olajjal párold barnulásig.",
+      "Közben főzd ki a tésztát.",
+      "Forgasd össze bőven borsozva."
+    ],
+    "tags": ["gyors", "vegetáriánus", "kamrabarát"],
+    "servings": 4
+  },
+  {
+    "slug": "rakott-kel",
+    "title": "Rakott kel",
+    "bookTitle": "Régi szakácskönyvek / MEK seed",
+    "sourceUrl": "https://mek.oszk.hu/html/vgi/kereses/kereses.phtml?tema=szak%C3%A1csk%C3%B6nyvek%2C_receptek",
+    "category": "Egytálétel",
+    "duration": 75,
+    "protein": "sertés",
+    "summary": "Réteges rakott kel darált hússal, rizzsel és tejföllel, családi adagban.",
+    "ingredients": ["Kelkáposzta", "Darált sertés", "Rizs", "Vöröshagyma", "Tejföl", "Pirospaprika"],
+    "instructions": [
+      "Párold elő a kelkáposztát és főzd meg a rizst.",
+      "Készíts paprikás darált húsos alapot.",
+      "Rétegezd tepsibe a kelt, a rizst és a húst.",
+      "Tejföllel a tetején süsd össze."
+    ],
+    "tags": ["egytálétel", "2 napra elég", "maradékbarát"],
+    "servings": 6
+  }
+]

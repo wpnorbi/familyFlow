@@ -16,6 +16,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Krémes zabkása friss bogyós gyümölcsökkel és mézzel.",
     ingredients: ["Zab", "Tej", "Áfonya", "Málna", "Méz", "Fahéj"],
+    instructions: [
+      "Forrald fel a tejet egy kisebb lábasban, majd szórd bele a zabot.",
+      "Főzd 3-4 percig, amíg sűrű és krémes lesz.",
+      "Keverd bele a fahéjat és a mézet.",
+      "Tálald a bogyós gyümölcsökkel a tetején.",
+    ],
     tags: ["vegetáriánus", "gyors"],
   },
   {
@@ -26,6 +32,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Ropogós pirítós friss avokádóval és buggyantott tojással.",
     ingredients: ["Kenyér", "Avokádó", "Tojás", "Citromlé", "Chili", "Só"],
+    instructions: [
+      "Pirítsd meg a kenyeret aranybarnára.",
+      "Törd össze az avokádót citromlével, sóval és kevés chilivel.",
+      "Készíts lágy vagy buggyantott tojást.",
+      "Kend az avokádót a pirítósra, majd tedd rá a tojást.",
+    ],
     tags: ["gyors"],
   },
   {
@@ -36,6 +48,12 @@ export const RECIPES: Recipe[] = [
     protein: "egyéb",
     description: "Gyors és tápláló reggelire, pár hozzávalóból.",
     ingredients: ["Tojás", "Sajt", "Sonka", "Tejföl", "Só", "Bors"],
+    instructions: [
+      "Verd fel a tojásokat a tejföllel, sóval és borssal.",
+      "Serpenyőben melegíts kevés zsiradékot, majd öntsd bele a tojást.",
+      "Szórd rá a sonkát és a sajtot.",
+      "Hajtsd félbe az omlettet, és süsd készre 2-3 perc alatt.",
+    ],
     tags: ["gyors", "protein"],
   },
   {
@@ -46,6 +64,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Krémes joghurt ropogós granolával és friss gyümölcsökkel.",
     ingredients: ["Görög joghurt", "Granola", "Eper", "Banán", "Méz"],
+    instructions: [
+      "Kanalazd a joghurtot egy tálba.",
+      "Szeleteld fel a gyümölcsöket.",
+      "Szórd a joghurtra a granolát és a gyümölcsöket.",
+      "Csorgass rá egy kevés mézet tálalás előtt.",
+    ],
     tags: ["gyors", "vegetáriánus"],
   },
   {
@@ -56,6 +80,12 @@ export const RECIPES: Recipe[] = [
     protein: "hal",
     description: "Sült lazac spárgával és citromos quinoa körettel.",
     ingredients: ["Lazac", "Citrom", "Fokhagyma", "Spárga", "Olívaolaj", "Kapor"],
+    instructions: [
+      "Fűszerezd a lazacot sóval, borssal, fokhagymával és citromhéjjal.",
+      "A spárgát forgasd össze olívaolajjal, majd tedd a hal mellé tepsire.",
+      "Süsd 200 fokon 18-20 percig.",
+      "Tálaláskor szórd meg kaporral és facsarj rá friss citromlevet.",
+    ],
     tags: ["hal", "protein"],
   },
   {
@@ -66,6 +96,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Klasszikus paradicsomos tészta friss bazsalikommal és parmezánnal.",
     ingredients: ["Tészta", "Paradicsom", "Bazsalikom", "Fokhagyma", "Olívaolaj", "Parmezán"],
+    instructions: [
+      "Főzd ki a tésztát sós vízben.",
+      "Közben fokhagymát piríts olívaolajon, majd add hozzá a paradicsomot.",
+      "Főzd össze a szószt 10-12 perc alatt.",
+      "Forgasd bele a tésztát, bazsalikommal és parmezánnal tálald.",
+    ],
     tags: ["vegetáriánus", "család"],
   },
   {
@@ -76,6 +112,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Tápláló quinoa tál szezonális zöldségekkel és citromos öntettel.",
     ingredients: ["Quinoa", "Paprika", "Cukkini", "Hagyma", "Olívaolaj", "Fűszerek"],
+    instructions: [
+      "Főzd meg a quinoát a csomagolás szerint.",
+      "Serpenyőben pirítsd meg a felkockázott zöldségeket.",
+      "Ízesítsd sóval, borssal és kedvenc fűszereiddel.",
+      "Tálban keverd össze a quinoát a zöldségekkel, és locsold meg citromos olajjal.",
+    ],
     tags: ["vegetáriánus", "egészséges"],
   },
   {
@@ -86,6 +128,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Selymes krémleves friss csiperkegombából, kakukkfűvel.",
     ingredients: ["Csiperkegomba", "Tejszín", "Vöröshagyma", "Kakukkfű", "Vaj", "Zöldségleves"],
+    instructions: [
+      "A hagymát vajon párold üvegesre, majd add hozzá a gombát.",
+      "Fűszerezd kakukkfűvel, és pirítsd 5-6 percig.",
+      "Öntsd fel alaplével, majd főzd puhára.",
+      "Turmixold le, keverd bele a tejszínt, és még egyszer forrald össze.",
+    ],
     tags: ["vegetáriánus", "leves"],
   },
   {
@@ -96,6 +144,12 @@ export const RECIPES: Recipe[] = [
     protein: "marha",
     description: "Tökéletesen elkészített steak rozmaringgal és fokhagymás vajjal.",
     ingredients: ["Marhahús", "Rozmaring", "Vaj", "Fokhagyma", "Só", "Bors"],
+    instructions: [
+      "A húst szobahőmérsékletűre pihentesd, majd sózd, borsozd.",
+      "Forró serpenyőben süsd oldalanként 2-3 percig.",
+      "Add hozzá a vajat, fokhagymát és rozmaringot, majd locsolgasd a húst.",
+      "Pihentesd 5 percig szeletelés előtt.",
+    ],
     tags: ["hús", "protein"],
   },
   {
@@ -106,6 +160,12 @@ export const RECIPES: Recipe[] = [
     protein: "vegetáriánus",
     description: "Frissítő avokádó tál mediterrán ízekkel, feta sajttal.",
     ingredients: ["Avokádó", "Paradicsom", "Uborka", "Feta", "Citromlé", "Olívaolaj"],
+    instructions: [
+      "Vágd fel az avokádót, paradicsomot és uborkát.",
+      "Keverd össze egy nagy tálban.",
+      "Morzsold rá a fetát.",
+      "Locsold meg citromlével és olívaolajjal, majd finoman forgasd össze.",
+    ],
     tags: ["vegetáriánus", "gyors", "egészséges"],
   },
   {
@@ -116,6 +176,12 @@ export const RECIPES: Recipe[] = [
     protein: "csirke",
     description: "Aromás indiai curry csirkével, kókusztejjel és jázmin rizzsel.",
     ingredients: ["Csirkemell", "Kókusztej", "Curry por", "Paradicsom", "Rizs", "Koriander"],
+    instructions: [
+      "Pirítsd meg a felkockázott csirkét kevés olajon.",
+      "Szórd rá a curry port, majd add hozzá a paradicsomot.",
+      "Öntsd fel kókusztejjel, és főzd sűrűre 15-20 perc alatt.",
+      "Főtt rizzsel és friss korianderrel tálald.",
+    ],
     tags: ["hús", "fűszeres"],
   },
   {
@@ -126,6 +192,12 @@ export const RECIPES: Recipe[] = [
     protein: "egyéb",
     description: "Melegítő ramen leves gazdag alaplével és lágy főtt tojással.",
     ingredients: ["Ramen tészta", "Tojás", "Shiitake gomba", "Spenót", "Szójaszósz", "Gyömbér"],
+    instructions: [
+      "Forralj alaplevet gyömbérrel és szójaszósszal.",
+      "Add hozzá a gombát és pár percig főzd.",
+      "Külön főzd ki a ramen tésztát és a lágy tojást.",
+      "Tálaláskor tedd a tésztát a levesbe, majd jöhet a tojás és a spenót.",
+    ],
     tags: ["leves", "ázsiai"],
   },
   {
@@ -136,6 +208,12 @@ export const RECIPES: Recipe[] = [
     protein: "csirke",
     description: "Ropogós bőrű csirkecomb fűszeres páccal és sült burgonyával.",
     ingredients: ["Csirkecomb", "Fokhagyma", "Rozmaring", "Burgonya", "Olívaolaj", "Paprika"],
+    instructions: [
+      "A csirkecombot dörzsöld be fokhagymával, paprikával, sóval és olajjal.",
+      "A burgonyát vágd fel, majd keverd össze rozmaringgal.",
+      "Rendezd tepsire a csirkét és a burgonyát.",
+      "Süsd 200 fokon 45-50 percig, amíg aranybarna lesz.",
+    ],
     tags: ["hús", "sütő"],
   },
 ];

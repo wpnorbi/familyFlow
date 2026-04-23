@@ -5,9 +5,9 @@ import { RECIPES, toDateKey } from "@/lib/etkezes-data";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 
 const TIME_FILTERS = [
-  { label: "Villám", sublabel: "≤15 perc", max: 15, icon: "bolt" },
-  { label: "Közepes", sublabel: "≤30 perc", max: 30, icon: "timer" },
-  { label: "Hosszabb", sublabel: "≤60 perc", max: 60, icon: "hourglass_bottom" },
+  { label: "Villám", sublabel: "< 15 perc", max: 15, icon: "bolt" },
+  { label: "Közepes", sublabel: "< 30 perc", max: 30, icon: "timer" },
+  { label: "Hosszabb", sublabel: "< 60 perc", max: 60, icon: "hourglass_bottom" },
   { label: "Bármennyi", sublabel: "Nincs limit", max: Infinity, icon: "all_inclusive" },
 ];
 
@@ -15,37 +15,41 @@ const PROTEIN_FILTERS: { label: string; value: Recipe["protein"] | "mind"; icon:
   { label: "Csirke", value: "csirke", icon: "egg_alt" },
   { label: "Hal", value: "hal", icon: "set_meal" },
   { label: "Marha", value: "marha", icon: "lunch_dining" },
-  { label: "Vegán", value: "vegetáriánus", icon: "eco" },
+  { label: "Sertés", value: "sertés", icon: "nutrition" },
+  { label: "Vegetáriánus", value: "vegetáriánus", icon: "eco" },
   { label: "Egyéb", value: "egyéb", icon: "restaurant" },
   { label: "Mind", value: "mind", icon: "all_inclusive" },
 ];
 
-const PROTEIN_GRADIENTS: Record<string, string> = {
-  csirke: "from-amber-50 to-amber-100",
-  hal: "from-blue-50 to-blue-100",
-  marha: "from-red-50 to-red-100",
-  vegetáriánus: "from-green-50 to-green-100",
-  egyéb: "from-purple-50 to-purple-100",
+const PROTEIN_GRADIENTS: Record<Recipe["protein"], string> = {
+  csirke: "from-amber-50 via-orange-50 to-amber-100",
+  hal: "from-sky-50 via-cyan-50 to-blue-100",
+  marha: "from-rose-50 via-red-50 to-orange-100",
+  sertés: "from-pink-50 via-rose-50 to-red-100",
+  vegetáriánus: "from-green-50 via-emerald-50 to-lime-100",
+  egyéb: "from-violet-50 via-fuchsia-50 to-purple-100",
 };
 
-const PROTEIN_ICON_COLORS: Record<string, string> = {
-  csirke: "text-amber-600",
-  hal: "text-blue-600",
-  marha: "text-red-600",
-  vegetáriánus: "text-green-600",
-  egyéb: "text-purple-600",
+const PROTEIN_ICON_COLORS: Record<Recipe["protein"], string> = {
+  csirke: "text-amber-700",
+  hal: "text-sky-700",
+  marha: "text-rose-700",
+  sertés: "text-pink-700",
+  vegetáriánus: "text-emerald-700",
+  egyéb: "text-violet-700",
 };
 
-const PROTEIN_ICONS: Record<string, string> = {
+const PROTEIN_ICONS: Record<Recipe["protein"], string> = {
   csirke: "egg_alt",
   hal: "set_meal",
   marha: "lunch_dining",
+  sertés: "nutrition",
   vegetáriánus: "eco",
   egyéb: "restaurant",
 };
 
 interface Props {
-  onAdd: (batch: Omit<MealBatch, "id">) => void;
+  onAdd: (batch: Omit<MealBatch, "id">) => void | Promise<void>;
   onClose: () => void;
 }
 
@@ -66,141 +70,240 @@ function addDays(dateKey: string, n: number): string {
   return toDateKey(date);
 }
 
-function getFoodImageUrl(recipe: Recipe): string {
-  const imagesByProtein: Record<Recipe["protein"], string[]> = {
-    csirke: [
-      "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=640&q=80",
-    ],
-    hal: [
-      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1485921325833-c519f76c4927?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=640&q=80",
-    ],
-    marha: [
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=640&q=80",
-    ],
-    vegetáriánus: [
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=640&q=80",
-    ],
-    egyéb: [
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=640&q=80",
-      "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=640&q=80",
-    ],
+function getProteinLabel(protein: Recipe["protein"]) {
+  return PROTEIN_FILTERS.find((item) => item.value === protein)?.label ?? protein;
+}
+
+function scaleIngredientLabel(ingredient: string, days: number): string {
+  return days > 1 ? `${ingredient} ×${days}` : ingredient;
+}
+
+function buildPlannedRecipeSnapshot(recipe: Recipe, days: number): Recipe {
+  const baseServings = recipe.servings ?? 4;
+
+  return {
+    ...recipe,
+    ingredients: recipe.ingredients.map((ingredient) => scaleIngredientLabel(ingredient, days)),
+    servings: baseServings * days,
+    description:
+      days > 1
+        ? `${recipe.description} Ez a terv ${days} napra van skálázva.`
+        : recipe.description,
   };
-  const hash = [...recipe.name].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const images = imagesByProtein[recipe.protein];
-  return images[hash % images.length];
+}
+
+function getRecipeCategories(): string[] {
+  return Array.from(new Set(RECIPES.map((recipe) => recipe.category)));
+}
+
+function getRecipeTags(): string[] {
+  return Array.from(new Set(RECIPES.flatMap((recipe) => recipe.tags ?? [])));
+}
+
+function matchesRecipe(recipe: Recipe, searchTerm: string, category: string, tag: string, maxDuration: number, protein: Recipe["protein"] | "mind") {
+  const normalizedQuery = searchTerm.trim().toLowerCase();
+  const searchable = [
+    recipe.name,
+    recipe.description,
+    recipe.category,
+    ...recipe.ingredients,
+    ...(recipe.tags ?? []),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const timeOk = recipe.duration <= maxDuration;
+  const proteinOk = protein === "mind" || recipe.protein === protein;
+  const categoryOk = category === "mind" || recipe.category === category;
+  const tagOk = tag === "mind" || (recipe.tags ?? []).includes(tag);
+  const searchOk = !normalizedQuery || searchable.includes(normalizedQuery);
+
+  return timeOk && proteinOk && categoryOk && tagOk && searchOk;
+}
+
+function RecipeArt({ recipe, compact = false }: { recipe: Recipe; compact?: boolean }) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${PROTEIN_GRADIENTS[recipe.protein]} ${compact ? "h-20 w-20" : "h-64"} border border-white/70`}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.75),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.45),transparent_40%)]" />
+      <div className="absolute right-3 top-3 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold text-on-surface shadow-sm">
+        {recipe.duration} perc
+      </div>
+      <div className="absolute left-3 top-3 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold text-on-surface shadow-sm">
+        {recipe.category}
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span
+          className={`material-symbols-outlined ${PROTEIN_ICON_COLORS[recipe.protein]} ${compact ? "text-[38px]" : "text-[92px]"} opacity-80`}
+          style={{ fontVariationSettings: "'FILL' 0, 'wght' 300" }}
+        >
+          {PROTEIN_ICONS[recipe.protein]}
+        </span>
+      </div>
+      <div className="absolute bottom-3 left-3 right-3">
+        <div className="rounded-2xl bg-white/70 px-3 py-2 backdrop-blur-sm shadow-sm">
+          <p className={`font-semibold text-on-surface ${compact ? "text-[11px] line-clamp-2" : "text-sm"}`}>
+            {recipe.name}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function AddMealModal({ onAdd, onClose }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [timeFilter, setTimeFilter] = useState<number>(Infinity);
   const [proteinFilter, setProteinFilter] = useState<Recipe["protein"] | "mind">("mind");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("mind");
+  const [tagFilter, setTagFilter] = useState<string>("mind");
   const [selected, setSelected] = useState<Recipe | null>(null);
+  const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
   const [cookDateKey, setCookDateKey] = useState<string>(getCookDateOptions()[0].dateKey);
   const [eatDays, setEatDays] = useState<number>(1);
-  const [internetRecipes, setInternetRecipes] = useState<Recipe[]>([]);
-  const [isSearchingInternet, setIsSearchingInternet] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
-  const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
-  const [visibleRecipeCount, setVisibleRecipeCount] = useState(80);
+  const [visibleRecipeCount, setVisibleRecipeCount] = useState(20);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableRecipes, setAvailableRecipes] = useState<Recipe[]>(RECIPES);
+  const [availableCategories, setAvailableCategories] = useState<string[]>(getRecipeCategories());
+  const [availableTags, setAvailableTags] = useState<string[]>(getRecipeTags());
+  const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+  const [recipesError, setRecipesError] = useState<string | null>(null);
+  const [usedFallbackResults, setUsedFallbackResults] = useState(false);
+  const [exactMatchCount, setExactMatchCount] = useState(0);
 
-  const cookDateOptions = getCookDateOptions();
-
-  const localFiltered = RECIPES.filter((r) => {
-    const timeOk = r.duration <= timeFilter;
-    const proteinOk = proteinFilter === "mind" || r.protein === proteinFilter;
-    return timeOk && proteinOk;
-  });
-  const filtered = [...localFiltered, ...internetRecipes].filter(
-    (recipe, index, recipes) => recipes.findIndex((candidate) => candidate.id === recipe.id) === index,
+  const fallbackRecipes = RECIPES.filter((recipe) =>
+    matchesRecipe(recipe, searchTerm, categoryFilter, tagFilter, timeFilter, proteinFilter),
   );
+  const filtered = recipesError ? fallbackRecipes : availableRecipes;
   const visibleRecipes = filtered.slice(0, visibleRecipeCount);
-
+  const cookDateOptions = getCookDateOptions();
   const eatDates = Array.from({ length: eatDays }, (_, i) => addDays(cookDateKey, i));
+  const plannedRecipe = selected ? buildPlannedRecipeSnapshot(selected, eatDays) : null;
 
-  const handleConfirm = () => {
-    if (!selected) return;
-    onAdd({
-      recipeId: selected.id,
-      recipeSnapshot: { ...selected, image: selected.image ?? getFoodImageUrl(selected) },
-      cookDate: cookDateKey,
-      eatDates,
-    });
-    onClose();
-  };
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !isSubmitting) {
+        if (previewRecipe) {
+          setPreviewRecipe(null);
+          return;
+        }
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isSubmitting, onClose, previewRecipe]);
+
+  async function handleConfirm() {
+    if (!selected || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await onAdd({
+        recipeId: selected.id,
+        recipeSnapshot: plannedRecipe ?? selected,
+        cookDate: cookDateKey,
+        eatDates,
+      });
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function resetRecipeFilters() {
+    setSelected(null);
+    setPreviewRecipe(null);
+    setVisibleRecipeCount(20);
+  }
 
   useEffect(() => {
     if (step !== 2) return;
 
     const controller = new AbortController();
-    const timer = window.setTimeout(() => {
-      setIsSearchingInternet(true);
-      setSearchError(null);
+    const timer = window.setTimeout(async () => {
+      setIsLoadingRecipes(true);
+      setRecipesError(null);
 
       const params = new URLSearchParams({
         protein: proteinFilter,
         maxDuration: String(timeFilter),
+        search: searchTerm,
+        category: categoryFilter,
+        tag: tagFilter,
       });
 
-      fetch(`/api/recipes/search?${params.toString()}`, { signal: controller.signal })
-        .then((response) => {
-          if (!response.ok) throw new Error("Nem sikerült az internetes receptkeresés.");
-          return response.json() as Promise<{ recipes: Recipe[] }>;
-        })
-        .then(({ recipes }) => setInternetRecipes(recipes))
-        .catch((error: unknown) => {
-          if (error instanceof DOMException && error.name === "AbortError") return;
-          setInternetRecipes([]);
-          setSearchError("Az internetes receptkeresés most nem elérhető, a lokális recepteket mutatjuk.");
-        })
-        .finally(() => {
-          if (!controller.signal.aborted) setIsSearchingInternet(false);
+      try {
+        const response = await fetch(`/api/recipes/search?${params.toString()}`, {
+          signal: controller.signal,
+          cache: "no-store",
         });
-    }, 0);
+
+        if (!response.ok) {
+          throw new Error("Recipe fetch failed.");
+        }
+
+        const payload = await response.json() as {
+          recipes?: Recipe[];
+          categories?: string[];
+          tags?: string[];
+          exactMatchCount?: number;
+          usedFallback?: boolean;
+        };
+
+        if (controller.signal.aborted) return;
+
+        setAvailableRecipes(Array.isArray(payload.recipes) ? payload.recipes : []);
+        setAvailableCategories(Array.isArray(payload.categories) ? payload.categories : getRecipeCategories());
+        setAvailableTags(Array.isArray(payload.tags) ? payload.tags : getRecipeTags());
+        setExactMatchCount(typeof payload.exactMatchCount === "number" ? payload.exactMatchCount : 0);
+        setUsedFallbackResults(Boolean(payload.usedFallback));
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setRecipesError("A magyar receptforrás most nem elérhető, a helyi recepteket mutatjuk.");
+        setAvailableRecipes(RECIPES);
+        setAvailableCategories(getRecipeCategories());
+        setAvailableTags(getRecipeTags());
+        setExactMatchCount(fallbackRecipes.length);
+        setUsedFallbackResults(false);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoadingRecipes(false);
+        }
+      }
+    }, 180);
 
     return () => {
-      window.clearTimeout(timer);
       controller.abort();
+      window.clearTimeout(timer);
     };
-  }, [proteinFilter, step, timeFilter]);
+  }, [step, proteinFilter, timeFilter, searchTerm, categoryFilter, tagFilter]);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-
-      <div className="relative z-10 w-full max-w-6xl bg-surface-container-lowest rounded-3xl shadow-[0_32px_80px_-12px_rgba(74,93,78,0.25)] overflow-hidden flex flex-col max-h-[94vh]">
-
-        {/* Fejléc */}
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+      <div className="w-full max-w-6xl h-[min(92vh,860px)] rounded-[32px] bg-surface-container-lowest shadow-[0_28px_90px_-24px_rgba(20,25,20,0.45)] border border-white/70 overflow-hidden flex flex-col">
         <div className="px-6 pt-6 pb-4 border-b border-surface-variant/50 shrink-0">
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-on-surface">Kaja hozzáadása</h2>
-              <p className="text-sm text-on-surface-variant mt-0.5">
-                {step === 1 && "Szűrők — mennyi idő, milyen fehérje"}
-                {step === 2 && "Válassz receptet"}
-                {step === 3 && "Mikor főzöd, és hány napra szól?"}
+              <p className="text-[11px] uppercase tracking-[0.24em] text-outline font-bold mb-2">
+                Étkezéstervező
+              </p>
+              <h2 className="text-2xl font-bold text-on-surface">Mit főzünk és hány napra?</h2>
+              <p className="text-sm text-outline mt-1">
+                Válassz receptet, szűrj gyorsan, és nézd meg a teljes elkészítést helyben.
               </p>
             </div>
             <button
               onClick={onClose}
-              className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer"
+              className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
-          {/* Progress */}
-          <div className="flex items-center gap-2">
+          <div className="mt-4 flex items-center gap-2">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
@@ -213,22 +316,19 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
           </div>
         </div>
 
-        {/* Step 1: Szűrők */}
         {step === 1 && (
           <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-6">
             <div>
               <p className="text-sm font-bold text-on-surface mb-3">Mennyi időd van főzni?</p>
-              <div className="grid grid-cols-4 gap-2">
-                {TIME_FILTERS.map((f) => {
-                  const active = timeFilter === f.max;
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                {TIME_FILTERS.map((filter) => {
+                  const active = timeFilter === filter.max;
                   return (
                     <button
-                      key={f.max}
+                      key={filter.label}
                       onClick={() => {
-                        setTimeFilter(f.max);
-                        setSelected(null);
-                        setInternetRecipes([]);
-                        setVisibleRecipeCount(80);
+                        setTimeFilter(filter.max);
+                        resetRecipeFilters();
                       }}
                       className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-center transition-all cursor-pointer ${
                         active
@@ -237,10 +337,12 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
                       }`}
                     >
                       <span className={`material-symbols-outlined text-[22px] ${active ? "" : "text-outline"}`}>
-                        {f.icon}
+                        {filter.icon}
                       </span>
-                      <span className="text-xs font-bold leading-none">{f.label}</span>
-                      <span className={`text-[10px] leading-none ${active ? "opacity-80" : "text-outline"}`}>{f.sublabel}</span>
+                      <span className="text-xs font-bold leading-none">{filter.label}</span>
+                      <span className={`text-[10px] leading-none ${active ? "opacity-80" : "text-outline"}`}>
+                        {filter.sublabel}
+                      </span>
                     </button>
                   );
                 })}
@@ -249,17 +351,15 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
 
             <div>
               <p className="text-sm font-bold text-on-surface mb-3">Milyen fehérje legyen?</p>
-              <div className="grid grid-cols-3 gap-2">
-                {PROTEIN_FILTERS.map((f) => {
-                  const active = proteinFilter === f.value;
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                {PROTEIN_FILTERS.map((filter) => {
+                  const active = proteinFilter === filter.value;
                   return (
                     <button
-                      key={f.value}
+                      key={filter.value}
                       onClick={() => {
-                        setProteinFilter(f.value);
-                        setSelected(null);
-                        setInternetRecipes([]);
-                        setVisibleRecipeCount(80);
+                        setProteinFilter(filter.value);
+                        resetRecipeFilters();
                       }}
                       className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl border text-left transition-all cursor-pointer ${
                         active
@@ -268,126 +368,254 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
                       }`}
                     >
                       <span className={`material-symbols-outlined text-[20px] ${active ? "" : "text-outline"}`}>
-                        {f.icon}
+                        {filter.icon}
                       </span>
-                      <span className="text-sm font-semibold">{f.label}</span>
+                      <span className="text-sm font-semibold">{filter.label}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="bg-surface-container rounded-2xl px-4 py-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[18px]">travel_explore</span>
-              <span className="text-sm text-on-surface-variant">
-                Először idő alapján szűrünk, utána fehérje szerint. A következő lépésben internetes receptek is jönnek.
-              </span>
+            <div className="rounded-3xl border border-surface-variant/40 bg-gradient-to-br from-surface-container-low to-white px-5 py-5">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[24px]">menu_book</span>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-on-surface">
+                    A következő lépésben már a saját receptlistádból választasz.
+                  </p>
+                  <p className="text-sm text-on-surface-variant">
+                    Lesz kereső, kategória- és címkeszűrő, és a Megnézem gombban rögtön ott lesz a hozzávalólista meg az elkészítés.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Step 2: Recept */}
         {step === 2 && (
-          <div className="flex-1 overflow-y-auto px-6 py-4">
-            <p className="text-xs font-bold text-outline uppercase tracking-widest mb-3">
-              {filtered.length} recept
-              {timeFilter < Infinity && ` · ≤${timeFilter} perc`}
-              {proteinFilter !== "mind" && ` · ${proteinFilter}`}
-              {isSearchingInternet && " · internet keresése…"}
-            </p>
+          <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold text-outline uppercase tracking-widest mb-1">
+                  {filtered.length} recept
+                  {timeFilter < Infinity && ` · ≤ ${timeFilter} perc`}
+                  {proteinFilter !== "mind" && ` · ${getProteinLabel(proteinFilter)}`}
+                </p>
+                <h3 className="text-lg font-bold text-on-surface">Szűrd le gyorsan, ami tényleg szóba jöhet</h3>
+                {usedFallbackResults && (
+                  <p className="mt-1 text-xs text-on-surface-variant">
+                    {exactMatchCount} pontos találat volt, ezért közeli receptekkel töltöttük fel a listát.
+                  </p>
+                )}
+              </div>
+              <div className="w-full lg:w-[320px]">
+                <label className="sr-only" htmlFor="recipe-search">Recept keresése</label>
+                <div className="flex items-center gap-2 rounded-2xl border border-surface-variant/50 bg-surface-container-low px-3 py-2.5">
+                  <span className="material-symbols-outlined text-outline text-[18px]">search</span>
+                  <input
+                    id="recipe-search"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setVisibleRecipeCount(20);
+                    }}
+                    placeholder="Keresés név, hozzávaló vagy tag alapján"
+                    className="w-full bg-transparent text-sm text-on-surface placeholder:text-outline focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
 
-            {searchError && (
-              <div className="mb-3 rounded-2xl bg-secondary-fixed/25 border border-secondary-fixed-dim/40 px-4 py-3 text-xs font-medium text-on-surface-variant flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-secondary">wifi_off</span>
-                {searchError}
+            <div className="flex flex-col gap-3">
+              <div>
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-outline">Kategória</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setCategoryFilter("mind");
+                      setVisibleRecipeCount(20);
+                    }}
+                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                      categoryFilter === "mind"
+                        ? "bg-primary text-white border-primary"
+                        : "bg-surface-container-low border-surface-variant/50 text-on-surface-variant"
+                    }`}
+                  >
+                    Mind
+                  </button>
+                  {availableCategories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        setCategoryFilter(category);
+                        setVisibleRecipeCount(20);
+                      }}
+                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                        categoryFilter === category
+                          ? "bg-primary text-white border-primary"
+                          : "bg-surface-container-low border-surface-variant/50 text-on-surface-variant"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-outline">Gyors szűrők</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setTagFilter("mind");
+                      setVisibleRecipeCount(20);
+                    }}
+                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                      tagFilter === "mind"
+                        ? "bg-secondary text-white border-secondary"
+                        : "bg-surface-container-low border-surface-variant/50 text-on-surface-variant"
+                    }`}
+                  >
+                    Minden címke
+                  </button>
+                  {availableTags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => {
+                        setTagFilter(tag);
+                        setVisibleRecipeCount(20);
+                      }}
+                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                        tagFilter === tag
+                          ? "bg-secondary text-white border-secondary"
+                          : "bg-surface-container-low border-surface-variant/50 text-on-surface-variant"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {recipesError && (
+              <div className="rounded-2xl border border-secondary-fixed-dim/40 bg-secondary-fixed/25 px-4 py-3 text-sm text-on-surface-variant">
+                {recipesError}
               </div>
             )}
 
-            {filtered.length === 0 && isSearchingInternet ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-                {Array.from({ length: 6 }, (_, index) => (
-                  <div key={index} className="h-[82px] rounded-2xl bg-surface-container animate-pulse" />
+            {isLoadingRecipes ? (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                {Array.from({ length: 8 }, (_, index) => (
+                  <div key={index} className="h-[156px] rounded-3xl bg-surface-container animate-pulse" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="text-center py-12 text-on-surface-variant">
+              <div className="text-center py-14 text-on-surface-variant">
                 <span className="material-symbols-outlined text-4xl text-outline mb-2 block">search_off</span>
                 <p className="text-sm">Nincs recept ezekkel a szűrőkkel.</p>
-                <button onClick={() => setStep(1)} className="mt-3 text-primary text-sm font-semibold cursor-pointer">
-                  Szűrők módosítása
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setCategoryFilter("mind");
+                    setTagFilter("mind");
+                  }}
+                  className="mt-3 text-primary text-sm font-semibold cursor-pointer"
+                >
+                  Szűrők törlése
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
                 {visibleRecipes.map((recipe) => {
                   const isSelected = selected?.id === recipe.id;
                   return (
                     <article
                       key={recipe.id}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
+                      className={`flex gap-3 p-3 rounded-3xl border transition-all ${
                         isSelected
-                          ? "bg-primary-container/30 border-primary-container shadow-sm"
-                          : "bg-surface-container-low border-surface-variant/40 hover:border-primary-container/50 hover:bg-surface-container"
+                          ? "bg-primary-container/25 border-primary-container shadow-sm"
+                          : "bg-surface-container-low border-surface-variant/40 hover:border-primary-container/40 hover:bg-surface-container"
                       }`}
                     >
                       <button
                         onClick={() => setPreviewRecipe(recipe)}
-                        className={`w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center bg-gradient-to-br ${PROTEIN_GRADIENTS[recipe.protein]} relative overflow-hidden shadow-sm`}
+                        className="shrink-0"
                         aria-label={`${recipe.name} részletei`}
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={recipe.image ?? getFoodImageUrl(recipe)}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                        {isSelected && (
-                          <div className="absolute inset-0 rounded-xl bg-primary/20 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                          </div>
-                        )}
+                        <RecipeArt recipe={recipe} compact />
                       </button>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-on-surface border border-surface-variant/40">
+                            {recipe.duration} perc
+                          </span>
+                          <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-on-surface border border-surface-variant/40">
+                            {recipe.category}
+                          </span>
+                          <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-on-surface border border-surface-variant/40">
+                            {getProteinLabel(recipe.protein)}
+                          </span>
+                        </div>
+
                         <button
                           onClick={() => setPreviewRecipe(recipe)}
-                          className={`text-sm font-semibold leading-snug mb-1 line-clamp-2 text-left hover:text-primary ${isSelected ? "text-primary" : "text-on-surface"}`}
+                          className={`text-left text-sm font-semibold leading-snug mb-1.5 hover:text-primary ${isSelected ? "text-primary" : "text-on-surface"}`}
                         >
                           {recipe.name}
                         </button>
-                        <div className="flex items-center gap-1.5">
-                          <span className="flex items-center gap-1 text-[11px] text-outline">
-                            <span className="material-symbols-outlined text-[13px]">timer</span>
-                            {recipe.duration} p
-                          </span>
-                          <span className="text-outline/40">·</span>
-                          <span className="text-[11px] text-outline">{recipe.protein}</span>
-                          {recipe.source === "hungarian-web" && (
-                            <>
-                              <span className="text-outline/40">·</span>
-                              <span className="text-[11px] text-primary font-semibold">magyar web</span>
-                            </>
+
+                        <p className="text-xs text-on-surface-variant line-clamp-2 mb-2.5">
+                          {recipe.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {recipe.ingredients.slice(0, 4).map((ingredient) => (
+                            <span
+                              key={ingredient}
+                              className="rounded-full bg-secondary-fixed/25 px-2.5 py-1 text-[11px] font-medium text-on-surface border border-secondary-fixed-dim/40"
+                            >
+                              {ingredient}
+                            </span>
+                          ))}
+                          {recipe.ingredients.length > 4 && (
+                            <span className="rounded-full bg-surface-container-high px-2.5 py-1 text-[11px] font-medium text-outline border border-surface-variant/40">
+                              +{recipe.ingredients.length - 4}
+                            </span>
                           )}
                         </div>
-                        <div className="mt-2 flex items-center gap-2">
+
+                        <div className="flex flex-wrap gap-2">
                           <button
                             onClick={() => setPreviewRecipe(recipe)}
-                            className="text-[11px] font-bold text-primary hover:underline"
+                            className="rounded-full border border-surface-variant px-3.5 py-2 text-xs font-semibold text-on-surface hover:bg-surface-container cursor-pointer"
                           >
                             Megnézem
                           </button>
-                          {isSelected && (
-                            <span className="text-[11px] font-semibold text-primary">Kiválasztva</span>
-                          )}
+                          <button
+                            onClick={() => setSelected(recipe)}
+                            className={`rounded-full px-3.5 py-2 text-xs font-bold transition-colors ${
+                              isSelected
+                                ? "bg-primary text-white"
+                                : "bg-primary/10 text-primary hover:bg-primary/15"
+                            }`}
+                          >
+                            {isSelected ? "Kiválasztva" : "Ezt főzném"}
+                          </button>
                         </div>
                       </div>
                     </article>
                   );
                 })}
+
                 {visibleRecipes.length < filtered.length && (
                   <button
-                    onClick={() => setVisibleRecipeCount((count) => count + 80)}
-                    className="md:col-span-2 xl:col-span-3 rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3 text-sm font-bold text-primary hover:bg-primary/10 transition-colors"
+                    onClick={() => setVisibleRecipeCount((count) => count + 20)}
+                    className="xl:col-span-2 rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3 text-sm font-bold text-primary hover:bg-primary/10 transition-colors"
                   >
                     További receptek mutatása ({filtered.length - visibleRecipes.length} maradt)
                   </button>
@@ -397,18 +625,19 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
           </div>
         )}
 
-        {/* Step 3: Dátumok */}
         {step === 3 && selected && (
           <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
-            <div className={`flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-br ${PROTEIN_GRADIENTS[selected.protein]} border border-surface-variant/20`}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/50">
-                <span className={`material-symbols-outlined text-[20px] ${PROTEIN_ICON_COLORS[selected.protein]}`}>
+            <div className={`flex items-center gap-3 p-3 rounded-3xl bg-gradient-to-br ${PROTEIN_GRADIENTS[selected.protein]} border border-surface-variant/20`}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/70">
+                <span className={`material-symbols-outlined text-[22px] ${PROTEIN_ICON_COLORS[selected.protein]}`}>
                   {PROTEIN_ICONS[selected.protein]}
                 </span>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="font-semibold text-on-surface text-sm">{selected.name}</p>
-                <p className="text-[11px] text-outline">{selected.duration} perc · {selected.ingredients.length} hozzávaló</p>
+                <p className="text-[11px] text-outline">
+                  {selected.duration} perc · {(plannedRecipe?.ingredients.length ?? selected.ingredients.length)} hozzávaló · {selected.instructions.length} lépés
+                </p>
               </div>
             </div>
 
@@ -432,44 +661,56 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
             </div>
 
             <div>
-              <p className="text-sm font-bold text-on-surface mb-3">Hány napig eszitek?</p>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4].map((n) => (
+              <p className="text-sm font-bold text-on-surface mb-3">Hány napra szól?</p>
+              <div className="grid grid-cols-4 gap-2 max-w-md">
+                {[1, 2, 3, 4].map((days) => (
                   <button
-                    key={n}
-                    onClick={() => setEatDays(n)}
-                    className={`w-12 h-12 rounded-2xl text-sm font-bold border transition-all cursor-pointer ${
-                      eatDays === n
-                        ? "bg-primary text-white border-primary shadow-sm"
+                    key={days}
+                    onClick={() => setEatDays(days)}
+                    className={`rounded-2xl border px-3 py-3 text-center transition-all cursor-pointer ${
+                      eatDays === days
+                        ? "bg-primary-container text-on-primary-container border-primary-container shadow-sm"
                         : "bg-surface-container-low border-surface-variant/50 text-on-surface-variant hover:bg-surface-container"
                     }`}
                   >
-                    {n}
+                    <span className="block text-base font-bold">{days}</span>
+                    <span className="block text-[11px] mt-0.5">{days === 1 ? "nap" : "nap"}</span>
                   </button>
                 ))}
-                <span className="ml-1 text-sm text-outline">nap</span>
               </div>
-              {eatDays > 1 && (
-                <p className="text-xs text-on-surface-variant mt-2">
-                  Maradék: {eatDates.slice(1).map((d) => d.slice(5).replace("-", ". ") + ".").join(", ")}
-                </p>
-              )}
             </div>
 
-            <div>
-              <p className="text-sm font-bold text-on-surface mb-2">Hozzávalók a bevásárlólistához:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {selected.ingredients.map((ing) => (
-                  <span key={ing} className="px-3 py-1 bg-secondary-fixed/30 text-on-surface text-xs font-medium rounded-full border border-secondary-fixed-dim/40">
-                    {ing}
-                  </span>
-                ))}
+            <div className="rounded-3xl bg-surface-container-low border border-surface-variant/40 p-4 flex flex-col gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">Főzés napja</p>
+                <p className="text-sm font-semibold text-on-surface">{cookDateKey}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">Ekkor eszitek</p>
+                <p className="text-sm text-on-surface-variant">
+                  {eatDates.join(", ")}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-2">Bevásárlólistára kerül</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {(plannedRecipe?.ingredients ?? selected.ingredients).map((ingredient) => (
+                    <span
+                      key={ingredient}
+                      className="px-3 py-1 bg-secondary-fixed/30 text-on-surface text-xs font-medium rounded-full border border-secondary-fixed-dim/40"
+                    >
+                      {ingredient}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-on-surface-variant">
+                  {eatDays} napra tervezve, kb. {plannedRecipe?.servings ?? selected.servings ?? 4} adaggal.
+                </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Lábléc */}
         <div className="px-6 py-4 border-t border-surface-variant/50 shrink-0 flex items-center justify-between gap-3">
           {step === 1 && (
             <>
@@ -483,11 +724,12 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
                 onClick={() => setStep(2)}
                 className="px-6 py-2.5 rounded-full text-sm font-bold bg-primary text-white shadow-[0_4px_14px_rgba(51,69,55,0.3)] hover:bg-primary/90 transition-all cursor-pointer flex items-center gap-2"
               >
-                Tovább
+                Receptet választok
                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
             </>
           )}
+
           {step === 2 && (
             <>
               <button
@@ -500,7 +742,7 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
               <div className="flex items-center gap-3">
                 {selected && (
                   <p className="text-sm text-on-surface-variant hidden sm:block">
-                    <span className="font-semibold text-on-surface">{selected.name}</span>
+                    Kiválasztva: <span className="font-semibold text-on-surface">{selected.name}</span>
                   </p>
                 )}
                 <button
@@ -518,6 +760,7 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
               </div>
             </>
           )}
+
           {step === 3 && (
             <>
               <button
@@ -528,11 +771,16 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
                 Vissza
               </button>
               <button
-                onClick={handleConfirm}
-                className="px-6 py-2.5 rounded-full text-sm font-bold bg-primary text-white shadow-[0_4px_14px_rgba(51,69,55,0.3)] hover:bg-primary/90 transition-all cursor-pointer flex items-center gap-2"
+                onClick={() => void handleConfirm()}
+                disabled={isSubmitting}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                  isSubmitting
+                    ? "bg-primary/60 text-white"
+                    : "bg-primary text-white shadow-[0_4px_14px_rgba(51,69,55,0.3)] hover:bg-primary/90"
+                }`}
               >
                 <span className="material-symbols-outlined text-[18px]">check</span>
-                Hozzáadás
+                {isSubmitting ? "Mentés..." : "Hozzáadás"}
               </button>
             </>
           )}
@@ -545,15 +793,8 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
           onClick={(e) => e.target === e.currentTarget && setPreviewRecipe(null)}
         >
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
-          <div className="relative z-10 w-full max-w-3xl overflow-hidden rounded-3xl bg-surface-container-lowest shadow-[0_24px_70px_-18px_rgba(27,28,26,0.35)] border border-white/70">
-            <div className={`relative h-64 bg-gradient-to-br ${PROTEIN_GRADIENTS[previewRecipe.protein]} flex items-center justify-center overflow-hidden`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewRecipe.image ?? getFoodImageUrl(previewRecipe)}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+          <div className="relative z-10 w-full max-w-4xl max-h-[88vh] overflow-hidden rounded-3xl bg-surface-container-lowest shadow-[0_24px_70px_-18px_rgba(27,28,26,0.35)] border border-white/70 flex flex-col">
+            <div className="relative shrink-0 p-5 border-b border-surface-variant/40">
               <button
                 onClick={() => setPreviewRecipe(null)}
                 className="absolute right-4 top-4 h-9 w-9 rounded-full bg-white/90 text-on-surface shadow-sm flex items-center justify-center hover:bg-white"
@@ -561,72 +802,102 @@ export default function AddMealModal({ onAdd, onClose }: Props) {
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
-              <div className="absolute bottom-4 left-5 right-5">
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-primary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[13px]">timer</span>
-                    {previewRecipe.duration} perc
-                  </span>
-                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-on-surface">
-                    {previewRecipe.protein}
-                  </span>
-                  {previewRecipe.source === "hungarian-web" && (
-                    <span className="rounded-full bg-secondary-container/90 px-2.5 py-1 text-[11px] font-bold text-on-secondary-container">
-                      magyar web
+              <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)] items-end">
+                <RecipeArt recipe={previewRecipe} />
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary">
+                      {previewRecipe.duration} perc
                     </span>
+                    <span className="rounded-full bg-surface-container-low px-3 py-1 text-[11px] font-bold text-on-surface border border-surface-variant/40">
+                      {previewRecipe.category}
+                    </span>
+                    <span className="rounded-full bg-surface-container-low px-3 py-1 text-[11px] font-bold text-on-surface border border-surface-variant/40">
+                      {getProteinLabel(previewRecipe.protein)}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-on-surface">{previewRecipe.name}</h3>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">
+                    {previewRecipe.description}
+                  </p>
+                  {previewRecipe.tags && previewRecipe.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {previewRecipe.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-secondary-fixed/20 px-2.5 py-1 text-[11px] font-semibold text-on-surface border border-secondary-fixed-dim/40"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
-                <h3 className="text-xl font-bold text-white drop-shadow-sm">{previewRecipe.name}</h3>
               </div>
             </div>
 
-            <div className="p-5 flex flex-col gap-4">
-              <p className="text-sm leading-relaxed text-on-surface-variant">
-                {previewRecipe.description}
-              </p>
-
+            <div className="overflow-y-auto p-5 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-2">
-                  Hozzávalók
+                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-3">
+                  Elkészítés
                 </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {previewRecipe.ingredients.map((ingredient) => (
-                    <span
-                      key={ingredient}
-                      className="rounded-full border border-surface-variant bg-surface-container-low px-3 py-1 text-xs font-medium text-on-surface"
-                    >
-                      {ingredient}
-                    </span>
+                <ol className="flex flex-col gap-3">
+                  {previewRecipe.instructions.map((stepText, index) => (
+                    <li key={stepText} className="flex gap-3 rounded-2xl border border-surface-variant/40 bg-surface-container-low px-4 py-3">
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                        {index + 1}
+                      </span>
+                      <p className="text-sm leading-relaxed text-on-surface">{stepText}</p>
+                    </li>
                   ))}
+                </ol>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-3xl border border-surface-variant/40 bg-surface-container-low p-4">
+                  <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-3">
+                    Hozzávalók
+                  </p>
+                  <ul className="space-y-2">
+                    {previewRecipe.ingredients.map((ingredient) => (
+                      <li key={ingredient} className="flex items-center gap-2 text-sm text-on-surface">
+                        <span className="material-symbols-outlined text-[16px] text-primary">check_circle</span>
+                        {ingredient}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-3xl border border-surface-variant/40 bg-gradient-to-br from-white to-surface-container-low p-4">
+                  <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-2">
+                    Gyors összefoglaló
+                  </p>
+                  <div className="space-y-2 text-sm text-on-surface-variant">
+                    <p>{previewRecipe.duration} perc alatt elkészíthető.</p>
+                    <p>{previewRecipe.ingredients.length} alapanyag kell hozzá.</p>
+                    <p>{previewRecipe.instructions.length} lépéses recept, külső oldal nélkül.</p>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-                {previewRecipe.sourceUrl ? (
-                  <a
-                    href={previewRecipe.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
-                  >
-                    Forrás megnyitása
-                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                  </a>
-                ) : (
-                  <span className="text-xs text-outline">Lokális recept</span>
-                )}
-
-                <button
-                  onClick={() => {
-                    setSelected(previewRecipe);
-                    setPreviewRecipe(null);
-                  }}
-                  className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(51,69,55,0.3)] hover:bg-primary/90 transition-colors flex items-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-[17px]">check</span>
-                  Ezt választom
-                </button>
-              </div>
+            <div className="border-t border-surface-variant/40 p-5 flex items-center justify-between gap-3">
+              <button
+                onClick={() => setPreviewRecipe(null)}
+                className="rounded-full border border-surface-variant px-5 py-2.5 text-sm font-semibold text-on-surface-variant hover:bg-surface-container"
+              >
+                Bezárás
+              </button>
+              <button
+                onClick={() => {
+                  setSelected(previewRecipe);
+                  setPreviewRecipe(null);
+                }}
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(51,69,55,0.3)] hover:bg-primary/90 transition-colors flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-[17px]">check</span>
+                Ezt választom
+              </button>
             </div>
           </div>
         </div>

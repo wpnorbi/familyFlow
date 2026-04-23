@@ -1,15 +1,19 @@
 export interface Recipe {
   id: string;
+  sourceId?: string;
   name: string;
   duration: number; // perc
   category: string;
-  protein: "csirke" | "hal" | "marha" | "vegetáriánus" | "egyéb";
+  protein: "csirke" | "hal" | "marha" | "sertés" | "vegetáriánus" | "egyéb";
   description: string;
   image?: string;
   ingredients: string[];
+  instructions: string[];
   tags?: string[];
-  source?: "local" | "hungarian-web";
+  source?: "local" | "hungarian-web" | "wikikonyvek" | "mek" | "user-import";
   sourceUrl?: string;
+  area?: string;
+  servings?: number;
 }
 
 // Egy főzési alkalom ami több napra szól

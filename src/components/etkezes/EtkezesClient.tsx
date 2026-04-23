@@ -7,8 +7,8 @@ import {
   getBatchRecipe,
   getUpcomingBatches,
 } from "@/lib/etkezes-data";
-import { loadMealBatches, loadShoppingItems, saveMealBatches, saveShoppingItems } from "@/lib/meal-store";
 import type { MealBatch, WeekDay } from "@/types/etkezes";
+import { useMealData } from "@/hooks/useMealData";
 
 import NextMealHero from "./NextMealHero";
 import WeekPlanner from "./WeekPlanner";
@@ -26,54 +26,42 @@ function getNextBatch(batches: MealBatch[], todayKey: string) {
 }
 
 export default function EtkezesClient() {
-  const [batches, setBatches] = useState<MealBatch[]>([]);
-  const [shoppingItems, setShoppingItems] = useState<string[]>([]);
+  const { mealBatches: batches, shoppingItems, updateMealData, hydrated } = useMealData();
   const [weekDays] = useState<WeekDay[]>(() => getWeekDays());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const todayKey = toDateKey(new Date());
   const nextMealData = getNextBatch(batches, todayKey);
 
-  const handleAddBatch = (batchData: Omit<MealBatch, "id">) => {
+  const handleAddBatch = async (batchData: Omit<MealBatch, "id">) => {
     const id = crypto.randomUUID();
-    setBatches((prev) => {
-      const next = [...prev, { id, ...batchData }];
-      saveMealBatches(next);
-      return next;
-    });
+    const nextBatches = [...batches, { id, ...batchData }];
 
     const recipe = batchData.recipeSnapshot;
+    let nextShoppingItems = shoppingItems;
+
     if (recipe) {
-      setShoppingItems((prev) => {
-        const existing = new Set(prev);
-        const toAdd = recipe.ingredients.filter((i) => !existing.has(i));
-        const next = toAdd.length ? [...prev, ...toAdd] : prev;
-        saveShoppingItems(next);
-        return next;
-      });
+      const existing = new Set(shoppingItems);
+      const toAdd = recipe.ingredients.filter((item) => !existing.has(item));
+      nextShoppingItems = toAdd.length ? [...shoppingItems, ...toAdd] : shoppingItems;
     }
+
+    await updateMealData(nextBatches, nextShoppingItems);
   };
 
-  const handleRemoveBatch = (batchId: string) => {
-    setBatches((prev) => {
-      const next = prev.filter((b) => b.id !== batchId);
-      saveMealBatches(next);
-      return next;
-    });
+  const handleRemoveBatch = async (batchId: string) => {
+    await updateMealData(
+      batches.filter((batch) => batch.id !== batchId),
+      shoppingItems,
+    );
   };
 
   useEffect(() => {
-    const hydrationTimer = window.setTimeout(() => {
-      setBatches(loadMealBatches());
-      setShoppingItems(loadShoppingItems());
-    }, 0);
-
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsModalOpen(false);
     };
     window.addEventListener("keydown", handler);
     return () => {
-      window.clearTimeout(hydrationTimer);
       window.removeEventListener("keydown", handler);
     };
   }, []);
@@ -97,6 +85,12 @@ export default function EtkezesClient() {
             Kaja hozzáadása
           </button>
         </div>
+
+        {!hydrated && (
+          <div className="rounded-2xl border border-surface-variant/50 bg-white px-4 py-3 text-sm text-outline">
+            Adatok betöltése…
+          </div>
+        )}
 
         {/* Hero */}
         <NextMealHero nextMealData={nextMealData} />

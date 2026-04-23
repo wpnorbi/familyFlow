@@ -30,6 +30,9 @@ Szükséges változók:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Az első kettő mehet kliensoldalra is. A `SUPABASE_SERVICE_ROLE_KEY` kizárólag szerveroldali env legyen, például Vercelben és a lokális `.env.local` fájlban.
 
 ## Jelenlegi adatkezelés
 
@@ -48,5 +51,5 @@ Ajánlott folyamat:
 1. Projekt feltöltése GitHub-ra
 2. GitHub repo importálása Vercelbe
 3. Ugyanazoknak az env változóknak a beállítása Vercelben
-4. Supabase adatbázis és táblák létrehozása
+4. A [supabase/schema.sql](/Users/vasnorbert/Work/FamilyFlow/supabase/schema.sql) futtatása a Supabase SQL Editorban
 5. Az aktuális `localStorage` alapú store-ok cseréje Supabase alapú mentésre

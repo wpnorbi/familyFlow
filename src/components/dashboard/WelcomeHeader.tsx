@@ -1,3 +1,5 @@
+import ThemeToggle from "@/components/ThemeToggle";
+
 const DAYS_HU = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
 const MONTHS_HU = [
   "jan.", "febr.", "már.", "ápr.", "máj.", "jún.",
@@ -32,6 +34,10 @@ export default function WelcomeHeader() {
         <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer">
           <span className="material-symbols-outlined text-[20px]">notifications</span>
         </button>
+        <ThemeToggle
+          iconOnly
+          className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer"
+        />
         <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer">
           <span className="material-symbols-outlined text-[20px]">settings</span>
         </button>

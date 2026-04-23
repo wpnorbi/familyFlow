@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { getBatchRecipe, getBatchesForDate, getUpcomingBatches, getWeekDays, toDateKey } from "@/lib/etkezes-data";
-import { loadMealBatches } from "@/lib/meal-store";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 import DinnerCard from "@/components/dashboard/DinnerCard";
 import MealsStrip from "@/components/dashboard/MealsStrip";
 import WeekendCard from "@/components/dashboard/WeekendCard";
+import { useMealData } from "@/hooks/useMealData";
 
 function getDashboardData(batches: MealBatch[]) {
   const today = new Date();
@@ -30,17 +29,7 @@ function getDashboardData(batches: MealBatch[]) {
 }
 
 export default function DashboardMeals() {
-  const [batches, setBatches] = useState<MealBatch[]>([]);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setBatches(loadMealBatches());
-      setHydrated(true);
-    }, 0);
-
-    return () => window.clearTimeout(timer);
-  }, []);
+  const { mealBatches: batches, hydrated } = useMealData();
 
   const { todayMeal, upcomingMeals } = hydrated
     ? getDashboardData(batches)

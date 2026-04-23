@@ -124,15 +124,13 @@ export default function NextMealHero({ nextMealData }: Props) {
           </div>
         )}
 
-        <div className="flex gap-3 mt-auto">
-          <a
-            href={recipe.sourceUrl ?? "#"}
-            target={recipe.sourceUrl ? "_blank" : undefined}
-            rel={recipe.sourceUrl ? "noreferrer" : undefined}
-            className="bg-primary text-white px-7 py-2.5 rounded-full text-sm font-bold hover:bg-primary/90 transition-opacity shadow-[0_4px_14px_rgba(51,69,55,0.25)] cursor-pointer"
-          >
-            Recept megnyitása
-          </a>
+        <div className="mt-auto rounded-2xl border border-surface-variant/50 bg-white/65 px-4 py-3">
+          <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">
+            Következő lépés
+          </p>
+          <p className="text-sm text-on-surface-variant">
+            A teljes recept a tervező felugró ablakában érhető el hozzávalókkal és elkészítési lépésekkel.
+          </p>
         </div>
       </div>
     </section>
