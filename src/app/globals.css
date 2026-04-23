@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === Háttér & Felület === */
+  --color-background: #fbf9f6;
+  --color-surface: #fbf9f6;
+  --color-surface-dim: #dbdad7;
+  --color-surface-bright: #fbf9f6;
+  --color-surface-variant: #e4e2e0;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f3f1;
+  --color-surface-container: #efeeeb;
+  --color-surface-container-high: #e9e8e5;
+  --color-surface-container-highest: #e4e2e0;
+  --color-surface-tint: #506354;
+  --color-on-surface: #1b1c1a;
+  --color-on-surface-variant: #434843;
+  --color-outline: #737872;
+  --color-outline-variant: #c3c8c1;
+  --color-inverse-surface: #30312f;
+  --color-inverse-on-surface: #f2f0ee;
+
+  /* === Elsődleges (Erdei zöld) === */
+  --color-primary: #334537;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #4a5d4e;
+  --color-on-primary-container: #c0d5c2;
+  --color-primary-fixed: #d3e8d5;
+  --color-primary-fixed-dim: #b7ccb9;
+  --color-on-primary-fixed: #0e1f13;
+  --color-on-primary-fixed-variant: #394b3d;
+  --color-inverse-primary: #b7ccb9;
+
+  /* === Másodlagos (Meleg terrakotta) === */
+  --color-secondary: #924b2d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fea27e;
+  --color-on-secondary-container: #77361b;
+  --color-secondary-fixed: #ffdbce;
+  --color-secondary-fixed-dim: #ffb599;
+  --color-on-secondary-fixed: #370e00;
+  --color-on-secondary-fixed-variant: #743419;
+
+  /* === Harmadlagos (Meleg szürke) === */
+  --color-tertiary: #44413b;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #5c5851;
+  --color-on-tertiary-container: #d5cec6;
+  --color-tertiary-fixed: #e8e1d9;
+  --color-tertiary-fixed-dim: #ccc6bd;
+  --color-on-tertiary-fixed: #1e1b16;
+  --color-on-tertiary-fixed-variant: #4a4640;
+
+  /* === Hiba (Piros) === */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* === Betűtípusok (mind Manrope) === */
+  --font-sans: Manrope, sans-serif;
+  --font-body-md: Manrope, sans-serif;
+  --font-body-lg: Manrope, sans-serif;
+  --font-display-xl: Manrope, sans-serif;
+  --font-headline-md: Manrope, sans-serif;
+  --font-headline-lg: Manrope, sans-serif;
+  --font-label-sm: Manrope, sans-serif;
+  --font-manrope: Manrope, sans-serif;
+
+  /* === Egyéni térközök === */
+  --spacing-gutter: 24px;
+  --spacing-section-gap: 80px;
+  --spacing-unit: 8px;
+  --spacing-stack-sm: 12px;
+  --spacing-stack-md: 24px;
+  --spacing-container-padding: 40px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* === Egyéni komponens stílusok === */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.ambient-shadow {
+  box-shadow:
+    0 20px 40px -10px rgba(74, 93, 78, 0.1),
+    0 4px 12px -4px rgba(74, 93, 78, 0.05);
 }
 
+/* === Alap stílusok === */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fbf9f6;
+  color: #1b1c1a;
+  font-family: Manrope, sans-serif;
+}
+
+::selection {
+  background-color: #4a5d4e;
+  color: #c0d5c2;
 }
