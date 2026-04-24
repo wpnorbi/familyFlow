@@ -8,6 +8,7 @@ export const DEFAULT_FAMILY_STATE: FamilyAppState = {
   schedule: DEFAULT_SCHEDULE,
   mealBatches: INITIAL_BATCHES,
   shoppingItems: [],
+  pantryItems: [],
 };
 
 function normalizeSchedule(schedule: unknown): WeeklySchedule {
@@ -79,6 +80,11 @@ function normalizeShoppingItems(input: unknown): string[] {
   return input.filter((item): item is string => typeof item === "string");
 }
 
+function normalizePantryItems(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+  return input.filter((item): item is string => typeof item === "string");
+}
+
 export function normalizeFamilyState(input: unknown): FamilyAppState {
   const data = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
 
@@ -86,6 +92,7 @@ export function normalizeFamilyState(input: unknown): FamilyAppState {
     schedule: normalizeSchedule(data.schedule),
     mealBatches: normalizeMealBatches(data.mealBatches),
     shoppingItems: normalizeShoppingItems(data.shoppingItems),
+    pantryItems: normalizePantryItems(data.pantryItems),
   };
 }
 
@@ -97,6 +104,7 @@ export function mergeFamilyState(
     schedule: patch.schedule ?? current.schedule,
     mealBatches: patch.mealBatches ?? current.mealBatches,
     shoppingItems: patch.shoppingItems ?? current.shoppingItems,
+    pantryItems: patch.pantryItems ?? current.pantryItems,
   });
 }
 
@@ -104,6 +112,6 @@ export function isDefaultSchedule(schedule: WeeklySchedule): boolean {
   return JSON.stringify(normalizeSchedule(schedule)) === JSON.stringify(DEFAULT_SCHEDULE);
 }
 
-export function hasMealData(mealBatches: MealBatch[], shoppingItems: string[]): boolean {
-  return mealBatches.length > 0 || shoppingItems.length > 0;
+export function hasMealData(mealBatches: MealBatch[], shoppingItems: string[], pantryItems: string[] = []): boolean {
+  return mealBatches.length > 0 || shoppingItems.length > 0 || pantryItems.length > 0;
 }

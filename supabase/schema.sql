@@ -3,9 +3,13 @@ create table if not exists public.app_state (
   schedule jsonb not null default '{}'::jsonb,
   meal_batches jsonb not null default '[]'::jsonb,
   shopping_items jsonb not null default '[]'::jsonb,
+  pantry_items jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );
+
+alter table public.app_state
+add column if not exists pantry_items jsonb not null default '[]'::jsonb;
 
 create or replace function public.set_updated_at()
 returns trigger

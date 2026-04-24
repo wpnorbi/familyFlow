@@ -5,4 +5,5 @@ export interface FamilyAppState {
   schedule: WeeklySchedule;
   mealBatches: MealBatch[];
   shoppingItems: string[];
+  pantryItems: string[];
 }

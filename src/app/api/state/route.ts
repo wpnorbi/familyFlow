@@ -13,6 +13,7 @@ type AppStateRow = {
   schedule: unknown;
   meal_batches: unknown;
   shopping_items: unknown;
+  pantry_items: unknown;
 };
 
 function rowToState(row: AppStateRow | null): FamilyAppState {
@@ -22,6 +23,7 @@ function rowToState(row: AppStateRow | null): FamilyAppState {
     schedule: row.schedule,
     mealBatches: row.meal_batches,
     shoppingItems: row.shopping_items,
+    pantryItems: row.pantry_items,
   });
 }
 
@@ -41,7 +43,7 @@ export async function GET() {
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("app_state")
-      .select("id, schedule, meal_batches, shopping_items")
+      .select("id, schedule, meal_batches, shopping_items, pantry_items")
       .eq("id", ROW_ID)
       .maybeSingle<AppStateRow>();
 
@@ -71,7 +73,7 @@ export async function PUT(request: Request) {
 
     const { data: existingRow, error: readError } = await supabase
       .from("app_state")
-      .select("id, schedule, meal_batches, shopping_items")
+      .select("id, schedule, meal_batches, shopping_items, pantry_items")
       .eq("id", ROW_ID)
       .maybeSingle<AppStateRow>();
 
@@ -89,6 +91,7 @@ export async function PUT(request: Request) {
         schedule: nextState.schedule,
         meal_batches: nextState.mealBatches,
         shopping_items: nextState.shoppingItems,
+        pantry_items: nextState.pantryItems,
       },
       { onConflict: "id" },
     );

@@ -40,10 +40,10 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body
-        className={`${manrope.className} flex min-h-screen w-full bg-background text-on-background antialiased`}
+        className={`${manrope.className} flex min-h-screen w-full overflow-x-hidden bg-background text-on-background antialiased`}
       >
         <SideNav />
-        <main className="flex-1 md:ml-28 flex flex-col min-h-screen">
+        <main className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden md:ml-28">
           {children}
         </main>
       </body>

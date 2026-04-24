@@ -1,8 +1,10 @@
+import curatedWebRaw from "@/lib/recipes/seeds/curated-web.raw.json";
+import { mapCuratedWebRecipe } from "@/lib/recipes/curated-web.adapter";
 import mekRaw from "@/lib/recipes/seeds/mek.raw.json";
 import wikikonyvekRaw from "@/lib/recipes/seeds/wikikonyvek.raw.json";
 import { mapMekRecipe } from "@/lib/recipes/mek.adapter";
 import { dedupeSeedCatalog, normalizeSeedRecord } from "@/lib/recipes/seed.normalizer";
-import type { MekRecipeDTO, WikikonyvekRecipeDTO } from "@/lib/recipes/seed.types";
+import type { CuratedWebRecipeDTO, MekRecipeDTO, WikikonyvekRecipeDTO } from "@/lib/recipes/seed.types";
 import { mapWikikonyvekRecipe } from "@/lib/recipes/wikikonyvek.adapter";
 import type { Recipe } from "@/types/etkezes";
 
@@ -19,6 +21,10 @@ export function getHungarianSeedCatalog(): Recipe[] {
     .map(mapMekRecipe)
     .map(normalizeSeedRecord);
 
-  cachedCatalog = dedupeSeedCatalog([...wikikonyvekRecipes, ...mekRecipes]);
+  const curatedWebRecipes = (curatedWebRaw as CuratedWebRecipeDTO[])
+    .map(mapCuratedWebRecipe)
+    .map(normalizeSeedRecord);
+
+  cachedCatalog = dedupeSeedCatalog([...wikikonyvekRecipes, ...mekRecipes, ...curatedWebRecipes]);
   return cachedCatalog;
 }

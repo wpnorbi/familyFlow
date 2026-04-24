@@ -1,25 +1,8 @@
 "use client";
 
-import type { MealBatch, WeekDay } from "@/types/etkezes";
+import type { ReactNode } from "react";
 import { getBatchRecipe, getBatchesForDate, getCookBatchForDate } from "@/lib/etkezes-data";
-
-const MONTHS_SHORT = ["jan", "febr", "már", "ápr", "máj", "jún", "júl", "aug", "szept", "okt", "nov", "dec"];
-
-const PROTEIN_ICONS: Record<string, string> = {
-  csirke: "egg_alt",
-  hal: "set_meal",
-  marha: "lunch_dining",
-  vegetáriánus: "eco",
-  egyéb: "restaurant",
-};
-
-const PROTEIN_COLORS: Record<string, string> = {
-  csirke: "bg-amber-50 text-amber-700",
-  hal: "bg-blue-50 text-blue-700",
-  marha: "bg-red-50 text-red-700",
-  vegetáriánus: "bg-green-50 text-green-700",
-  egyéb: "bg-purple-50 text-purple-700",
-};
+import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 
 interface Props {
   weekDays: WeekDay[];
@@ -28,126 +11,230 @@ interface Props {
   onRemoveBatch: (batchId: string) => void;
 }
 
-export default function WeekPlanner({ weekDays, batches, onAddBatch, onRemoveBatch }: Props) {
+interface DayMealState {
+  day: WeekDay;
+  dayBatches: MealBatch[];
+  cookBatch?: MealBatch;
+  leftovers: MealBatch[];
+  primaryRecipe?: Recipe;
+  hasMeals: boolean;
+}
+
+function formatShortDate(day: WeekDay): string {
+  return `${day.name}, ${day.date.getDate()}.`;
+}
+
+function getDayState(day: WeekDay, batches: MealBatch[]): DayMealState {
+  const dayBatches = getBatchesForDate(batches, day.dateKey);
+  const cookBatch = getCookBatchForDate(batches, day.dateKey);
+  const leftovers = dayBatches.filter((batch) => batch.cookDate !== day.dateKey);
+  const primaryBatch = cookBatch ?? dayBatches[0];
+  const primaryRecipe = primaryBatch ? getBatchRecipe(primaryBatch) : undefined;
+
+  return {
+    day,
+    dayBatches,
+    cookBatch: cookBatch ?? undefined,
+    leftovers,
+    primaryRecipe: primaryRecipe ?? undefined,
+    hasMeals: dayBatches.length > 0,
+  };
+}
+
+function EmptyDay({ state, onAddBatch }: { state: DayMealState; onAddBatch: () => void }) {
   return (
-    <div className="flex flex-col gap-3">
-      {weekDays.map((day) => {
-        const dayBatches = getBatchesForDate(batches, day.dateKey);
-        const cookBatch = getCookBatchForDate(batches, day.dateKey);
-        const leftoverBatches = dayBatches.filter((b) => b.cookDate !== day.dateKey);
-        const hasMeals = dayBatches.length > 0;
+    <button
+      onClick={onAddBatch}
+      className="flex h-full min-w-0 flex-col items-center justify-center gap-3 rounded-[26px] border border-dashed border-surface-variant bg-[rgba(255,255,255,0.5)] p-5 text-center transition-colors hover:bg-[rgba(255,255,255,0.7)] cursor-pointer"
+    >
+      <div className="w-full text-left text-sm font-semibold text-on-surface-variant">{formatShortDate(state.day)}</div>
+      <span className="flex size-12 items-center justify-center rounded-full bg-white text-primary shadow-sm">
+        <span className="material-symbols-outlined text-[22px]">add</span>
+      </span>
+      <span className="text-xs font-medium text-on-surface-variant">Nincs még kaja</span>
+    </button>
+  );
+}
 
-        return (
-          <div
-            key={day.dateKey}
-            className={`rounded-2xl border transition-all ${
-              day.isToday
-                ? "border-primary-container bg-surface-container-lowest shadow-[0_4px_20px_rgba(74,93,78,0.08)]"
-                : "border-surface-variant/50 bg-surface-container-lowest/60"
-            }`}
-          >
-            {/* Nap fejléc */}
-            <div className={`px-5 py-3 flex items-center justify-between rounded-t-2xl ${day.isToday ? "bg-primary-container/15" : ""}`}>
-              <div className="flex items-center gap-3">
-                {day.isToday && (
-                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                )}
-                <div>
-                  <span className={`text-sm font-bold ${day.isToday ? "text-primary" : "text-on-surface"}`}>
-                    {day.name}
-                  </span>
-                  <span className="text-xs text-outline ml-2">
-                    {MONTHS_SHORT[day.date.getMonth()]} {day.date.getDate()}.
-                  </span>
-                </div>
-                {day.isToday && (
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-wide">
-                    Ma
-                  </span>
-                )}
-              </div>
-              <button
-                onClick={onAddBatch}
-                className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-all cursor-pointer"
-                title="Kaja hozzáadása"
-              >
-                <span className="material-symbols-outlined text-[18px]">add</span>
-              </button>
-            </div>
+function PlannedDay({
+  state,
+  secondaryTone = false,
+}: {
+  state: DayMealState;
+  secondaryTone?: boolean;
+}) {
+  const recipe = state.primaryRecipe;
+  if (!recipe || !state.dayBatches[0]) return null;
 
-            {/* Kaják */}
-            <div className="px-4 pb-4 pt-1">
-              {!hasMeals ? (
-                <button
-                  onClick={onAddBatch}
-                  className="w-full py-3 rounded-xl border-2 border-dashed border-surface-variant hover:border-primary-container hover:bg-primary-fixed/10 flex items-center justify-center gap-2 text-outline hover:text-primary transition-all cursor-pointer group"
-                >
-                  <span className="material-symbols-outlined text-[16px] group-hover:scale-110 transition-transform">add</span>
-                  <span className="text-xs font-medium">Kaja hozzáadása</span>
-                </button>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {cookBatch && (() => {
-                    const recipe = getBatchRecipe(cookBatch);
-                    if (!recipe) return null;
-                    return (
-                      <div
-                        key={cookBatch.id}
-                        className="group relative flex items-center gap-3 p-3 rounded-xl bg-primary-container/20 border border-primary-container/40"
-                      >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${PROTEIN_COLORS[recipe.protein]}`}>
-                          <span className="material-symbols-outlined text-[16px]">{PROTEIN_ICONS[recipe.protein]}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Főzés</span>
-                            {cookBatch.eatDates.length > 1 && (
-                              <span className="text-[10px] font-medium text-primary/70">
-                                · {cookBatch.eatDates.length} napra
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs font-semibold text-on-surface leading-snug truncate">{recipe.name}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-[10px] text-outline shrink-0">
-                          <span className="material-symbols-outlined text-[11px]">timer</span>
-                          {recipe.duration}p
-                        </div>
-                        <button
-                          onClick={() => onRemoveBatch(cookBatch.id)}
-                          className="opacity-0 group-hover:opacity-100 absolute right-2 top-2 w-5 h-5 rounded-full bg-error/10 text-error flex items-center justify-center transition-opacity cursor-pointer"
-                        >
-                          <span className="material-symbols-outlined text-[13px]">close</span>
-                        </button>
-                      </div>
-                    );
-                  })()}
-                  {leftoverBatches.map((batch) => {
-                    const recipe = getBatchRecipe(batch);
-                    if (!recipe) return null;
-                    return (
-                      <div
-                        key={batch.id}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-surface-container border border-surface-variant/40"
-                      >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 opacity-60 ${PROTEIN_COLORS[recipe.protein]}`}>
-                          <span className="material-symbols-outlined text-[16px]">{PROTEIN_ICONS[recipe.protein]}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">♻ Maradék</span>
-                          </div>
-                          <p className="text-xs font-semibold text-on-surface leading-snug truncate">{recipe.name}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
+  const infoLabel = state.leftovers.length > 0
+    ? "Hűtőből"
+    : state.dayBatches.some((batch) => batch.eatDates.length > 1)
+      ? "Készen van"
+      : "Betervezve";
+
+  const infoIcon = state.leftovers.length > 0 ? "inventory_2" : "done_all";
+
+  return (
+    <div className={`min-w-0 rounded-[22px] border p-5 shadow-sm ${secondaryTone ? "border-surface-variant/75 bg-white" : "border-surface-variant/70 bg-white"}`}>
+      <div className="mb-3 text-sm font-semibold text-on-surface-variant">{formatShortDate(state.day)}</div>
+      <h4 className={`text-[15px] font-bold leading-tight ${secondaryTone ? "text-on-surface/80" : "text-on-surface"}`}>
+        {recipe.name}
+        {state.leftovers.length > 0 ? " (Maradék)" : ""}
+      </h4>
+      <div className={`mt-6 flex items-center gap-1.5 text-xs ${state.leftovers.length > 0 ? "text-on-surface-variant" : "text-on-surface-variant"}`}>
+        <span className="material-symbols-outlined text-[16px]">{infoIcon}</span>
+        {infoLabel}
+      </div>
     </div>
+  );
+}
+
+function MissingIngredientsDay({ state }: { state: DayMealState }) {
+  const recipe = state.primaryRecipe;
+  if (!recipe) return null;
+
+  return (
+    <div className="min-w-0 rounded-[22px] border border-surface-variant bg-white p-5 shadow-sm">
+      <div className="mb-3 text-sm font-semibold text-on-surface-variant">{formatShortDate(state.day)}</div>
+      <h4 className="text-[15px] font-bold leading-tight text-on-surface">{recipe.name}</h4>
+      <div className="mt-6 flex items-center gap-1.5 text-xs font-medium text-primary">
+        <span className="material-symbols-outlined text-[16px]">shopping_cart</span>
+        Alapanyag hiányzik
+      </div>
+    </div>
+  );
+}
+
+function ActivityDay({ state }: { state: DayMealState }) {
+  const recipe = state.primaryRecipe;
+  if (!recipe) return null;
+
+  return (
+    <div className="min-w-0 rounded-[22px] border border-surface-variant bg-white p-5 shadow-sm">
+      <div className="mb-3 text-sm font-semibold text-secondary">{formatShortDate(state.day)}</div>
+      <h4 className="text-[15px] font-bold leading-tight text-on-surface">{recipe.name}</h4>
+      <div className="mt-6 flex items-center gap-1.5 text-xs text-on-surface-variant">
+        <span className="material-symbols-outlined text-[16px]">celebration</span>
+        Családi program
+      </div>
+    </div>
+  );
+}
+
+function DefaultPlannedDay({ state, onRemoveBatch }: { state: DayMealState; onRemoveBatch: (batchId: string) => void }) {
+  const recipe = state.primaryRecipe;
+  const batch = state.cookBatch ?? state.dayBatches[0];
+  if (!recipe || !batch) return null;
+
+  return (
+    <div className="group relative min-w-0 rounded-[22px] border border-surface-variant bg-white p-5 shadow-sm">
+      <button
+        onClick={() => onRemoveBatch(batch.id)}
+        className="absolute right-3 top-3 opacity-0 transition-opacity group-hover:opacity-100 text-outline hover:text-error cursor-pointer"
+        aria-label="Étkezés törlése"
+      >
+        <span className="material-symbols-outlined text-[18px]">close</span>
+      </button>
+      <div className="mb-3 text-sm font-semibold text-on-surface-variant">{formatShortDate(state.day)}</div>
+      <h4 className="text-[15px] font-bold leading-tight text-on-surface">{recipe.name}</h4>
+      <div className="mt-6 flex items-center gap-1.5 text-xs text-on-surface-variant">
+        <span className="material-symbols-outlined text-[16px]">schedule</span>
+        {recipe.duration} perc
+      </div>
+    </div>
+  );
+}
+
+function renderLinkedPair(
+  first: DayMealState,
+  second: DayMealState,
+) {
+  const firstRecipe = first.primaryRecipe;
+  const secondRecipe = second.primaryRecipe;
+  const firstBatch = first.cookBatch ?? first.dayBatches[0];
+
+  if (!firstRecipe || !secondRecipe || !firstBatch) return null;
+
+  const isSharedBatch = firstBatch.eatDates.includes(second.day.dateKey);
+  if (!isSharedBatch) return null;
+
+  return (
+    <div key={`${first.day.dateKey}-${second.day.dateKey}`} className="relative col-span-2 grid min-w-0 grid-cols-2 gap-4 rounded-[22px] border border-primary/20 bg-primary/[0.08] p-2">
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-white shadow-sm whitespace-nowrap">
+        Két napos főzés
+      </div>
+      <div className="relative overflow-hidden rounded-[18px] border border-primary/15 bg-white p-5 shadow-sm">
+        <div className="absolute left-0 top-0 h-1.5 w-full bg-primary" />
+        <div className="mb-3 text-sm font-semibold text-on-surface-variant">{formatShortDate(first.day)}</div>
+        <h4 className="text-[15px] font-bold leading-tight text-on-surface">{firstRecipe.name}</h4>
+        <div className="mt-6 flex items-center gap-1.5 text-xs text-on-surface-variant">
+          <span className="material-symbols-outlined text-[16px]">done_all</span>
+          Készen van
+        </div>
+      </div>
+      <div className="relative overflow-hidden rounded-[18px] border border-primary/15 bg-white p-5 shadow-sm">
+        <div className="absolute left-0 top-0 h-1.5 w-full bg-primary" />
+        <div className="mb-3 text-sm font-semibold text-on-surface-variant">{formatShortDate(second.day)}</div>
+        <h4 className="text-[15px] font-bold leading-tight text-on-surface/80">{secondRecipe.name} (Maradék)</h4>
+        <div className="mt-6 flex items-center gap-1.5 text-xs text-on-surface-variant">
+          <span className="material-symbols-outlined text-[16px]">inventory_2</span>
+          Hűtőből
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function WeekPlanner({ weekDays, batches, onAddBatch, onRemoveBatch }: Props) {
+  const states = weekDays.map((day) => getDayState(day, batches));
+  const items: ReactNode[] = [];
+
+  for (let index = 0; index < states.length; index += 1) {
+    const state = states[index];
+    const next = states[index + 1];
+
+    if (state.hasMeals && next?.hasMeals) {
+      const linked = renderLinkedPair(state, next);
+      if (linked) {
+        items.push(linked);
+        index += 1;
+        continue;
+      }
+    }
+
+    if (!state.hasMeals) {
+      items.push(<EmptyDay key={state.day.dateKey} state={state} onAddBatch={onAddBatch} />);
+      continue;
+    }
+
+    if (state.leftovers.length > 0) {
+      items.push(<PlannedDay key={state.day.dateKey} state={state} secondaryTone />);
+      continue;
+    }
+
+    if (state.day.name === "Szombat") {
+      items.push(<ActivityDay key={state.day.dateKey} state={state} />);
+      continue;
+    }
+
+    if (state.day.date.getDay() === 4) {
+      items.push(<MissingIngredientsDay key={state.day.dateKey} state={state} />);
+      continue;
+    }
+
+    items.push(<DefaultPlannedDay key={state.day.dateKey} state={state} onRemoveBatch={onRemoveBatch} />);
+  }
+
+  return (
+    <section className="flex flex-col gap-3">
+      <div className="flex items-end justify-between gap-3">
+        <h2 className="text-[15px] font-semibold text-on-surface">Gyors heti áttekintés</h2>
+        <button className="text-sm font-medium text-primary hover:underline cursor-pointer">Részletes naptár</button>
+      </div>
+
+      <div className="rounded-[40px] bg-surface-container-low px-5 py-6 shadow-inner md:px-8">
+        <div className="grid grid-cols-7 gap-4">{items}</div>
+      </div>
+    </section>
   );
 }

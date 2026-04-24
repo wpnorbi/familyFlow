@@ -3,6 +3,7 @@ import { INITIAL_BATCHES } from "@/lib/etkezes-data";
 
 const BATCHES_STORAGE_KEY = "familyflow_meal_batches";
 const SHOPPING_STORAGE_KEY = "familyflow_shopping_items";
+const PANTRY_STORAGE_KEY = "familyflow_pantry_items";
 
 export function loadMealBatches(): MealBatch[] {
   if (typeof window === "undefined") return INITIAL_BATCHES;
@@ -34,4 +35,20 @@ export function loadShoppingItems(): string[] {
 export function saveShoppingItems(items: string[]): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(SHOPPING_STORAGE_KEY, JSON.stringify(items));
+}
+
+export function loadPantryItems(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(PANTRY_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as string[];
+  } catch {
+    return [];
+  }
+}
+
+export function savePantryItems(items: string[]): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(PANTRY_STORAGE_KEY, JSON.stringify(items));
 }

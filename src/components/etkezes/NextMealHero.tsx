@@ -1,4 +1,6 @@
 import type { Recipe, MealBatch } from "@/types/etkezes";
+import RecipeImage from "@/components/etkezes/RecipeImage";
+import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
 
 interface NextMealData {
   recipe: Recipe;
@@ -9,128 +11,150 @@ interface NextMealData {
 
 interface Props {
   nextMealData: NextMealData | null;
+  pantryItems: string[];
+  shoppingItems: string[];
+  plannedDaysCount: number;
+  openDaysCount: number;
+  onAddMeal: () => void;
+  onStartCooking?: (recipe: Recipe) => void;
+  onViewRecipe?: (recipe: Recipe) => void;
 }
 
 const MONTHS = ["jan.", "febr.", "már.", "ápr.", "máj.", "jún.", "júl.", "aug.", "szept.", "okt.", "nov.", "dec."];
 
-const PROTEIN_ICONS: Record<string, string> = {
-  csirke: "egg_alt",
-  hal: "set_meal",
-  marha: "lunch_dining",
-  vegetáriánus: "eco",
-  egyéb: "restaurant",
-};
+function getDifficultyLabel(duration: number): string {
+  if (duration <= 20) return "Könnyű";
+  if (duration <= 40) return "Közepes nehézség";
+  return "Komolyabb főzés";
+}
 
-const PROTEIN_GRADIENTS: Record<string, string> = {
-  csirke: "from-amber-100 via-amber-50 to-orange-50",
-  hal: "from-blue-100 via-blue-50 to-cyan-50",
-  marha: "from-red-100 via-red-50 to-rose-50",
-  vegetáriánus: "from-green-100 via-green-50 to-emerald-50",
-  egyéb: "from-purple-100 via-purple-50 to-violet-50",
-};
+function getMealMomentLabel(isCookDay: boolean, dateLabel: string): string {
+  return isCookDay ? "Ma, vacsora" : `${dateLabel}, étkezés`;
+}
 
-const PROTEIN_ICON_COLORS: Record<string, string> = {
-  csirke: "text-amber-400",
-  hal: "text-blue-400",
-  marha: "text-red-400",
-  vegetáriánus: "text-green-400",
-  egyéb: "text-purple-400",
-};
+function TinyStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-full border border-white/55 bg-white/82 px-2.5 py-1 text-[10px] font-semibold text-on-surface shadow-[0_8px_14px_-12px_rgba(21,36,28,0.35)]">
+      <span className="text-outline">{label}</span> {value}
+    </div>
+  );
+}
 
-export default function NextMealHero({ nextMealData }: Props) {
+export default function NextMealHero({
+  nextMealData,
+  pantryItems,
+  shoppingItems,
+  plannedDaysCount,
+  openDaysCount,
+  onAddMeal,
+  onStartCooking,
+  onViewRecipe,
+}: Props) {
   if (!nextMealData) {
     return (
-      <section className="bg-surface-container rounded-2xl p-8 border border-dashed border-surface-variant flex flex-col items-center justify-center text-center min-h-[180px] gap-3">
-        <span className="material-symbols-outlined text-4xl text-outline">restaurant</span>
-        <div>
-          <p className="font-semibold text-on-surface mb-1">Még nincs tervezett kaja ezen a héten</p>
-          <p className="text-sm text-on-surface-variant">
-            Kattints a &ldquo;Kaja hozzáadása&rdquo; gombra a tervezés megkezdéséhez.
-          </p>
+      <section className="rounded-[28px] border border-primary/20 bg-[linear-gradient(135deg,rgba(214,227,212,0.52),rgba(255,255,255,0.98)_35%,rgba(247,243,238,0.95)_100%)] px-4 py-3.5 shadow-[0_24px_36px_-26px_rgba(37,55,43,0.35)]">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-outline">Következő étkezés</p>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <h1 className="text-lg font-bold text-on-surface">Még nincs betervezve semmi</h1>
+              <TinyStat label="Heti terv" value={`${plannedDaysCount}/7 nap`} />
+              <TinyStat label="Nyitott" value={`${openDaysCount} nap`} />
+              <TinyStat label="Lista" value={`${shoppingItems.length} tétel`} />
+            </div>
+            <p className="mt-1.5 text-xs text-on-surface-variant">
+              Válassz egy ebédet vagy vacsorát, és már indulhat is a hét.
+            </p>
+          </div>
+
+          <button
+            onClick={onAddMeal}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-primary/15 bg-primary px-4 py-2 text-xs font-bold text-white shadow-[0_12px_18px_-16px_rgba(51,69,55,0.6)] transition-colors hover:bg-primary/90 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[15px]">add</span>
+            Kaja hozzáadása
+          </button>
         </div>
       </section>
     );
   }
 
   const { recipe, batch, nextEatDate, isCookDay } = nextMealData;
-  const [y, m, d] = nextEatDate.split("-").map(Number);
-  const dateObj = new Date(y, m - 1, d);
-  const dateStr = `${MONTHS[dateObj.getMonth()]} ${dateObj.getDate()}.`;
+  const [eatYear, eatMonth, eatDay] = nextEatDate.split("-").map(Number);
+  const eatDateObj = new Date(eatYear, eatMonth - 1, eatDay);
+  const eatDateLabel = `${MONTHS[eatDateObj.getMonth()]} ${eatDateObj.getDate()}.`;
+  const coveredDays = batch.eatDates.length;
+  const pantryMatch = rankRecipesForPantry([recipe], pantryItems)[0];
+  const missingCount = pantryMatch?.missingIngredients.length ?? recipe.ingredients.length;
+  const servings = recipe.servings ?? 4;
+  const handleViewRecipe = () => {
+    if (onViewRecipe) onViewRecipe(recipe);
+  };
+  const handleStartCooking = () => {
+    if (onStartCooking) onStartCooking(recipe);
+  };
 
   return (
-    <section className="bg-surface-container-lowest rounded-2xl shadow-[0_20px_60px_-15px_rgba(74,93,78,0.08)] overflow-hidden flex flex-col lg:flex-row border border-surface-variant/30 group">
-      {/* Vizuális panel */}
-      <div
-        className={`w-full lg:w-2/5 min-h-[220px] lg:min-h-[260px] relative bg-gradient-to-br ${PROTEIN_GRADIENTS[recipe.protein]} overflow-hidden shrink-0 flex items-center justify-center`}
-      >
-        <span
-          className={`material-symbols-outlined text-[140px] ${PROTEIN_ICON_COLORS[recipe.protein]} opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-700`}
-          style={{ fontVariationSettings: "'FILL' 0, 'wght' 100" }}
-        >
-          {PROTEIN_ICONS[recipe.protein]}
-        </span>
-
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-[11px] font-bold text-primary uppercase tracking-widest">
-            {isCookDay ? "Ma főzöl" : "Következő"} · {dateStr}
-          </span>
-        </div>
-
-        {!isCookDay && (
-          <div className="absolute bottom-4 left-4 bg-secondary-container/80 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-            <span className="material-symbols-outlined text-[14px] text-on-secondary-container">takeout_dining</span>
-            <span className="text-[11px] font-bold text-on-secondary-container">Maradék</span>
+    <section className="flex flex-col gap-3">
+      <h2 className="text-[15px] font-semibold text-on-surface">Következő étkezés</h2>
+      <div className="overflow-hidden rounded-[32px] border border-surface-variant/80 bg-white shadow-[0_10px_30px_rgba(34,27,19,0.06)]">
+        <div className="grid gap-4 p-4 md:p-5 lg:grid-cols-[208px_minmax(0,1fr)] lg:items-center lg:gap-6">
+          <div className="relative h-36 overflow-hidden rounded-[22px] border border-white/75 shadow-[0_14px_24px_-18px_rgba(24,39,31,0.32)]">
+            <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/28 via-black/8 to-transparent" />
           </div>
-        )}
-      </div>
 
-      {/* Tartalom */}
-      <div className="p-7 lg:p-10 flex flex-col justify-center flex-1">
-        <div className="flex items-center gap-3 mb-3">
-          <span
-            className={`px-3 py-1 rounded-full text-[12px] font-bold ${
-              isCookDay
-                ? "bg-primary-fixed text-on-primary-fixed-variant"
-                : "bg-secondary-fixed text-on-secondary-fixed-variant"
-            }`}
-          >
-            {isCookDay ? `Főzés · ${recipe.duration} perc` : "Maradék"}
-          </span>
-          {batch.eatDates.length > 1 && isCookDay && (
-            <span className="text-outline text-sm flex items-center gap-1">
-              <span className="material-symbols-outlined text-[16px]">event_repeat</span>
-              {batch.eatDates.length} napra elég
-            </span>
-          )}
-        </div>
-
-        <h2 className="text-2xl lg:text-3xl font-bold text-on-background mb-3 leading-tight">
-          {recipe.name}
-        </h2>
-
-        <p className="text-on-surface-variant mb-5 leading-relaxed">{recipe.description}</p>
-
-        {isCookDay && (
-          <div className="flex flex-wrap gap-1.5 mb-6">
-            {recipe.ingredients.map((ing) => (
-              <span
-                key={ing}
-                className="px-2.5 py-1 bg-surface-container rounded-full text-[11px] font-medium text-on-surface-variant border border-surface-variant/50"
-              >
-                {ing}
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-[rgba(255,151,122,0.18)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[rgb(158,78,54)]">
+                {getMealMomentLabel(isCookDay, eatDateLabel)}
               </span>
-            ))}
-          </div>
-        )}
+              <TinyStat label="Terv" value={`${plannedDaysCount}/7 nap`} />
+              <TinyStat label="Nyitott" value={`${openDaysCount} nap`} />
+            </div>
 
-        <div className="mt-auto rounded-2xl border border-surface-variant/50 bg-white/65 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">
-            Következő lépés
-          </p>
-          <p className="text-sm text-on-surface-variant">
-            A teljes recept a tervező felugró ablakában érhető el hozzávalókkal és elkészítési lépésekkel.
-          </p>
+            <h3 className="mt-3 text-[24px] font-semibold leading-tight text-on-surface">{recipe.name}</h3>
+            <p className="mt-1.5 max-w-2xl line-clamp-2 text-sm leading-relaxed text-on-surface-variant">{recipe.description}</p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-on-surface-variant">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px]">schedule</span>
+                {recipe.duration} perc
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px]">restaurant</span>
+                {getDifficultyLabel(recipe.duration)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px]">group</span>
+                {servings} adag
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[17px]">shopping_basket</span>
+                {missingCount} hiányzik
+              </span>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2.5">
+              <button
+                onClick={handleStartCooking}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[0_14px_24px_-20px_rgba(51,69,55,0.6)] transition-colors hover:bg-primary/90 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[17px]">play_arrow</span>
+                Főzés indítása
+              </button>
+              <button
+                onClick={handleViewRecipe}
+                className="inline-flex items-center justify-center rounded-full border border-primary/30 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/[0.06] cursor-pointer"
+              >
+                Recept megtekintése
+              </button>
+            </div>
+
+            <p className="mt-3 text-xs text-on-surface-variant">
+              {shoppingItems.length} tétel vár a bevásárlólistán, ez a recept {coveredDays} napra szól.
+            </p>
+          </div>
         </div>
       </div>
     </section>

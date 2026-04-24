@@ -1,48 +1,13 @@
 "use client";
 
+import RecipeImage from "@/components/etkezes/RecipeImage";
 import { useEffect, useMemo, useState } from "react";
 import { getBatchRecipe } from "@/lib/etkezes-data";
 import { useMealData } from "@/hooks/useMealData";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 
-const CARD_LIMIT = 4;
+const CARD_LIMIT = 3;
 const MIN_HISTORY_FOR_PERSONALIZATION = 4;
-
-const PROTEIN_ICONS: Record<string, string> = {
-  csirke: "egg_alt",
-  hal: "set_meal",
-  marha: "lunch_dining",
-  sertés: "nutrition",
-  vegetáriánus: "eco",
-  egyéb: "restaurant",
-};
-
-const PROTEIN_GRADIENTS: Record<string, string> = {
-  csirke: "from-amber-100 to-amber-200",
-  hal: "from-blue-100 to-blue-200",
-  marha: "from-red-100 to-red-200",
-  sertés: "from-pink-100 to-rose-200",
-  vegetáriánus: "from-green-100 to-green-200",
-  egyéb: "from-purple-100 to-purple-200",
-};
-
-const PROTEIN_ICON_COLORS: Record<string, string> = {
-  csirke: "text-amber-500",
-  hal: "text-blue-500",
-  marha: "text-red-500",
-  sertés: "text-pink-500",
-  vegetáriánus: "text-green-500",
-  egyéb: "text-purple-500",
-};
-
-const PROTEIN_LABELS: Record<string, string> = {
-  csirke: "Csirke",
-  hal: "Hal",
-  marha: "Marha",
-  sertés: "Sertés",
-  vegetáriánus: "Vegetáriánus",
-  egyéb: "Egyéb",
-};
 
 function toDaySeed(): number {
   const today = new Date();
@@ -143,43 +108,67 @@ function getRecommendedRecipes(catalog: Recipe[], batches: MealBatch[]): { recip
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   return (
-    <div className="group cursor-pointer">
-      <div
-        className={`aspect-[4/5] rounded-2xl mb-3 relative bg-gradient-to-br ${PROTEIN_GRADIENTS[recipe.protein]} flex items-center justify-center overflow-hidden border border-surface-variant/30 group-hover:shadow-lg transition-shadow`}
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.75),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.45),transparent_40%)]" />
-        <span
-          className={`material-symbols-outlined text-[90px] ${PROTEIN_ICON_COLORS[recipe.protein]} opacity-30 group-hover:opacity-45 group-hover:scale-110 transition-all duration-500`}
-          style={{ fontVariationSettings: "'FILL' 0, 'wght' 100" }}
-        >
-          {PROTEIN_ICONS[recipe.protein]}
-        </span>
-
-        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-          <span className="material-symbols-outlined text-[13px] text-surface-tint">timer</span>
-          <span className="text-xs font-bold text-on-background">{recipe.duration} p</span>
-        </div>
-
-        <div className={`absolute bottom-3 left-3 bg-gradient-to-r ${PROTEIN_GRADIENTS[recipe.protein]} px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm border border-white/50`}>
-          <span className={`material-symbols-outlined text-[13px] ${PROTEIN_ICON_COLORS[recipe.protein]}`}>
-            {PROTEIN_ICONS[recipe.protein]}
-          </span>
-          <span className={`text-xs font-bold ${PROTEIN_ICON_COLORS[recipe.protein]}`}>
-            {PROTEIN_LABELS[recipe.protein]}
-          </span>
+    <article className="group overflow-hidden rounded-[18px] border border-surface-variant bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,243,238,0.93))] shadow-[0_10px_18px_-24px_rgba(34,27,19,0.18)] transition-all hover:border-primary/25 hover:shadow-[0_14px_22px_-24px_rgba(37,55,43,0.22)]">
+      <div className="relative aspect-[4/2.55] overflow-hidden">
+        <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(18,24,20,0.12),rgba(18,24,20,0.02))]" />
+        <div className="absolute top-2.5 right-2.5 rounded-full bg-white/90 p-1 text-on-surface shadow-sm">
+          <span className="material-symbols-outlined text-[16px]">favorite_border</span>
         </div>
       </div>
-
-      <h4 className="font-semibold text-on-background mb-1 leading-snug group-hover:text-primary transition-colors text-sm">
-        {recipe.name}
-      </h4>
-      <p className="text-xs text-outline mb-1">{recipe.category}</p>
-      <p className="text-xs text-on-surface-variant line-clamp-2">{recipe.description}</p>
-    </div>
+      <div className="flex flex-1 flex-col gap-1.5 p-3">
+        <h4 className="line-clamp-2 text-sm font-semibold leading-tight text-on-surface group-hover:text-primary transition-colors">
+          {recipe.name}
+        </h4>
+        <div className="mt-auto flex items-center justify-between gap-2 text-xs text-on-surface-variant">
+          <span className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-[14px]">schedule</span>
+            {recipe.duration} perc
+          </span>
+          <span className="rounded-full bg-primary-fixed px-2 py-0.5 text-[10px] font-bold text-on-primary-fixed-variant">
+            {recipe.category}
+          </span>
+        </div>
+        <p className="text-xs leading-relaxed text-on-surface-variant line-clamp-1">{recipe.description}</p>
+      </div>
+    </article>
   );
 }
 
-export default function RecipeRecommendations() {
+function AiCard({ onGenerate }: { onGenerate?: () => void }) {
+  const handleGenerate = onGenerate ?? (() => {});
+
+  return (
+    <button
+      onClick={handleGenerate}
+      className="relative overflow-hidden rounded-[18px] border border-primary/20 bg-[linear-gradient(135deg,rgba(178,200,177,0.6),rgba(226,235,222,0.72)_30%,rgba(255,255,255,0.96)_100%)] p-4 text-left shadow-[0_14px_24px_-26px_rgba(37,55,43,0.28)] transition-all hover:border-primary/30 hover:shadow-[0_18px_28px_-24px_rgba(37,55,43,0.34)] cursor-pointer"
+    >
+      <div className="absolute -right-4 -top-4 size-24 rounded-full bg-white/20 blur-2xl" />
+      <div className="absolute -left-4 bottom-0 size-20 rounded-full bg-primary/10 blur-2xl" />
+      <div className="relative z-10 flex h-full flex-col gap-3">
+        <div className="size-12 rounded-full border border-white/35 bg-white/18 backdrop-blur-md flex items-center justify-center text-on-primary-container shadow-sm">
+          <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
+        </div>
+        <div>
+          <h4 className="text-base font-bold text-on-background">AI Generálás</h4>
+          <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant">
+            Nem tetszenek az ajánlások? Kérj új ötleteket a mesterséges intelligenciától.
+          </p>
+        </div>
+        <div className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-[0_12px_20px_-18px_rgba(51,69,55,0.55)]">
+          <span className="material-symbols-outlined text-[16px]">refresh</span>
+          Mondj mást
+        </div>
+      </div>
+    </button>
+  );
+}
+
+interface Props {
+  onGenerate?: () => void;
+}
+
+export default function RecipeRecommendations({ onGenerate }: Props) {
   const { mealBatches, hydrated } = useMealData();
   const [catalog, setCatalog] = useState<Recipe[]>([]);
 
@@ -199,7 +188,7 @@ export default function RecipeRecommendations() {
           setCatalog(payload.recipes);
         }
       } catch {
-        // Csendes fallback: egyszerűen nem renderelünk ajánlókat, ha a catalog route nem elérhető.
+        // Ha nincs receptkatalógus, ez a blokk csendesen nem jelenik meg.
       }
     }
 
@@ -223,36 +212,18 @@ export default function RecipeRecommendations() {
   }
 
   return (
-    <section>
-      <div className="flex items-end justify-between mb-5">
-        <div>
-          <h3 className="text-xl font-bold text-on-background">Mit főzzünk legközelebb?</h3>
-          <p className="text-sm text-on-surface-variant mt-1">
-            {recommendationState.personalized
-              ? "A korábbi főzéseid alapján valószínűleg ezeket szeretnéd legközelebb."
-              : "Még kevés a főzési előzmény, ezért most valódi receptekből válogatunk neked."}
-          </p>
-        </div>
+    <section className="rounded-[22px] border border-surface-variant bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,244,239,0.9))] px-4 py-3.5 shadow-[0_14px_24px_-24px_rgba(34,27,19,0.16)]">
+      <div className="mb-2.5 flex items-center justify-between gap-3">
+        <p className="text-xs text-on-surface-variant">
+          {recommendationState.personalized ? "A korábbi főzésekhez igazítva." : "Néhány gyorsan használható receptötlet."}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
         {recommendationState.recipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
-
-        <div className="group">
-          <div className="aspect-[4/5] rounded-2xl overflow-hidden mb-3 relative bg-surface-container flex items-center justify-center border-2 border-dashed border-outline-variant">
-            <div className="text-center p-6">
-              <span className="material-symbols-outlined text-4xl text-primary mb-2 block">grocery</span>
-              <h4 className="font-semibold text-on-background mb-2 text-sm">Mi van itthon?</h4>
-              <p className="text-xs text-outline leading-relaxed">
-                Következő panel: hozzávalókból ajánl receptet a kamrád alapján.
-              </p>
-            </div>
-          </div>
-          <p className="font-semibold text-on-surface-variant text-sm">Új panel hamarosan</p>
-          <p className="text-xs text-outline">Alapanyag alapú ajánló</p>
-        </div>
+        <AiCard onGenerate={onGenerate} />
       </div>
     </section>
   );

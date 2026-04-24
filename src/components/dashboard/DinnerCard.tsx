@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getRecipeImageDataUri } from "@/lib/recipes/recipe-image";
 import type { Recipe } from "@/types/etkezes";
 
 interface Props {
@@ -47,7 +48,10 @@ export default function DinnerCard({ recipe }: Props) {
           style={{ backgroundImage: `url('${recipe.image}')` }}
         />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-fixed to-primary-container" />
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+          style={{ backgroundImage: `url('${getRecipeImageDataUri(recipe)}')` }}
+        />
       )}
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />

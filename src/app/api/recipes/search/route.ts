@@ -80,6 +80,7 @@ export async function GET(request: Request) {
     const search = (searchParams.get("search") ?? "").trim();
     const category = (searchParams.get("category") ?? "mind").trim();
     const tag = (searchParams.get("tag") ?? "mind").trim();
+    const childFriendly = searchParams.get("childFriendly") === "true";
     const maxDurationParam = searchParams.get("maxDuration");
     const maxDuration = maxDurationParam === "Infinity" || !maxDurationParam ? Infinity : Number(maxDurationParam);
 
@@ -88,7 +89,8 @@ export async function GET(request: Request) {
     const baseFiltered = catalog
       .filter((recipe) => recipe.duration <= maxDuration)
       .filter((recipe) => matchesProtein(recipe, protein))
-      .filter((recipe) => matchesSearch(recipe, search));
+      .filter((recipe) => matchesSearch(recipe, search))
+      .filter((recipe) => !childFriendly || (recipe.tags ?? []).includes("gyerekbarát"));
 
     const categories = Array.from(new Set(baseFiltered.map((recipe) => recipe.category))).sort((a, b) =>
       a.localeCompare(b, "hu"),
@@ -100,6 +102,7 @@ export async function GET(request: Request) {
     const strictRecipes = baseFiltered
       .filter((recipe) => category === "mind" || recipe.category === category)
       .filter((recipe) => tag === "mind" || (recipe.tags ?? []).includes(tag))
+      .filter((recipe) => !childFriendly || (recipe.tags ?? []).includes("gyerekbarát"))
       .sort((a, b) => a.duration - b.duration || a.name.localeCompare(b.name, "hu"));
 
     let recipes = strictRecipes.slice(0, 180);
@@ -114,6 +117,7 @@ export async function GET(request: Request) {
           recipe,
           score: getRelaxedScore(recipe, { protein, category, tag, maxDuration }),
         }))
+        .filter((item) => !childFriendly || (item.recipe.tags ?? []).includes("gyerekbarát"))
         .filter((item) => item.score > 0)
         .sort(
           (a, b) =>
