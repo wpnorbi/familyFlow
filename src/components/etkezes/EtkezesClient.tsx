@@ -19,6 +19,7 @@ import RecipeRecommendations from "./RecipeRecommendations";
 import AddMealModal from "./AddMealModal";
 import PantryIdeasPanel from "./PantryIdeasPanel";
 import CookingSessionModal from "./CookingSessionModal";
+import EtkezesMobileView from "./EtkezesMobileView";
 
 function getNextBatch(batches: MealBatch[], todayKey: string) {
   const upcoming = getUpcomingBatches(batches, todayKey, 1);
@@ -107,7 +108,26 @@ export default function EtkezesClient() {
 
   return (
     <>
-      <div className="mx-auto flex w-full min-w-0 max-w-[1400px] flex-col gap-4 overflow-x-hidden px-4 py-4 md:px-5 lg:px-6">
+      <EtkezesMobileView
+        nextMealData={nextMealData}
+        weekDays={weekDays}
+        batches={batches}
+        shoppingItems={shoppingItems}
+        pantryItems={pantryItems}
+        catalog={catalog}
+        onAddMeal={() => setIsModalOpen(true)}
+        onStartCooking={(recipe) => {
+          setCookingRecipe(recipe);
+          setIsCookingOpen(true);
+        }}
+        onViewRecipe={(recipe) => {
+          setInitialRecipe(recipe);
+          setIsModalOpen(true);
+        }}
+        onGenerateIdeas={() => setIsModalOpen(true)}
+      />
+
+      <div className="mx-auto hidden w-full min-w-0 max-w-[1400px] flex-col gap-4 overflow-x-hidden px-4 py-4 md:flex md:px-5 lg:px-6">
         {!hydrated && (
           <div className="rounded-2xl border border-surface-variant/70 bg-white/92 px-4 py-3 text-sm text-outline">
             Adatok betöltése...
