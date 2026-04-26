@@ -108,19 +108,19 @@ function getRecommendedRecipes(catalog: Recipe[], batches: MealBatch[]): { recip
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   return (
-    <article className="group overflow-hidden rounded-[18px] border border-surface-variant bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,243,238,0.93))] shadow-[0_10px_18px_-24px_rgba(34,27,19,0.18)] transition-all hover:border-primary/25 hover:shadow-[0_14px_22px_-24px_rgba(37,55,43,0.22)]">
-      <div className="relative aspect-[4/2.55] overflow-hidden">
+    <article className="group overflow-hidden rounded-[18px] border border-[rgba(182,147,116,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(250,244,235,0.95))] shadow-[0_10px_18px_-24px_rgba(34,27,19,0.18)] transition-all hover:border-primary/25 hover:shadow-[0_14px_22px_-24px_rgba(37,55,43,0.22)]">
+      <div className="relative aspect-[4/2.2] overflow-hidden">
         <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(18,24,20,0.12),rgba(18,24,20,0.02))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(18,24,20,0.14),rgba(18,24,20,0.02))]" />
         <div className="absolute top-2.5 right-2.5 rounded-full bg-white/90 p-1 text-on-surface shadow-sm">
           <span className="material-symbols-outlined text-[16px]">favorite_border</span>
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-1.5 p-3">
-        <h4 className="line-clamp-2 text-sm font-semibold leading-tight text-on-surface group-hover:text-primary transition-colors">
+      <div className="flex flex-1 flex-col gap-1.25 p-2.5 pb-2">
+        <h4 className="line-clamp-1 text-[13px] font-semibold leading-tight text-on-surface transition-colors group-hover:text-primary">
           {recipe.name}
         </h4>
-        <div className="mt-auto flex items-center justify-between gap-2 text-xs text-on-surface-variant">
+        <div className="mt-auto flex items-center justify-between gap-2 text-[11px] text-on-surface-variant">
           <span className="flex items-center gap-1">
             <span className="material-symbols-outlined text-[14px]">schedule</span>
             {recipe.duration} perc
@@ -129,7 +129,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
             {recipe.category}
           </span>
         </div>
-        <p className="text-xs leading-relaxed text-on-surface-variant line-clamp-1">{recipe.description}</p>
+        <p className="line-clamp-1 text-[11px] leading-snug text-on-surface-variant">{recipe.description}</p>
       </div>
     </article>
   );
@@ -141,22 +141,22 @@ function AiCard({ onGenerate }: { onGenerate?: () => void }) {
   return (
     <button
       onClick={handleGenerate}
-      className="relative overflow-hidden rounded-[18px] border border-primary/20 bg-[linear-gradient(135deg,rgba(178,200,177,0.6),rgba(226,235,222,0.72)_30%,rgba(255,255,255,0.96)_100%)] p-4 text-left shadow-[0_14px_24px_-26px_rgba(37,55,43,0.28)] transition-all hover:border-primary/30 hover:shadow-[0_18px_28px_-24px_rgba(37,55,43,0.34)] cursor-pointer"
+      className="relative overflow-hidden rounded-[18px] border border-surface-variant/75 bg-[linear-gradient(135deg,rgba(236,241,235,0.7),rgba(247,249,245,0.88)_45%,rgba(255,255,255,0.98)_100%)] p-4 text-left shadow-[0_10px_18px_-26px_rgba(37,55,43,0.18)] transition-all hover:border-primary/20 hover:shadow-[0_14px_22px_-24px_rgba(37,55,43,0.22)] cursor-pointer"
     >
-      <div className="absolute -right-4 -top-4 size-24 rounded-full bg-white/20 blur-2xl" />
-      <div className="absolute -left-4 bottom-0 size-20 rounded-full bg-primary/10 blur-2xl" />
+      <div className="absolute -right-4 -top-4 size-24 rounded-full bg-white/18 blur-2xl" />
+      <div className="absolute -left-4 bottom-0 size-20 rounded-full bg-primary/6 blur-2xl" />
       <div className="relative z-10 flex h-full flex-col gap-3">
-        <div className="size-12 rounded-full border border-white/35 bg-white/18 backdrop-blur-md flex items-center justify-center text-on-primary-container shadow-sm">
-          <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
+        <div className="size-10 rounded-full border border-white/40 bg-white/22 backdrop-blur-md flex items-center justify-center text-on-surface-variant shadow-none">
+          <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
         </div>
         <div>
-          <h4 className="text-base font-bold text-on-background">AI Generálás</h4>
-          <p className="mt-1.5 text-xs leading-relaxed text-on-surface-variant">
+          <h4 className="text-[15px] font-semibold text-on-surface">AI Generálás</h4>
+          <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">
             Nem tetszenek az ajánlások? Kérj új ötleteket a mesterséges intelligenciától.
           </p>
         </div>
-        <div className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-[0_12px_20px_-18px_rgba(51,69,55,0.55)]">
-          <span className="material-symbols-outlined text-[16px]">refresh</span>
+        <div className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-full border border-surface-variant/70 bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-on-surface-variant shadow-none">
+          <span className="material-symbols-outlined text-[14px]">refresh</span>
           Mondj mást
         </div>
       </div>
@@ -212,14 +212,14 @@ export default function RecipeRecommendations({ onGenerate }: Props) {
   }
 
   return (
-    <section className="rounded-[22px] border border-surface-variant bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,244,239,0.9))] px-4 py-3.5 shadow-[0_14px_24px_-24px_rgba(34,27,19,0.16)]">
+    <section className="rounded-[22px] border border-[rgba(182,147,116,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.97),rgba(250,246,239,0.92))] px-4 py-3 shadow-[0_14px_24px_-24px_rgba(34,27,19,0.16)]">
       <div className="mb-2.5 flex items-center justify-between gap-3">
-        <p className="text-xs text-on-surface-variant">
+        <p className="text-[11px] leading-snug text-on-surface-variant">
           {recommendationState.personalized ? "A korábbi főzésekhez igazítva." : "Néhány gyorsan használható receptötlet."}
         </p>
       </div>
 
-      <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {recommendationState.recipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}

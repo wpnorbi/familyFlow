@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import type { Recipe } from "@/types/etkezes";
 
@@ -14,7 +14,37 @@ type WakeLockSentinelLike = {
   addEventListener?: (type: string, listener: () => void) => void;
 };
 
-const SPOTIFY_COOKING_URL = "https://open.spotify.com/search/cooking%20playlist";
+type PlaylistTrack = {
+  title: string;
+  artist: string;
+  mood: string;
+  sourceLabel: string;
+  url: string;
+};
+
+const COOKING_PLAYLIST: PlaylistTrack[] = [
+  {
+    title: "Placid Ambient",
+    artist: "MusicLFiles",
+    mood: "nyugodt, könnyű háttérzene",
+    sourceLabel: "Wikimedia Commons",
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/Placid%20Ambient%20by%20MusicLFiles.ogg",
+  },
+  {
+    title: "Peaceful",
+    artist: "Tamlin Lollis Love",
+    mood: "lágy, meditatív hangulat",
+    sourceLabel: "Wikimedia Commons",
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/Peaceful.ogg",
+  },
+  {
+    title: "Brenticus - Ambient",
+    artist: "Brenticus",
+    mood: "finom, lebegő háttér",
+    sourceLabel: "Wikimedia Commons",
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/Brenticus%20-%20Ambient.ogg",
+  },
+];
 
 function ProgressBar({ progress }: { progress: number }) {
   return (
@@ -28,15 +58,21 @@ function ProgressBar({ progress }: { progress: number }) {
 }
 
 export default function CookingSessionModal({ recipe, onClose }: Props) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
   const [wakeLockSupported, setWakeLockSupported] = useState(false);
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [playlistAnswered, setPlaylistAnswered] = useState(false);
+  const [musicStarted, setMusicStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [musicError, setMusicError] = useState<string | null>(null);
 
   const totalItems = recipe.ingredients.length + recipe.instructions.length;
   const doneItems = checkedIngredients.size + checkedSteps.size;
   const progress = totalItems > 0 ? Math.round((doneItems / totalItems) * 100) : 0;
+  const currentTrack = COOKING_PLAYLIST[currentTrackIndex];
 
   const progressLabel = useMemo(() => {
     if (progress === 100) return "Kész vagy";
@@ -49,6 +85,10 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
     setCheckedIngredients(new Set());
     setCheckedSteps(new Set());
     setPlaylistAnswered(false);
+    setMusicStarted(false);
+    setIsPlaying(false);
+    setCurrentTrackIndex(0);
+    setMusicError(null);
   }, [recipe.id]);
 
   useEffect(() => {
@@ -87,6 +127,28 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
   }, [recipe.id]);
 
   useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !musicStarted || !isPlaying) return;
+
+    audio.src = currentTrack.url;
+    audio.load();
+
+    const playPromise = audio.play();
+    if (playPromise) {
+      void playPromise.catch(() => {
+        setMusicError("A böngésző blokkolta az automatikus lejátszást. Nyomd meg a play gombot.");
+      });
+    }
+  }, [currentTrack.url, isPlaying, musicStarted]);
+
+  useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
@@ -115,7 +177,42 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
 
   const startPlaylist = () => {
     setPlaylistAnswered(true);
-    window.open(SPOTIFY_COOKING_URL, "_blank", "noopener,noreferrer");
+    setMusicError(null);
+    setMusicStarted(true);
+    setIsPlaying(true);
+    setCurrentTrackIndex(0);
+    const audio = audioRef.current;
+    if (audio) {
+      audio.src = COOKING_PLAYLIST[0].url;
+      audio.load();
+      const playPromise = audio.play();
+      if (playPromise) {
+        void playPromise.catch(() => {
+          setMusicError("A böngésző még most is blokkolja az automatikus lejátszást.");
+        });
+      }
+    }
+  };
+
+  const handlePlayPause = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      setMusicStarted(true);
+      setIsPlaying(true);
+      setMusicError(null);
+      void audio.play().catch(() => {
+        setMusicError("Nem sikerült elindítani a zenét. Próbáld meg újra.");
+      });
+      return;
+    }
+
+    audio.pause();
+  };
+
+  const handleTrackEnded = () => {
+    setCurrentTrackIndex((index) => (index + 1) % COOKING_PLAYLIST.length);
   };
 
   return (
@@ -126,7 +223,7 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
         <div className="shrink-0 border-b border-white/70 bg-white/85 px-5 py-4 backdrop-blur-md sm:px-6">
           {!playlistAnswered && (
             <div className="mb-4 flex flex-col gap-3 rounded-[20px] border border-primary/15 bg-primary/[0.05] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-medium text-on-surface">Indítsuk a főzős playlistet is?</p>
+              <p className="text-sm font-medium text-on-surface">Indítsunk egy ingyenes főzős playlistet is?</p>
               <div className="flex gap-2">
                 <button
                   onClick={startPlaylist}
@@ -140,6 +237,61 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
                 >
                   Most ne
                 </button>
+              </div>
+            </div>
+          )}
+
+          {playlistAnswered && (
+            <div className="mb-4 rounded-[20px] border border-surface-variant/60 bg-surface-container-low px-4 py-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-outline">Főzős zene</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-on-surface">
+                    <span className="font-medium">{currentTrack.title}</span>
+                    <span className="text-on-surface-variant">•</span>
+                    <span>{currentTrack.artist}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-on-surface-variant">
+                    {currentTrack.mood} - ingyenes forrás: {currentTrack.sourceLabel}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePlayPause}
+                    className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-white cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">{isPlaying ? "pause" : "play_arrow"}</span>
+                    {isPlaying ? "Szünet" : "Lejátszás"}
+                  </button>
+                  <button
+                    onClick={handleTrackEnded}
+                    className="inline-flex h-10 items-center gap-2 rounded-full border border-surface-variant bg-white px-4 text-xs font-semibold text-on-surface cursor-pointer"
+                  >
+                    Következő
+                  </button>
+                </div>
+              </div>
+              {musicError && <p className="mt-2 text-xs text-error">{musicError}</p>}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {COOKING_PLAYLIST.map((track, index) => (
+                  <button
+                    key={track.title}
+                    onClick={() => {
+                      setPlaylistAnswered(true);
+                      setMusicStarted(true);
+                      setIsPlaying(true);
+                      setMusicError(null);
+                      setCurrentTrackIndex(index);
+                    }}
+                    className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer transition-colors ${
+                      index === currentTrackIndex
+                        ? "bg-primary text-white"
+                        : "bg-white text-on-surface border border-surface-variant"
+                    }`}
+                  >
+                    {track.title}
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -251,6 +403,15 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
             </div>
           </section>
         </div>
+
+        <audio
+          ref={audioRef}
+          preload="none"
+          onEnded={handleTrackEnded}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onError={() => setMusicError("Nem sikerült betölteni a zenét. Próbálj másik számot.")}
+        />
       </div>
     </div>
   );
