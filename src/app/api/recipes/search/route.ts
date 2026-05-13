@@ -3,6 +3,10 @@ import type { Recipe } from "@/types/etkezes";
 
 const MIN_RECIPE_RESULTS = 20;
 
+function isPriorityImportedRecipe(recipe: Recipe): boolean {
+  return recipe.source === "user-import" || (recipe.tags ?? []).includes("lidl");
+}
+
 function matchesProtein(recipe: Recipe, protein: Recipe["protein"] | "mind"): boolean {
   return protein === "mind" || recipe.protein === protein;
 }
@@ -14,7 +18,10 @@ function matchesSearch(recipe: Recipe, search: string): boolean {
     recipe.name,
     recipe.description,
     recipe.category,
+    recipe.sourceName ?? "",
     recipe.area ?? "",
+    recipe.familyNotes ?? "",
+    recipe.kidFriendlyNotes ?? "",
     ...(recipe.ingredients ?? []),
     ...(recipe.tags ?? []),
   ]
@@ -70,6 +77,10 @@ function getRelaxedScore(
     if (filters.maxDuration > 15 && filters.maxDuration <= 30) score += 10;
   }
 
+  if (isPriorityImportedRecipe(recipe)) {
+    score += 160;
+  }
+
   return score;
 }
 
@@ -103,7 +114,11 @@ export async function GET(request: Request) {
       .filter((recipe) => category === "mind" || recipe.category === category)
       .filter((recipe) => tag === "mind" || (recipe.tags ?? []).includes(tag))
       .filter((recipe) => !childFriendly || (recipe.tags ?? []).includes("gyerekbarát"))
-      .sort((a, b) => a.duration - b.duration || a.name.localeCompare(b.name, "hu"));
+      .sort((a, b) => {
+        const priorityDiff = Number(isPriorityImportedRecipe(b)) - Number(isPriorityImportedRecipe(a));
+        if (priorityDiff !== 0) return priorityDiff;
+        return a.duration - b.duration || a.name.localeCompare(b.name, "hu");
+      });
 
     let recipes = strictRecipes.slice(0, 180);
     let usedFallback = false;

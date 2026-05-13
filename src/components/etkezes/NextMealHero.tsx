@@ -38,8 +38,8 @@ function getHeroBadgeLabel(isCookDay: boolean): string {
 
 function TinyStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-full border border-white/60 bg-white/78 px-2.5 py-1 text-[11px] font-semibold text-on-surface shadow-[0_8px_14px_-12px_rgba(21,36,28,0.32)] backdrop-blur-sm">
-      <span className="text-outline">{label}</span> {value}
+    <div className="ff-chip px-2.5 py-1 text-[11px] font-semibold text-[var(--ff-text)] shadow-[var(--ff-shadow-soft)]">
+      <span className="text-[var(--ff-text-soft)]">{label}</span> {value}
     </div>
   );
 }
@@ -56,24 +56,24 @@ export default function NextMealHero({
 }: Props) {
   if (!nextMealData) {
     return (
-      <section className="rounded-[28px] border border-primary/20 bg-[linear-gradient(135deg,rgba(214,227,212,0.52),rgba(255,255,255,0.98)_35%,rgba(247,243,238,0.95)_100%)] px-4 py-3 shadow-[0_24px_36px_-26px_rgba(37,55,43,0.35)]">
+      <section className="ff-glass-card-sage rounded-[var(--ff-radius-xl)] px-4 py-3">
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-outline">Következő étkezés</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--ff-text-soft)]">Következő étkezés</p>
             <div className="mt-1 flex flex-wrap items-center gap-2">
-              <h1 className="text-lg font-bold text-on-surface">Még nincs betervezve semmi</h1>
+              <h1 className="text-lg font-semibold text-[var(--ff-text)]">Még nincs betervezve semmi</h1>
               <TinyStat label="Heti terv" value={`${plannedDaysCount}/7 nap`} />
               <TinyStat label="Nyitott" value={`${openDaysCount} nap`} />
               <TinyStat label="Lista" value={`${shoppingItems.length} tétel`} />
             </div>
-            <p className="mt-1.5 text-[11px] leading-snug text-on-surface-variant">
-              Válassz egy ebédet vagy vacsorát, és már indulhat is a hét.
+            <p className="mt-1.5 text-[11px] leading-snug text-[var(--ff-text-muted)]">
+              Válassz egy ebédet vagy vacsorát, és indulhat a heti terv.
             </p>
           </div>
 
           <button
             onClick={onAddMeal}
-            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-primary/15 bg-primary px-4 py-2 text-[11px] font-bold text-white shadow-[0_12px_18px_-16px_rgba(51,69,55,0.6)] transition-colors hover:bg-primary/90 cursor-pointer"
+            className="ff-button-primary inline-flex items-center justify-center gap-1.5 px-4 py-2 text-[11px] font-bold cursor-pointer"
           >
             <span className="material-symbols-outlined text-[14px]">add</span>
             Kaja hozzáadása
@@ -100,8 +100,8 @@ export default function NextMealHero({
 
   return (
     <section className="flex flex-col gap-2.5">
-      <h2 className="text-[16px] font-semibold tracking-tight text-on-surface">Következő étkezés</h2>
-      <div className="relative isolate overflow-hidden rounded-[38px] border border-[rgba(164,131,97,0.22)] bg-[linear-gradient(135deg,rgba(250,239,224,0.9),rgba(254,252,248,0.98)_42%,rgba(237,244,236,0.9)_100%)] shadow-[0_34px_80px_-46px_rgba(74,58,42,0.5)] ring-1 ring-white/65">
+      <h2 className="text-[16px] font-semibold tracking-tight text-[var(--ff-text)]">Következő étkezés</h2>
+      <div className="ff-glass-card-sage relative isolate overflow-hidden rounded-[38px]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.5),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.16),transparent_28%)] opacity-90" />
         <div className="pointer-events-none absolute left-6 top-6 h-14 w-14 rounded-full border border-white/40 bg-white/10 backdrop-blur-2xl" />
 
@@ -128,7 +128,7 @@ export default function NextMealHero({
 
           <div className="min-w-0 py-1 lg:pr-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-[rgba(181,120,88,0.16)] bg-[rgba(255,255,255,0.58)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[rgb(149,86,58)] shadow-[0_8px_16px_-14px_rgba(99,63,40,0.34)]">
+              <span className="ff-chip px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--ff-caramel-strong)] shadow-[var(--ff-shadow-soft)]">
                 {getMealMomentLabel(isCookDay, eatDateLabel)}
               </span>
               <TinyStat label="Terv" value={`${plannedDaysCount}/7 nap`} />
@@ -158,20 +158,14 @@ export default function NextMealHero({
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-2.5">
-              <button
-                onClick={handleStartCooking}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,rgba(71,93,73,1),rgba(52,69,54,1))] px-5 py-3 text-[11px] font-semibold text-white shadow-[0_18px_34px_-18px_rgba(52,69,54,0.72)] transition-transform transition-colors hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-18px_rgba(52,69,54,0.78)] cursor-pointer"
-              >
+              <button onClick={handleStartCooking} className="ff-button-primary inline-flex items-center justify-center gap-2 px-5 py-3 text-[11px] font-semibold cursor-pointer">
                 <span className="material-symbols-outlined text-[16px]">play_arrow</span>
                 Főzés indítása
               </button>
-              <button
-                onClick={handleViewRecipe}
-                className="inline-flex items-center justify-center rounded-full border border-[rgba(170,133,96,0.18)] bg-white/78 px-4 py-2.5 text-[11px] font-semibold text-[rgb(123,79,49)] transition-colors hover:bg-white/94 cursor-pointer"
-              >
+              <button onClick={handleViewRecipe} className="ff-button-secondary inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-semibold cursor-pointer">
                 Recept megtekintése
               </button>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-surface-variant/55 bg-white/62 px-3 py-2 text-[10px] font-medium text-on-surface-variant shadow-[0_8px_16px_-16px_rgba(34,27,19,0.2)]">
+              <div className="ff-chip inline-flex items-center gap-1.5 px-3 py-2 text-[10px] font-medium shadow-[var(--ff-shadow-soft)]">
                 <span className="material-symbols-outlined text-[14px]">music_note</span>
                 Indíts zenét főzéshez
               </div>

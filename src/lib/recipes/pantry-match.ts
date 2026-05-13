@@ -60,9 +60,11 @@ export function rankRecipesForPantry(recipes: Recipe[], pantryItems: string[]): 
     if ((recipe.tags ?? []).includes("gyors")) score += 10;
     if (recipe.duration <= 30) score += 8;
     if (recipe.duration <= 15) score += 5;
+    if (recipe.source === "user-import" || (recipe.tags ?? []).includes("lidl")) score += 55;
 
     if (!hasPantryItems) {
       score = 0;
+      if (recipe.source === "user-import" || (recipe.tags ?? []).includes("lidl")) score += 60;
       if ((recipe.tags ?? []).includes("kamrabarát")) score += 40;
       if ((recipe.tags ?? []).includes("gyors")) score += 25;
       if (recipe.duration <= 30) score += 12;

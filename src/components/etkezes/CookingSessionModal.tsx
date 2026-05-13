@@ -48,9 +48,9 @@ const COOKING_PLAYLIST: PlaylistTrack[] = [
 
 function ProgressBar({ progress }: { progress: number }) {
   return (
-    <div className="overflow-hidden rounded-full bg-surface-container h-2.5">
+    <div className="h-2.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.45)]">
       <div
-        className="h-full rounded-full bg-primary transition-all duration-300"
+        className="h-full rounded-full bg-[linear-gradient(135deg,var(--ff-primary-soft),var(--ff-primary))] transition-all duration-300"
         style={{ width: `${progress}%` }}
       />
     </div>
@@ -219,22 +219,16 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-0 backdrop-blur-sm sm:p-4">
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative z-10 flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden bg-[linear-gradient(180deg,rgba(253,251,248,0.99),rgba(248,244,239,0.98))] shadow-[0_32px_100px_-26px_rgba(20,25,20,0.48)] sm:h-[min(92vh,860px)] sm:rounded-[32px] sm:border sm:border-white/70">
-        <div className="shrink-0 border-b border-white/70 bg-white/85 px-5 py-4 backdrop-blur-md sm:px-6">
+      <div className="ff-modal-shell relative z-10 flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden sm:h-[min(92vh,860px)] sm:rounded-[32px] sm:border">
+        <div className="shrink-0 border-b border-[var(--ff-card-border)] bg-white/85 px-5 py-4 backdrop-blur-md sm:px-6">
           {!playlistAnswered && (
-            <div className="mb-4 flex flex-col gap-3 rounded-[20px] border border-primary/15 bg-primary/[0.05] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-medium text-on-surface">Indítsunk egy ingyenes főzős playlistet is?</p>
+            <div className="ff-glass-card-sage mb-4 flex flex-col gap-3 rounded-[20px] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm font-medium text-[var(--ff-text)]">Indítsunk egy ingyenes főzős playlistet is?</p>
               <div className="flex gap-2">
-                <button
-                  onClick={startPlaylist}
-                  className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white cursor-pointer"
-                >
+                <button onClick={startPlaylist} className="ff-button-primary px-4 py-2 text-xs font-semibold cursor-pointer">
                   Igen
                 </button>
-                <button
-                  onClick={() => setPlaylistAnswered(true)}
-                  className="rounded-full border border-surface-variant bg-white px-4 py-2 text-xs font-semibold text-on-surface cursor-pointer"
-                >
+                <button onClick={() => setPlaylistAnswered(true)} className="ff-button-secondary px-4 py-2 text-xs font-semibold cursor-pointer">
                   Most ne
                 </button>
               </div>
@@ -242,31 +236,25 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
           )}
 
           {playlistAnswered && (
-            <div className="mb-4 rounded-[20px] border border-surface-variant/60 bg-surface-container-low px-4 py-3">
+            <div className="ff-glass-card mb-4 rounded-[20px] px-4 py-3">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-outline">Főzős zene</p>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-on-surface">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Főzős zene</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--ff-text)]">
                     <span className="font-medium">{currentTrack.title}</span>
-                    <span className="text-on-surface-variant">•</span>
+                    <span className="text-[var(--ff-text-muted)]">•</span>
                     <span>{currentTrack.artist}</span>
                   </div>
-                  <p className="mt-1 text-xs text-on-surface-variant">
+                  <p className="mt-1 text-xs text-[var(--ff-text-muted)]">
                     {currentTrack.mood} - ingyenes forrás: {currentTrack.sourceLabel}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePlayPause}
-                    className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-white cursor-pointer"
-                  >
+                  <button onClick={handlePlayPause} className="ff-button-primary inline-flex h-10 items-center gap-2 px-4 text-xs font-semibold cursor-pointer">
                     <span className="material-symbols-outlined text-[18px]">{isPlaying ? "pause" : "play_arrow"}</span>
                     {isPlaying ? "Szünet" : "Lejátszás"}
                   </button>
-                  <button
-                    onClick={handleTrackEnded}
-                    className="inline-flex h-10 items-center gap-2 rounded-full border border-surface-variant bg-white px-4 text-xs font-semibold text-on-surface cursor-pointer"
-                  >
+                  <button onClick={handleTrackEnded} className="ff-button-secondary inline-flex h-10 items-center gap-2 px-4 text-xs font-semibold cursor-pointer">
                     Következő
                   </button>
                 </div>
@@ -285,8 +273,8 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
                     }}
                     className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer transition-colors ${
                       index === currentTrackIndex
-                        ? "bg-primary text-white"
-                        : "bg-white text-on-surface border border-surface-variant"
+                      ? "ff-button-primary text-white"
+                        : "ff-button-secondary text-[var(--ff-text)]"
                     }`}
                   >
                     {track.title}
@@ -298,16 +286,13 @@ export default function CookingSessionModal({ recipe, onClose }: Props) {
 
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-outline">Főzés folyamatban</p>
-              <h2 className="mt-1 text-2xl font-semibold text-on-surface">{recipe.name}</h2>
-              <p className="mt-1 text-sm text-on-surface-variant">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Főzés folyamatban</p>
+              <h2 className="mt-1 text-2xl font-semibold text-[var(--ff-text)]">{recipe.name}</h2>
+              <p className="mt-1 text-sm text-[var(--ff-text-muted)]">
                 {progressLabel}. {doneItems}/{totalItems} tétel kész.
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-on-surface-variant shadow-sm transition-colors hover:bg-surface-container cursor-pointer"
-            >
+            <button onClick={onClose} className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(255,252,244,0.92)] cursor-pointer">
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>

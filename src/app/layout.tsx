@@ -43,7 +43,7 @@ export default function RootLayout({
         className={`${manrope.className} flex min-h-screen w-full overflow-x-hidden bg-background text-on-background antialiased`}
       >
         <SideNav />
-        <main className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden md:ml-28">
+        <main className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden md:ml-24">
           {children}
         </main>
       </body>

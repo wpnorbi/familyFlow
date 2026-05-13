@@ -5,45 +5,61 @@ interface Props {
 }
 
 export default function MealsStrip({ upcomingMeals }: Props) {
-  // --- Üres állapot ---
   if (upcomingMeals.length === 0) {
     return (
-      <div className="w-full flex items-center justify-between gap-4 p-4 pl-5 rounded-[2rem] bg-surface border border-dashed border-surface-variant ambient-shadow">
-        <div className="flex items-center gap-3 text-outline">
-          <span className="material-symbols-outlined text-[20px]">event_busy</span>
-          <span className="text-sm font-medium">Ezen a héten még nincs tervezett étkezés</span>
+      <div className="ff-glass-card flex w-full flex-col gap-4 rounded-[var(--ff-radius-lg)] p-5 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--ff-text-soft)]">Mai fókusz</p>
+          <p className="mt-2 text-sm font-medium leading-relaxed text-[var(--ff-text-muted)]">
+            Válassz vacsorát, adj hozzá programot, vagy nézd meg a kamrát.
+          </p>
         </div>
-        <Link
-          href="/etkezes"
-          className="px-4 py-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors flex items-center gap-1 mr-2 whitespace-nowrap shrink-0"
-        >
-          Tervezés most
-          <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/etkezes"
+            className="ff-button-primary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors hover:brightness-[1.03]"
+          >
+            Vacsora kiválasztása
+          </Link>
+          <Link
+            href="/programok"
+            className="ff-button-secondary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-[rgba(255,240,227,0.72)]"
+          >
+            Program hozzáadása
+          </Link>
+          <Link
+            href="/kamra"
+            className="ff-button-secondary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-[rgba(238,243,230,0.7)]"
+          >
+            Kamra megnyitása
+          </Link>
+        </div>
       </div>
     );
   }
 
-  // --- Feltöltött állapot ---
   return (
-    <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-4 p-2 pl-4 rounded-[2rem] bg-surface border border-surface-variant/50 ambient-shadow">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="ff-glass-card flex w-full flex-col gap-4 rounded-[var(--ff-radius-lg)] p-4 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--ff-text-soft)]">Következő étkezések</p>
+        <div className="flex flex-wrap items-center gap-2">
         {upcomingMeals.map(({ label, meal }) => (
           <div
             key={label}
-            className="px-4 py-2 bg-surface-container-low rounded-full flex items-center gap-2 border border-surface-variant/30 hover:bg-surface-variant/50 cursor-pointer transition-colors"
+              className="ff-chip flex items-center gap-2 px-4 py-2 transition-colors hover:bg-[rgba(216,224,203,0.4)] cursor-pointer"
           >
-            <span className="text-[11px] font-bold text-outline uppercase tracking-wider">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--ff-text-soft)]">
               {label}
             </span>
-            <span className="text-sm font-bold text-on-surface">— {meal}</span>
+            <span className="text-sm font-bold text-[var(--ff-text)]">— {meal}</span>
           </div>
         ))}
+        </div>
       </div>
 
       <Link
         href="/etkezes"
-        className="px-4 py-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors flex items-center gap-1 mr-2 whitespace-nowrap shrink-0"
+        className="mr-2 inline-flex shrink-0 items-center gap-1 whitespace-nowrap px-4 py-2 text-sm font-bold text-[var(--ff-primary)] transition-colors hover:text-[var(--ff-primary-strong)]"
       >
         Teljes heti terv
         <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

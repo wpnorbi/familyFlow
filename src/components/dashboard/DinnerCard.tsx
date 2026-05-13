@@ -7,41 +7,58 @@ interface Props {
 }
 
 export default function DinnerCard({ recipe }: Props) {
-  // --- Üres állapot ---
   if (!recipe) {
     return (
-      <div className="relative h-full min-h-[500px] rounded-3xl overflow-hidden ambient-shadow border border-dashed border-surface-variant flex flex-col items-center justify-center bg-gradient-to-br from-surface-container-lowest to-surface-container p-8 text-center">
-        <div className="w-20 h-20 rounded-3xl bg-surface-container-high flex items-center justify-center mb-6">
-          <span
-            className="material-symbols-outlined text-5xl text-outline"
-            style={{ fontVariationSettings: "'FILL' 0, 'wght' 100" }}
+      <div className="ff-glass-card-sage relative flex h-full min-h-[320px] flex-col justify-between overflow-hidden rounded-[var(--ff-radius-xl)] p-6">
+        <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 translate-x-1/3 -translate-y-1/3 rounded-full bg-[rgba(124,145,111,0.18)] blur-3xl" />
+        <div className="relative z-10">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div className="ff-chip inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em]">
+              <span className="material-symbols-outlined text-[14px]">wb_twilight</span>
+              Mai étkezés
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-[var(--ff-radius-md)] bg-[var(--ff-sage-light)] text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
+              <span className="material-symbols-outlined text-[24px]">restaurant</span>
+            </div>
+          </div>
+          <h3 className="text-[30px] font-semibold tracking-tight text-[var(--ff-text)]">Nincs tervezett vacsora</h3>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--ff-text-muted)]">
+            Válassz egy gyors vacsorát estére, és indulhat a heti terv.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {["Gyors vacsora", "Maradékokból", "Heti terv"].map((hint) => (
+              <span
+                key={hint}
+                className="ff-chip px-3 py-1.5 text-xs font-medium"
+              >
+                {hint}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative z-10 mt-6 flex flex-wrap items-center gap-3">
+          <Link
+            href="/etkezes"
+            className="ff-button-primary inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold transition-all hover:brightness-[1.03]"
           >
-            restaurant
-          </span>
+            <span className="material-symbols-outlined text-[18px]">restaurant_menu</span>
+            Vacsora kiválasztása
+          </Link>
+          <Link
+            href="/kamra"
+            className="ff-button-secondary inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold transition-colors hover:bg-[rgba(238,243,230,0.65)]"
+          >
+            <span className="material-symbols-outlined text-[18px]">inventory_2</span>
+            Kamra átnézése
+          </Link>
         </div>
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-surface-variant text-[11px] font-bold text-outline uppercase tracking-widest mb-4">
-          <span className="material-symbols-outlined text-[14px]">wb_twilight</span>
-          Mai Étkezés
-        </div>
-        <h3 className="text-2xl font-bold text-on-surface mb-2">Nincs tervezett kaja</h3>
-        <p className="text-on-surface-variant text-sm leading-relaxed max-w-xs mb-8">
-          Még nem adtál hozzá mai étkezést. Nyisd meg a heti tervezőt, és adj hozzá egy adagot.
-        </p>
-        <Link
-          href="/etkezes"
-          className="px-6 py-3 rounded-full bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-[0_4px_14px_rgba(51,69,55,0.25)] flex items-center gap-2"
-        >
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          Vacsora kiválasztása
-        </Link>
       </div>
     );
   }
 
-  // --- Feltöltött állapot ---
   return (
-    <div className="relative h-full min-h-[500px] rounded-3xl overflow-hidden ambient-shadow group cursor-pointer">
-      {/* Háttérkép */}
+    <div className="group relative h-full min-h-[380px] cursor-pointer overflow-hidden rounded-[var(--ff-radius-xl)] border border-[var(--ff-glass-border)] shadow-[var(--ff-shadow-card)]">
       {recipe.image ? (
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -53,26 +70,25 @@ export default function DinnerCard({ recipe }: Props) {
           style={{ backgroundImage: `url('${getRecipeImageDataUri(recipe)}')` }}
         />
       )}
-      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,249,237,0.04),rgba(55,67,50,0.08))]" />
 
-      {/* Tartalom */}
-      <div className="absolute inset-0 p-8 flex flex-col justify-end">
-        <div className="flex items-center justify-between mb-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/95 backdrop-blur-md text-on-primary-container text-[13px] font-semibold w-max shadow-lg">
+      <div className="absolute inset-0 flex flex-col justify-end p-7">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="inline-flex w-max items-center gap-2 rounded-full bg-[rgba(255,249,237,0.22)] px-4 py-2 text-[13px] font-semibold text-[var(--ff-text-inverse)] shadow-lg backdrop-blur-md">
             <span className="material-symbols-outlined text-sm">restaurant</span>
             Mai Étkezés
           </div>
         </div>
 
-        <h3 className="text-4xl lg:text-5xl font-bold text-white mb-2 leading-tight">
+        <h3 className="mb-2 text-4xl font-bold leading-tight text-white lg:text-5xl">
           {recipe.name}
         </h3>
-        <p className="text-base text-white/80 mb-8 max-w-md">{recipe.description}</p>
+        <p className="mb-8 max-w-md text-base text-white/80">{recipe.description}</p>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="glass-panel p-3 px-4 rounded-[20px] flex items-center gap-3 border border-white/30 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-            <div className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center shrink-0">
+          <div className="glass-panel flex items-center gap-3 rounded-[20px] border border-white/30 p-3 px-4 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(238,243,230,0.72)] text-[var(--ff-primary)]">
               <span className="material-symbols-outlined text-[20px]">timer</span>
             </div>
             <div>
@@ -85,8 +101,8 @@ export default function DinnerCard({ recipe }: Props) {
             </div>
           </div>
 
-          <div className="glass-panel p-3 px-4 rounded-[20px] flex items-center gap-3 border border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-            <div className="w-10 h-10 rounded-full bg-white/15 text-white flex items-center justify-center shrink-0">
+          <div className="glass-panel flex items-center gap-3 rounded-[20px] border border-white/20 p-3 px-4 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 text-white">
               <span className="material-symbols-outlined text-[20px]">grocery</span>
             </div>
             <div>

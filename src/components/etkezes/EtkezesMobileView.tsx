@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import RecipeImage from "@/components/etkezes/RecipeImage";
-import { getBatchRecipe, getBatchesForDate, getCookBatchForDate } from "@/lib/etkezes-data";
+import { getBatchesForDate } from "@/lib/etkezes-data";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
 import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 
@@ -27,90 +28,131 @@ interface Props {
   onGenerateIdeas: () => void;
 }
 
-function getCurrentStage() {
-  const now = new Date();
-  const hour = now.getHours();
-  const minute = String(now.getMinutes()).padStart(2, "0");
-  const timeLabel = `${hour}:${minute}`;
+type MobileScreen = "landing" | "chooser" | "ideas";
+type TimeChoice = 15 | 30 | 45 | "mind";
+type DayChoice = 1 | 2 | 3 | 7;
+type StyleChoice =
+  | "Gyors vacsora"
+  | "Gyerekbarát"
+  | "Kamrából"
+  | "30 perc alatt"
+  | "2 napra"
+  | "Egyszerű"
+  | "Tészta"
+  | "Leves";
+type FilterChoice = "Összes" | "Gyors" | "Gyerekbarát" | "Kamra";
+const LANDING_HERO_IMAGE = "/images/dashboard/hero-kitchen.jpg";
 
-  if (hour < 12) {
-    return { stage: "Reggel", current: `${timeLabel} - Reggeli ritmus`, progress: 22 };
-  }
-  if (hour < 18) {
-    return { stage: "Délután", current: `${timeLabel} - Suli vége`, progress: 52 };
-  }
-  return { stage: "Este", current: `${timeLabel} - Vacsora készül`, progress: 82 };
+const STYLE_OPTIONS: Array<{
+  label: StyleChoice;
+  icon: string;
+  tone: string;
+}> = [
+  { label: "Gyors vacsora", icon: "bolt", tone: "bg-[linear-gradient(145deg,rgba(238,243,231,0.98),rgba(221,230,211,0.92))] text-[var(--ff-primary)] border-[rgba(94,113,87,0.18)]" },
+  { label: "Gyerekbarát", icon: "favorite", tone: "bg-[linear-gradient(145deg,rgba(255,240,227,0.98),rgba(248,220,198,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(230,168,121,0.18)]" },
+  { label: "Kamrából", icon: "kitchen", tone: "bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(246,228,203,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(185,130,71,0.18)]" },
+  { label: "30 perc alatt", icon: "timer", tone: "bg-[linear-gradient(145deg,rgba(244,249,239,0.98),rgba(221,230,211,0.88))] text-[var(--ff-primary)] border-[rgba(124,145,111,0.16)]" },
+  { label: "2 napra", icon: "history_2", tone: "bg-[linear-gradient(145deg,rgba(244,249,239,0.98),rgba(238,243,231,0.9))] text-[var(--ff-primary)] border-[rgba(124,145,111,0.16)]" },
+  { label: "Egyszerű", icon: "home", tone: "bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(246,235,216,0.9))] text-[var(--ff-text)] border-[rgba(74,67,54,0.12)]" },
+  { label: "Tészta", icon: "ramen_dining", tone: "bg-[linear-gradient(145deg,rgba(255,240,227,0.98),rgba(255,249,237,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(230,168,121,0.18)]" },
+  { label: "Leves", icon: "soup_kitchen", tone: "bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(246,228,203,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(185,130,71,0.18)]" },
+];
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Jó reggelt, Anna";
+  if (hour < 18) return "Jó napot, Anna";
+  return "Jó estét, Anna";
 }
 
-function getDayState(day: WeekDay, batches: MealBatch[]) {
-  const dayBatches = getBatchesForDate(batches, day.dateKey);
-  const cookBatch = getCookBatchForDate(batches, day.dateKey);
-  const primaryBatch = cookBatch ?? dayBatches[0];
-  const recipe = primaryBatch ? getBatchRecipe(primaryBatch) : undefined;
-
-  return {
-    day,
-    recipe,
-  };
+function matchesFilter(recipe: Recipe, filter: FilterChoice, pantryItems: string[]) {
+  if (filter === "Összes") return true;
+  if (filter === "Gyors") return recipe.duration <= 30 || (recipe.tags ?? []).includes("gyors");
+  if (filter === "Gyerekbarát") return (recipe.tags ?? []).includes("gyerekbarát");
+  if (filter === "Kamra") {
+    const match = rankRecipesForPantry([recipe], pantryItems)[0];
+    return (match?.matchedIngredients.length ?? 0) > 0 || recipe.source === "user-import";
+  }
+  return true;
 }
 
-function getWeekendCard(weekDays: WeekDay[], batches: MealBatch[], fallback: Recipe | null) {
-  const weekendDays = weekDays.filter((day) => day.name === "Szombat" || day.name === "Vasárnap");
-  const plannedWeekend = weekendDays
-    .map((day) => ({ day, recipe: getDayState(day, batches).recipe }))
-    .find((entry) => entry.recipe);
+function applyStyleRanking(recipes: Recipe[], style: StyleChoice, pantryItems: string[]) {
+  const rankedByPantry = rankRecipesForPantry(recipes, pantryItems);
 
-  if (plannedWeekend?.recipe) {
-    return {
-      label: `${plannedWeekend.day.name} ${plannedWeekend.day.date.getDate()}:00`,
-      title: plannedWeekend.recipe.name,
-      recipe: plannedWeekend.recipe,
+  if (style === "Kamrából") {
+    return rankedByPantry.map((item) => item.recipe);
+  }
+
+  const ordered = [...recipes].sort((a, b) => {
+    const aTags = a.tags ?? [];
+    const bTags = b.tags ?? [];
+    const aPantry = rankedByPantry.find((item) => item.recipe.id === a.id)?.score ?? 0;
+    const bPantry = rankedByPantry.find((item) => item.recipe.id === b.id)?.score ?? 0;
+
+    const scoreRecipe = (recipe: Recipe, tags: string[], pantryScore: number) => {
+      let score = 0;
+      if (style === "Gyors vacsora" && (recipe.duration <= 30 || tags.includes("gyors"))) score += 120;
+      if (style === "Gyerekbarát" && tags.includes("gyerekbarát")) score += 140;
+      if (style === "30 perc alatt" && recipe.duration <= 30) score += 120;
+      if (style === "2 napra" && (tags.includes("2 napra elég") || recipe.servings && recipe.servings >= 4)) score += 110;
+      if (style === "Egyszerű" && (recipe.duration <= 30 || tags.includes("gyors") || tags.includes("család"))) score += 100;
+      if (style === "Tészta" && (recipe.category.toLowerCase().includes("tészta") || recipe.name.toLowerCase().includes("tészta"))) score += 130;
+      if (style === "Leves" && recipe.category.toLowerCase().includes("leves")) score += 130;
+      if (recipe.source === "user-import") score += 40;
+      return score;
     };
-  }
 
-  if (fallback) {
-    return {
-      label: "Szombat 10:00",
-      title: fallback.name,
-      recipe: fallback,
-    };
-  }
+    return scoreRecipe(b, bTags, bPantry) - scoreRecipe(a, aTags, aPantry) || a.duration - b.duration || a.name.localeCompare(b.name, "hu");
+  });
 
-  return null;
+  return ordered;
 }
 
-function getPantryAlert(shoppingItems: string[]) {
-  if (shoppingItems.length === 0) {
-    return "A kamrában most nincs kritikus hiány. A terv nyugodtan tartható.";
-  }
-
-  const items = shoppingItems.slice(0, 2).join(" és ");
-  return `${items} kritikus szinten. Hozzáadva a megosztott bevásárlólistához.`;
-}
-
-function MobileRecommendationCard({
+function MobileRecipeCard({
   recipe,
   onViewRecipe,
 }: {
   recipe: Recipe;
   onViewRecipe: (recipe: Recipe) => void;
 }) {
+  const meta = [
+    { icon: "schedule", label: `${recipe.duration} perc` },
+    ...(recipe.tags ?? [])
+      .filter((tag) => ["gyerekbarát", "gyors", "2 napra elég", "kamrabarát"].includes(tag))
+      .slice(0, 2)
+      .map((tag) => ({
+        icon: tag === "2 napra elég" ? "calendar_month" : tag === "kamrabarát" ? "eco" : "sentiment_satisfied",
+        label: tag === "2 napra elég" ? "2 napra" : tag === "kamrabarát" ? "Kamra" : "Gyerekbarát",
+      })),
+  ];
+
   return (
     <button
       onClick={() => onViewRecipe(recipe)}
-      className="overflow-hidden rounded-[20px] border border-surface-variant bg-white text-left shadow-sm cursor-pointer"
+      className="flex items-center gap-4 rounded-[28px] border border-white/80 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.92))] p-3 text-left shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-[22px]">
         <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
-        <div className="absolute right-3 top-3 rounded-full bg-white/90 p-1.5 text-on-surface shadow-sm">
-          <span className="material-symbols-outlined text-[18px]">favorite_border</span>
-        </div>
+        {recipe.sourceName && (
+          <div className="absolute left-2 top-2 rounded-full bg-[rgba(255,249,237,0.92)] px-2 py-0.5 text-[9px] font-semibold text-[var(--ff-caramel-strong)]">
+            {recipe.sourceName}
+          </div>
+        )}
       </div>
-      <div className="p-3">
-        <h4 className="text-sm font-semibold leading-tight text-on-surface">{recipe.name}</h4>
-        <div className="mt-2 flex items-center gap-1 text-xs text-on-surface-variant">
-          <span className="material-symbols-outlined text-[14px]">schedule</span>
-          {recipe.duration} perc
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <h4 className="line-clamp-2 text-[16px] font-semibold leading-tight tracking-[-0.02em] text-[var(--ff-text)]">{recipe.name}</h4>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--ff-text-soft)]">
+            <span className="material-symbols-outlined text-[18px]">bookmark</span>
+          </span>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+          {meta.map((item) => (
+            <span key={`${recipe.id}-${item.label}`} className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--ff-text-muted)]">
+              <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
+              {item.label}
+            </span>
+          ))}
         </div>
       </div>
     </button>
@@ -124,182 +166,375 @@ export default function EtkezesMobileView({
   shoppingItems,
   pantryItems,
   catalog,
-  onStartCooking,
+  onAddMeal,
   onViewRecipe,
-  onGenerateIdeas,
 }: Props) {
-  const currentStage = useMemo(() => getCurrentStage(), []);
-  const nextMealMatch = nextMealData ? rankRecipesForPantry([nextMealData.recipe], pantryItems)[0] : null;
-  const missingCount = nextMealMatch?.missingIngredients.length ?? nextMealData?.recipe.ingredients.length ?? 0;
-  const ingredientProgress = nextMealData
-    ? Math.round(((nextMealMatch?.matchedIngredients.length ?? 0) / Math.max(nextMealData.recipe.ingredients.length, 1)) * 100)
-    : 0;
-  const weekendCard = useMemo(
-    () => getWeekendCard(weekDays, batches, nextMealData?.recipe ?? null),
-    [weekDays, batches, nextMealData],
+  const [screen, setScreen] = useState<MobileScreen>("landing");
+  const [days, setDays] = useState<DayChoice>(2);
+  const [time, setTime] = useState<TimeChoice>(30);
+  const [style, setStyle] = useState<StyleChoice>("Gyerekbarát");
+  const [filter, setFilter] = useState<FilterChoice>("Összes");
+
+  const greeting = useMemo(() => getGreeting(), []);
+  const plannedDaysCount = useMemo(
+    () => weekDays.filter((day) => getBatchesForDate(batches, day.dateKey).length > 0).length,
+    [batches, weekDays],
   );
-  const recommendations = useMemo(() => catalog.slice(0, 3), [catalog]);
+
+  const suggestedRecipes = useMemo(() => {
+    const base = catalog.length ? catalog : [];
+    const timeFiltered = base.filter((recipe) => time === "mind" || recipe.duration <= time);
+    const ranked = applyStyleRanking(timeFiltered, style, pantryItems);
+    return ranked.filter((recipe) => matchesFilter(recipe, filter, pantryItems)).slice(0, 12);
+  }, [catalog, filter, pantryItems, style, time]);
+
+  const landingRecipes = suggestedRecipes.slice(0, 4);
+  const weeklyProgressWidth = `${Math.max((plannedDaysCount / 7) * 100, plannedDaysCount > 0 ? 16 : 0)}%`;
+  const shoppingSummary =
+    shoppingItems.length > 0 ? "Okos lista, kevesebb felesleg" : "Már majdnem minden megvan";
+  const pantrySummary = pantryItems.length > 0 ? "Használd, amid van otthon" : "Adj hozzá pár alapanyagot";
 
   return (
-    <div className="md:hidden">
-      <header className="fixed top-0 z-50 w-full border-none bg-white/80 shadow-[0_4px_20px_-2px_rgba(74,93,78,0.08)] backdrop-blur-lg">
-        <div className="flex w-full items-center justify-between px-6 py-4">
-          <button className="text-[#4A5D4E] transition-opacity cursor-pointer">
-            <span className="material-symbols-outlined text-[28px]">calendar_today</span>
-          </button>
-          <h1 className="text-lg font-semibold tracking-tight text-[#4A5D4E]">Családi Terv</h1>
-          <button className="h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-primary-container text-on-primary-container shadow-sm cursor-pointer">
-            <span className="flex h-full w-full items-center justify-center text-sm font-bold">FN</span>
-          </button>
-        </div>
-      </header>
+    <div className="relative min-h-screen overflow-hidden bg-[var(--ff-bg)] md:hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.95),transparent_28%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.82),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(255,240,227,0.72),transparent_24%)]" />
 
-      <main className="flex w-full flex-col gap-0 pb-32 pt-[72px]">
-        <section className="relative w-full rounded-b-[2.5rem] bg-primary px-6 py-8 text-on-primary shadow-xl">
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary-fixed-dim">Jelenleg</span>
-              <h3 className="text-lg font-semibold text-on-primary">{currentStage.current}</h3>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-fixed text-primary shadow-inner">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-            </div>
-          </div>
-
-          <div className="relative mb-6 h-2 w-full overflow-hidden rounded-full bg-primary-fixed-dim/30">
-            <div className="absolute left-0 top-0 h-full rounded-full bg-primary-fixed" style={{ width: `${currentStage.progress}%` }} />
-          </div>
-
-          <div className="relative flex justify-between px-2">
-            {[
-              { label: "Reggel", icon: "wb_sunny", active: currentStage.stage === "Reggel" },
-              { label: "Délután", icon: "schedule", active: currentStage.stage === "Délután" },
-              { label: "Este", icon: "nightlight_round", active: currentStage.stage === "Este" },
-            ].map((item) => (
-              <div key={item.label} className="flex flex-col items-center gap-2">
-                <div className={`flex h-8 w-8 items-center justify-center rounded-full ${item.active ? "border-2 border-primary-fixed bg-primary text-primary-fixed shadow-sm" : item.label === "Reggel" ? "bg-primary-fixed text-primary shadow-sm" : "bg-primary-fixed-dim/20 text-primary-fixed-dim/70"}`}>
-                  <span className="material-symbols-outlined text-[16px]">{item.icon}</span>
+      <main className="relative flex min-h-screen flex-col px-4 pb-28 pt-5">
+        {screen === "landing" && (
+          <>
+            <header className="flex items-center justify-between gap-3 pb-5">
+              <div className="flex items-center gap-3">
+                <div className="ff-glass-card flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
+                  <span className="text-sm font-bold">A</span>
                 </div>
-                <span className={`text-[11px] font-medium ${item.active || item.label === "Reggel" ? "text-primary-fixed" : "text-primary-fixed-dim/70"}`}>{item.label}</span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Étkezés</p>
+                  <h1 className="text-lg font-semibold text-[var(--ff-text)]">{greeting}</h1>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
+              <button className="ff-icon-button flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-text-muted)]">
+                <span className="material-symbols-outlined text-[20px]">notifications</span>
+              </button>
+            </header>
 
-        {nextMealData && (
-          <section className="mb-12 mt-8 flex flex-col gap-3 px-6">
-            <h2 className="px-1 text-2xl font-semibold tracking-tight text-primary">Mai Vacsora</h2>
-            <div className="relative pt-2">
-              <button
-                onClick={() => onStartCooking(nextMealData.recipe)}
-                className="relative h-[260px] w-full overflow-hidden rounded-[22px] shadow-lg cursor-pointer"
-              >
-                <RecipeImage recipe={nextMealData.recipe} className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-black/10" />
-                <div className="absolute left-4 top-4 flex gap-2">
-                  <span className="flex items-center gap-1 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur-md">
-                    <span className="material-symbols-outlined text-[14px]">timer</span>
-                    {nextMealData.recipe.duration}p
+            <section className="relative overflow-hidden rounded-[36px] border border-white/72 bg-[linear-gradient(145deg,rgba(255,250,240,0.96),rgba(246,228,203,0.78))] p-4 text-[var(--ff-text-inverse)] shadow-[0_28px_60px_-30px_rgba(61,49,34,0.36)]">
+              <div className="absolute inset-0">
+                <div
+                  className="h-full w-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${LANDING_HERO_IMAGE})` }}
+                />
+              </div>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(31,22,14,0.24),rgba(31,22,14,0.58))]" />
+              <div className="relative">
+                <p className="flex items-center gap-2 text-[13px] font-semibold text-[rgba(255,248,238,0.98)] [text-shadow:0_1px_10px_rgba(26,18,12,0.28)]">
+                  <span className="material-symbols-outlined text-[17px] text-[rgba(244,188,95,0.98)]">wb_twilight</span>
+                  Mai vacsora
+                </p>
+                <h2 className="mt-4 max-w-[12rem] text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-[rgba(255,251,245,1)] [text-shadow:0_2px_14px_rgba(26,18,12,0.34)]">Mit főzzünk ma?</h2>
+                <p className="mt-2 max-w-[13rem] text-[15px] leading-snug text-[rgba(255,244,230,0.98)] [text-shadow:0_1px_12px_rgba(26,18,12,0.32)]">
+                  Pár gyors döntés, és mutatjuk az ötleteket.
+                </p>
+
+                <div className="mt-5 grid grid-cols-3 gap-2">
+                  {[
+                    { icon: "calendar_month", label: "2 napra" },
+                    { icon: "schedule", label: "30 perc" },
+                    { icon: "sentiment_satisfied", label: "Gyerekbarát" },
+                  ].map((item) => (
+                    <span
+                      key={item.label}
+                      className="flex items-center justify-center gap-2 rounded-full border border-white/28 bg-[rgba(255,249,237,0.94)] px-2.5 py-2.5 text-[11px] font-medium text-[var(--ff-text)] shadow-[0_14px_20px_-18px_rgba(61,49,34,0.28)]"
+                    >
+                      <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
+                      <span className="whitespace-nowrap">{item.label}</span>
+                    </span>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setScreen("chooser")}
+                  className="mt-5 flex w-full items-center justify-between rounded-[999px] bg-[linear-gradient(135deg,#dc994e,#c88432)] px-5 py-4 text-[var(--ff-text-inverse)] shadow-[0_20px_36px_-18px_rgba(185,130,71,0.48)]"
+                >
+                  <span className="flex-1 pl-3 text-center text-[18px] font-semibold tracking-[-0.02em]">Kaja kiválasztása</span>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#c68437] shadow-[0_12px_22px_-16px_rgba(61,49,34,0.24)]">
+                    <span className="material-symbols-outlined text-[21px]">arrow_forward</span>
                   </span>
-                </div>
-              </button>
+                </button>
+              </div>
+            </section>
 
-              <div className="absolute -bottom-10 left-4 right-4 flex flex-col gap-3 rounded-[22px] border border-white/60 bg-white/95 p-5 shadow-[0_12px_40px_rgba(74,93,78,0.12)] backdrop-blur-xl">
-                <div>
-                  <h3 className="mb-1 text-2xl font-semibold text-primary">{nextMealData.recipe.name}</h3>
-                  <p className="text-base text-on-surface-variant">{nextMealData.recipe.description}</p>
-                </div>
-                <div className="mt-1 flex items-center justify-between">
-                  <div className="flex items-center gap-2 rounded-full bg-error-container px-3 py-1.5 text-on-error-container">
-                    <span className="material-symbols-outlined text-[16px]">warning</span>
-                    <span className="text-[13px] font-semibold">{missingCount} hiányzó tétel</span>
+            <section className="mt-5 grid grid-cols-3 gap-3">
+              <div className="rounded-[26px] border border-white/78 bg-[linear-gradient(145deg,rgba(234,244,226,0.98),rgba(206,225,190,0.9))] p-3.5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.22)]">
+                <div className="flex h-full min-h-[130px] flex-col justify-between gap-3">
+                  <div>
+                    <h3 className="text-[14px] font-semibold tracking-[-0.02em] text-[var(--ff-text)]">Heti terved</h3>
+                    <p className="mt-3 text-[17px] font-semibold text-[var(--ff-primary)]">{plannedDaysCount}/7 nap</p>
+                    <p className="mt-1 text-[11px] leading-snug text-[var(--ff-text-muted)]">
+                      {plannedDaysCount > 0 ? "Szuperül haladsz!" : "Kezdjük el együtt."}
+                    </p>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="text-[13px] font-semibold text-primary">{ingredientProgress}% kész</span>
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-surface-variant">
-                      <div className="h-full rounded-full bg-secondary-container" style={{ width: `${ingredientProgress}%` }} />
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="h-2 flex-1 rounded-full bg-[rgba(61,49,34,0.08)]">
+                      <div
+                        className="h-full rounded-full bg-[linear-gradient(135deg,var(--ff-primary-soft),var(--ff-primary))]"
+                        style={{ width: weeklyProgressWidth }}
+                      />
                     </div>
+                    <button
+                      onClick={() => setScreen("chooser")}
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,249,237,0.92)] text-[var(--ff-primary)] shadow-[0_10px_18px_-16px_rgba(61,49,34,0.28)]"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        )}
 
-        {weekendCard && (
-          <section className={`mb-24 flex flex-col gap-3 px-6 ${nextMealData ? "pt-4" : "mt-8"}`}>
-            <h2 className="px-1 text-2xl font-semibold tracking-tight text-primary">Hétvégi Kaland</h2>
-            <div className="relative pt-2">
+              <Link href="/bevasarlas" className="rounded-[26px] border border-white/78 bg-[linear-gradient(145deg,rgba(236,245,228,0.98),rgba(214,230,199,0.9))] p-3.5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.22)]">
+                <div className="flex h-full min-h-[130px] flex-col justify-between gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[16px] bg-[rgba(197,220,179,0.98)] text-[var(--ff-primary)] shadow-[0_10px_18px_-16px_rgba(61,49,34,0.22)]">
+                    <span className="material-symbols-outlined text-[20px]">shopping_basket</span>
+                  </div>
+                  <div>
+                    <h3 className="text-[14px] font-semibold tracking-[-0.02em] text-[var(--ff-text)]">Bevásárlás</h3>
+                    <p className="mt-2 text-[11px] leading-snug text-[var(--ff-text-muted)]">{shoppingSummary}</p>
+                  </div>
+                  <div className="flex justify-end">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,249,237,0.92)] text-[var(--ff-primary)] shadow-[0_10px_18px_-16px_rgba(61,49,34,0.28)]">
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+
               <button
-                onClick={() => onViewRecipe(weekendCard.recipe)}
-                className="relative h-[240px] w-full overflow-hidden rounded-[22px] shadow-lg cursor-pointer"
+                onClick={() => setScreen("chooser")}
+                className="rounded-[26px] border border-white/78 bg-[linear-gradient(145deg,rgba(255,245,233,0.98),rgba(248,222,194,0.92))] p-3.5 text-left shadow-[0_22px_40px_-28px_rgba(61,49,34,0.22)]"
               >
-                <RecipeImage recipe={weekendCard.recipe} className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-black/10" />
-                <div className="absolute right-4 top-4 flex flex-col items-center rounded-xl border border-white/50 bg-white/90 p-2.5 shadow-sm backdrop-blur-md">
-                  <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>partly_cloudy_day</span>
-                  <span className="mt-1 text-[11px] font-semibold text-on-surface">22°C</span>
+                <div className="flex h-full min-h-[130px] flex-col justify-between gap-3">
+                  <div className="relative h-12 w-16 overflow-hidden rounded-[16px] bg-[linear-gradient(145deg,rgba(255,249,237,0.96),rgba(246,228,203,0.82))]">
+                    <div className="absolute left-1 top-3 h-6 w-6 rounded-full bg-[rgba(246,228,203,0.96)]" />
+                    <div className="absolute left-5 top-1 h-10 w-10 rounded-full bg-[rgba(255,249,237,0.98)]" />
+                    <div className="absolute left-9 top-4 h-6 w-6 rounded-full bg-[rgba(230,168,121,0.22)]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[14px] font-semibold tracking-[-0.02em] text-[var(--ff-text)]">Kamra ötletek</h3>
+                    <p className="mt-2 text-[11px] leading-snug text-[var(--ff-text-muted)]">{pantrySummary}</p>
+                  </div>
+                  <div className="flex justify-end">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,249,237,0.92)] text-[var(--ff-primary)] shadow-[0_10px_18px_-16px_rgba(61,49,34,0.28)]">
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </span>
+                  </div>
                 </div>
               </button>
+            </section>
 
-              <div className="absolute -bottom-24 left-4 right-4 flex flex-col gap-4 rounded-[22px] border border-white/60 bg-white/95 p-5 shadow-[0_12px_40px_rgba(74,93,78,0.12)] backdrop-blur-xl">
-                <div>
-                  <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-secondary">{weekendCard.label}</span>
-                  <h3 className="text-2xl font-semibold text-primary">{weekendCard.title}</h3>
-                </div>
-
-                <div className="rounded-[16px] border border-surface-variant bg-surface p-3.5 shadow-sm">
-                  <h4 className="mb-2.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[18px]">backpack</span>
-                    Pakolási lista (Kiemelt)
-                  </h4>
-                  <ul className="flex flex-col gap-2.5">
-                    {weekendCard.recipe.ingredients.slice(0, 3).map((ingredient, index) => (
-                      <li key={ingredient} className="flex items-center gap-3">
-                        <div className={`flex h-5 w-5 items-center justify-center rounded border-2 ${index === 0 ? "border-primary bg-primary-fixed text-primary" : "border-outline"}`}>
-                          {index === 0 && <span className="material-symbols-outlined text-[14px] font-bold">check</span>}
-                        </div>
-                        <span className={`text-sm ${index === 0 ? "text-on-surface opacity-70 line-through" : "text-on-surface"}`}>{ingredient}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            <section className="mt-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Mai ötletek</h3>
+                <button
+                  onClick={() => setScreen("ideas")}
+                  className="flex items-center gap-1 text-[13px] font-medium text-[var(--ff-text-muted)]"
+                >
+                  Összes megtekintése
+                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                </button>
               </div>
-            </div>
-          </section>
+
+              <div className="flex flex-col gap-3">
+                {landingRecipes.length > 0 ? (
+                  landingRecipes.map((recipe) => (
+                    <MobileRecipeCard key={recipe.id} recipe={recipe} onViewRecipe={onViewRecipe} />
+                  ))
+                ) : (
+                  <div className="ff-glass-card rounded-[28px] px-5 py-8 text-center">
+                    <p className="text-sm text-[var(--ff-text-muted)]">Még nincs megjeleníthető ötlet.</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </>
         )}
 
-        <section className="px-6 pb-8">
-          <div className="flex items-start gap-4 rounded-2xl border border-error/20 bg-error-container/60 p-4 shadow-sm">
-            <div className="mt-0.5">
-              <span className="material-symbols-outlined text-on-error-container">notification_important</span>
+        {screen === "chooser" && (
+          <>
+            <header className="flex items-center justify-between gap-3 pb-4">
+              <button
+                onClick={() => setScreen("landing")}
+                className="ff-icon-button flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-text-muted)]"
+              >
+                <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+              </button>
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Gyors választás</span>
+              <div className="h-11 w-11" />
+            </header>
+
+            <section className="ff-glass-card relative overflow-hidden rounded-[36px] px-5 py-6 text-center">
+              <div className="absolute left-1/2 top-5 h-28 w-28 -translate-x-1/2 rounded-[34px] bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.7),transparent_35%),linear-gradient(145deg,rgba(124,145,111,0.9),rgba(55,67,50,0.88))] shadow-[0_24px_50px_-24px_rgba(55,67,50,0.55)]" />
+              <div className="absolute left-1/2 top-14 h-24 w-24 -translate-x-1/2 rounded-[32px] bg-[radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.24),transparent_42%),linear-gradient(145deg,rgba(221,230,211,0.5),rgba(255,249,237,0.16))] blur-[2px]" />
+              <div className="relative pt-32">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Szia, Anna!</p>
+                <h2 className="mt-2 text-[30px] font-semibold leading-[1.04] text-[var(--ff-text)]">Mit főzzünk ma?</h2>
+              </div>
+            </section>
+
+            <section className="mt-4">
+              <div className="grid grid-cols-2 gap-3">
+                {STYLE_OPTIONS.map((option) => {
+                  const selected = style === option.label;
+                  return (
+                    <button
+                      key={option.label}
+                      onClick={() => {
+                        setStyle(option.label);
+                        if (option.label === "30 perc alatt") setTime(30);
+                        if (option.label === "2 napra") setDays(2);
+                      }}
+                      className={`relative min-h-[112px] rounded-[28px] border p-4 text-left shadow-[0_14px_30px_-24px_rgba(61,49,34,0.28)] transition-all ${option.tone} ${selected ? "ring-2 ring-white/60 shadow-[0_18px_34px_-20px_rgba(61,49,34,0.34)]" : ""}`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="material-symbols-outlined text-[20px]">{option.icon}</span>
+                        {selected && (
+                          <span className="rounded-full bg-[rgba(255,255,255,0.72)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em]">
+                            Aktív
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-8 text-[15px] font-semibold leading-tight">{option.label}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="mt-4 grid grid-cols-2 gap-3">
+              <div className="ff-glass-card rounded-[26px] p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Hány napra?</p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {[
+                    { label: "Ma", value: 1 as DayChoice },
+                    { label: "2 napra", value: 2 as DayChoice },
+                    { label: "3 napra", value: 3 as DayChoice },
+                    { label: "Egész hétre", value: 7 as DayChoice },
+                  ].map((option) => (
+                    <button
+                      key={option.label}
+                      onClick={() => setDays(option.value)}
+                      className={`rounded-[18px] px-3 py-3 text-[12px] font-semibold transition-all ${
+                        days === option.value
+                          ? "bg-[linear-gradient(145deg,rgba(221,230,211,0.98),rgba(238,243,231,0.92))] text-[var(--ff-primary)]"
+                          : "bg-[rgba(255,252,244,0.78)] text-[var(--ff-text-muted)]"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ff-glass-card rounded-[26px] p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Mennyi idő?</p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {[
+                    { label: "15 perc", value: 15 as TimeChoice },
+                    { label: "30 perc", value: 30 as TimeChoice },
+                    { label: "45+ perc", value: 45 as TimeChoice },
+                    { label: "Mindegy", value: "mind" as TimeChoice },
+                  ].map((option) => (
+                    <button
+                      key={option.label}
+                      onClick={() => setTime(option.value)}
+                      className={`rounded-[18px] px-3 py-3 text-[12px] font-semibold transition-all ${
+                        time === option.value
+                          ? "bg-[linear-gradient(145deg,rgba(255,240,227,0.98),rgba(248,220,198,0.92))] text-[var(--ff-caramel-strong)]"
+                          : "bg-[rgba(255,252,244,0.78)] text-[var(--ff-text-muted)]"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <div className="mt-auto pt-5">
+              <button
+                onClick={() => setScreen("ideas")}
+                className="ff-button-primary flex w-full items-center justify-center gap-2 px-5 py-4 text-sm font-bold"
+              >
+                Mutasd az ötleteket
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </button>
             </div>
-            <div>
-              <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-on-error-container">Kamra Riport</h4>
-              <p className="text-sm leading-relaxed text-on-error-container/90">{getPantryAlert(shoppingItems)}</p>
+          </>
+        )}
+
+        {screen === "ideas" && (
+          <>
+            <header className="flex items-center justify-between gap-3 pb-4">
+              <button
+                onClick={() => setScreen("chooser")}
+                className="ff-icon-button flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-text-muted)]"
+              >
+                <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+              </button>
+              <div className="text-center">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Mai ötletek</p>
+                <h2 className="text-[22px] font-semibold text-[var(--ff-text)]">Mai ötletek</h2>
+              </div>
+              <button className="ff-icon-button flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-text-muted)]">
+                <span className="material-symbols-outlined text-[20px]">search</span>
+              </button>
+            </header>
+
+            <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+              {(["Összes", "Gyors", "Gyerekbarát", "Kamra"] as FilterChoice[]).map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setFilter(item)}
+                  className={`shrink-0 rounded-full px-4 py-2 text-[12px] font-semibold transition-all ${
+                    filter === item
+                      ? "bg-[linear-gradient(145deg,rgba(221,230,211,0.98),rgba(246,228,203,0.88))] text-[var(--ff-primary)] shadow-[0_12px_24px_-18px_rgba(61,49,34,0.3)]"
+                      : "ff-chip text-[var(--ff-text-muted)] shadow-none"
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
-          </div>
-        </section>
+
+            <section className="flex flex-col gap-3">
+              {suggestedRecipes.length > 0 ? (
+                suggestedRecipes.map((recipe) => (
+                  <MobileRecipeCard key={recipe.id} recipe={recipe} onViewRecipe={onViewRecipe} />
+                ))
+              ) : (
+                <div className="ff-glass-card rounded-[28px] px-5 py-8 text-center">
+                  <p className="text-sm text-[var(--ff-text-muted)]">Nincs még találat ehhez az irányhoz.</p>
+                </div>
+              )}
+            </section>
+
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={onAddMeal}
+                className="ff-button-secondary flex-1 px-4 py-3 text-sm font-semibold"
+              >
+                Részletesebb választás
+              </button>
+              <button
+                onClick={onViewRecipe.bind(null, suggestedRecipes[0] ?? catalog[0])}
+                disabled={!suggestedRecipes.length && !catalog.length}
+                className="ff-button-primary flex-1 px-4 py-3 text-sm font-bold disabled:opacity-60"
+              >
+                Első recept
+              </button>
+            </div>
+          </>
+        )}
       </main>
 
-      <nav className="fixed bottom-6 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-around rounded-full border border-white/20 bg-white/90 px-2 py-2 shadow-[0_20px_50px_rgba(74,93,78,0.15)] backdrop-blur-2xl">
-        <button className="flex scale-90 flex-col items-center justify-center rounded-full bg-[#4A5D4E] px-5 py-2 text-white transition-all">
-          <span className="material-symbols-outlined mb-1" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
-          <span className="text-[11px] font-medium uppercase tracking-wide">Főoldal</span>
-        </button>
-        <Link href="/etkezes" className="flex flex-col items-center justify-center rounded-full px-5 py-2 text-[#4A5D4E]/60 transition-colors">
-          <span className="material-symbols-outlined mb-1">restaurant</span>
-          <span className="text-[11px] font-medium uppercase tracking-wide">Étkezés</span>
-        </Link>
-        <Link href="/programok" className="flex flex-col items-center justify-center rounded-full px-5 py-2 text-[#4A5D4E]/60 transition-colors">
-          <span className="material-symbols-outlined mb-1">event_available</span>
-          <span className="text-[11px] font-medium uppercase tracking-wide">Hétvége</span>
-        </Link>
-        <Link href="/kamra" className="flex flex-col items-center justify-center rounded-full px-5 py-2 text-[#4A5D4E]/60 transition-colors">
-          <span className="material-symbols-outlined mb-1">group</span>
-          <span className="text-[11px] font-medium uppercase tracking-wide">Család</span>
-        </Link>
-      </nav>
+      <MobileBottomNav />
     </div>
   );
 }

@@ -12,8 +12,18 @@ export interface Recipe {
   tags?: string[];
   source?: "local" | "hungarian-web" | "wikikonyvek" | "mek" | "user-import";
   sourceUrl?: string;
+  sourceName?: string;
   area?: string;
   servings?: number;
+  difficulty?: "Könnyű" | "Közepes" | "Nehéz" | null;
+  ingredientGroups?: Array<{
+    name: string;
+    items: string[];
+  }>;
+  familyNotes?: string;
+  kidFriendlyNotes?: string;
+  shoppingListReady?: boolean;
+  openOriginalRecipeLabel?: string;
 }
 
 // Egy főzési alkalom ami több napra szól

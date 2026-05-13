@@ -1,0 +1,220 @@
+:root,
+html[data-theme="light"] {
+  --ff-bg: #f7f1e6;
+  --ff-bg-soft: #fbf7ef;
+  --ff-bg-warm: #f3e8d5;
+  --ff-bg-cream: #fff9ed;
+
+  --ff-surface: rgba(255, 252, 244, 0.78);
+  --ff-surface-strong: rgba(255, 248, 235, 0.92);
+  --ff-surface-muted: rgba(244, 235, 219, 0.72);
+  --ff-glass-border: rgba(255, 255, 255, 0.55);
+  --ff-card-border: rgba(74, 67, 54, 0.08);
+
+  --ff-primary: #374332;
+  --ff-primary-strong: #263326;
+  --ff-primary-soft: #5e7157;
+  --ff-primary-muted: #dde6d3;
+  --ff-primary-glass: rgba(55, 67, 50, 0.14);
+
+  --ff-sage: #7c916f;
+  --ff-sage-soft: #d8e0cb;
+  --ff-sage-light: #eef3e6;
+
+  --ff-caramel: #b98247;
+  --ff-caramel-strong: #9a6331;
+  --ff-caramel-soft: #e7c49a;
+  --ff-caramel-light: #f6e4cb;
+
+  --ff-peach: #e6a879;
+  --ff-peach-soft: #f8dcc6;
+  --ff-peach-light: #fff0e3;
+
+  --ff-text: #1f211d;
+  --ff-text-muted: #6f6a60;
+  --ff-text-soft: #9b9488;
+  --ff-text-inverse: #fff9ed;
+
+  --ff-shadow-soft: 0 18px 45px rgba(61, 49, 34, 0.08);
+  --ff-shadow-card: 0 22px 60px rgba(61, 49, 34, 0.11);
+  --ff-shadow-card-strong: 0 26px 70px rgba(61, 49, 34, 0.14);
+  --ff-shadow-button: 0 12px 28px rgba(38, 51, 38, 0.2);
+  --ff-shadow-warm: 0 24px 70px rgba(185, 130, 71, 0.16);
+
+  --ff-radius-sm: 12px;
+  --ff-radius-md: 18px;
+  --ff-radius-lg: 26px;
+  --ff-radius-xl: 34px;
+  --ff-radius-pill: 999px;
+}
+
+html[data-theme="dark"] {
+  --ff-bg: #1f201c;
+  --ff-bg-soft: #272822;
+  --ff-bg-warm: #2f3028;
+  --ff-bg-cream: #36362e;
+  --ff-surface: rgba(47, 48, 40, 0.74);
+  --ff-surface-strong: rgba(56, 57, 47, 0.92);
+  --ff-surface-muted: rgba(61, 58, 51, 0.72);
+  --ff-glass-border: rgba(255, 255, 255, 0.08);
+  --ff-card-border: rgba(255, 255, 255, 0.08);
+  --ff-primary: #c8d6bf;
+  --ff-primary-strong: #e3eddc;
+  --ff-primary-soft: #9cae91;
+  --ff-primary-muted: rgba(200, 214, 191, 0.18);
+  --ff-primary-glass: rgba(200, 214, 191, 0.14);
+  --ff-sage: #a9b59c;
+  --ff-sage-soft: rgba(169, 181, 156, 0.22);
+  --ff-sage-light: rgba(169, 181, 156, 0.14);
+  --ff-caramel: #d29c63;
+  --ff-caramel-strong: #efb780;
+  --ff-caramel-soft: rgba(210, 156, 99, 0.24);
+  --ff-caramel-light: rgba(210, 156, 99, 0.16);
+  --ff-peach: #f1b68b;
+  --ff-peach-soft: rgba(241, 182, 139, 0.2);
+  --ff-peach-light: rgba(241, 182, 139, 0.12);
+  --ff-text: #f4efe6;
+  --ff-text-muted: #c1b9ab;
+  --ff-text-soft: #978f83;
+  --ff-text-inverse: #1f201c;
+  --ff-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.24);
+  --ff-shadow-card: 0 22px 60px rgba(0, 0, 0, 0.3);
+  --ff-shadow-card-strong: 0 26px 70px rgba(0, 0, 0, 0.34);
+  --ff-shadow-button: 0 12px 28px rgba(0, 0, 0, 0.32);
+  --ff-shadow-warm: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.ff-glass-card {
+  background: linear-gradient(145deg, rgba(255, 252, 244, 0.88), rgba(246, 235, 216, 0.62));
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid var(--ff-glass-border);
+  box-shadow: var(--ff-shadow-card);
+}
+
+.ff-glass-card-strong {
+  background: linear-gradient(145deg, rgba(255, 252, 244, 0.94), rgba(248, 238, 221, 0.78));
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--ff-glass-border);
+  box-shadow: var(--ff-shadow-card);
+}
+
+.ff-glass-card-sage {
+  background: linear-gradient(145deg, rgba(255, 252, 244, 0.88), rgba(235, 242, 226, 0.74));
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid var(--ff-glass-border);
+  box-shadow: var(--ff-shadow-card);
+}
+
+.ff-glass-card-warm {
+  background: linear-gradient(145deg, rgba(255, 249, 238, 0.9), rgba(246, 224, 204, 0.78));
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid var(--ff-glass-border);
+  box-shadow: var(--ff-shadow-warm);
+}
+
+.ff-glass-card-subtle {
+  background: linear-gradient(145deg, rgba(255, 251, 244, 0.84), rgba(247, 239, 225, 0.68));
+  backdrop-filter: blur(20px) saturate(1.18);
+  -webkit-backdrop-filter: blur(20px) saturate(1.18);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  box-shadow: var(--ff-shadow-soft);
+}
+
+.ff-glass-card-priority {
+  background: linear-gradient(145deg, rgba(255, 245, 233, 0.9), rgba(246, 228, 203, 0.8));
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  box-shadow: var(--ff-shadow-card-strong);
+}
+
+.ff-dock {
+  background: rgba(255, 250, 240, 0.72);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 18px 0 60px rgba(61, 49, 34, 0.08);
+}
+
+.ff-button-primary {
+  background: linear-gradient(135deg, var(--ff-primary), var(--ff-primary-strong));
+  color: var(--ff-text-inverse);
+  border-radius: var(--ff-radius-pill);
+  box-shadow: var(--ff-shadow-button);
+}
+
+.ff-button-primary:hover,
+.ff-button-warm:hover {
+  filter: brightness(1.03);
+}
+
+.ff-button-secondary {
+  background: rgba(255, 252, 244, 0.72);
+  border: 1px solid rgba(74, 67, 54, 0.1);
+  color: var(--ff-primary);
+  border-radius: var(--ff-radius-pill);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.ff-button-warm {
+  background: linear-gradient(135deg, var(--ff-caramel), var(--ff-caramel-strong));
+  color: var(--ff-text-inverse);
+  border-radius: var(--ff-radius-pill);
+  box-shadow: 0 12px 28px rgba(185, 130, 71, 0.24);
+}
+
+.ff-chip {
+  border-radius: var(--ff-radius-pill);
+  border: 1px solid rgba(74, 67, 54, 0.08);
+  background: rgba(255, 251, 244, 0.76);
+  color: var(--ff-text-muted);
+}
+
+.ff-icon-button {
+  background: rgba(255, 252, 244, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: var(--ff-shadow-soft);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.ff-input,
+.ff-select,
+.ff-textarea {
+  border-radius: var(--ff-radius-md);
+  border: 1px solid rgba(74, 67, 54, 0.1);
+  background: rgba(255, 253, 248, 0.88);
+  color: var(--ff-text);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ff-input::placeholder,
+.ff-textarea::placeholder {
+  color: var(--ff-text-soft);
+}
+
+.ff-input:focus,
+.ff-select:focus,
+.ff-textarea:focus {
+  outline: none;
+  border-color: rgba(55, 67, 50, 0.28);
+  box-shadow: 0 0 0 3px rgba(221, 230, 211, 0.76);
+}
+
+.ff-modal-shell {
+  background: linear-gradient(180deg, rgba(253, 251, 248, 0.99), rgba(248, 244, 239, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 32px 100px -26px rgba(20, 25, 20, 0.48);
+}
+
+.ff-section-heading {
+  color: var(--ff-text);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}

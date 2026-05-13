@@ -14,35 +14,40 @@ export default function SideNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed left-0 top-0 h-full flex-col p-4 z-50 bg-white/80 backdrop-blur-xl w-28 rounded-r-[32px] border-r border-stone-100 shadow-[20px_0_60px_-15px_rgba(74,93,78,0.1)] hidden md:flex items-center">
-      {/* Logo */}
-      <div className="flex flex-col items-center mb-10 w-full mt-4">
-        <div className="w-14 h-14 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-sm">
+    <nav className="ff-dock fixed left-0 top-0 z-50 hidden h-full w-24 flex-col items-center rounded-r-[var(--ff-radius-xl)] p-3 md:flex">
+      <Link
+        href="/iranyitopult"
+        className="ff-glass-card mt-3 mb-7 flex w-full flex-col items-center gap-2 rounded-[24px] px-2 py-3 text-center transition-colors hover:bg-[rgba(255,252,244,0.92)]"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-[var(--ff-radius-md)] bg-[var(--ff-primary-glass)] text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
           <span
-            className="material-symbols-outlined text-3xl"
+            className="material-symbols-outlined text-[28px]"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             family_home
           </span>
         </div>
-      </div>
+        <div className="space-y-0.5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Family</p>
+          <p className="text-[12px] font-semibold text-[var(--ff-primary)]">Flow</p>
+        </div>
+      </Link>
 
-      {/* Nav linkek */}
-      <div className="flex flex-col gap-3 flex-grow w-full items-center">
+      <div className="flex w-full flex-grow flex-col items-center gap-2.5">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (pathname === "/" && item.href === "/iranyitopult");
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-1.5 w-full py-4 rounded-2xl text-[11px] font-medium transition-all duration-200 ${
+              className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[22px] px-2 py-3 text-[11px] font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-primary-container text-on-primary-container shadow-lg"
-                  : "text-stone-500 hover:text-primary-container hover:bg-stone-50"
+                  ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] shadow-[var(--ff-shadow-button)]"
+                  : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,252,244,0.86)] hover:text-[var(--ff-primary)]"
               }`}
             >
               <span
-                className="material-symbols-outlined"
+                className="material-symbols-outlined text-[22px]"
                 style={
                   isActive && item.fillActive
                     ? { fontVariationSettings: "'FILL' 1" }
@@ -56,24 +61,18 @@ export default function SideNav() {
           );
         })}
 
-        {/* Alsó szekció */}
-        <div className="mt-auto w-full flex flex-col items-center gap-2 border-t border-stone-200/60 pt-3">
+        <div className="mt-auto flex w-full flex-col items-center gap-2 border-t border-[var(--ff-card-border)] pt-3">
           <Link
             href="/beallitasok"
-            className={`flex flex-col items-center justify-center gap-1.5 w-full py-3 rounded-2xl text-[11px] font-medium transition-all duration-200 ${
+            className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[20px] py-3 text-[11px] font-medium transition-all duration-200 ${
               pathname === "/beallitasok"
-                ? "bg-primary-container text-on-primary-container"
-                : "text-stone-500 hover:text-primary-container hover:bg-stone-50"
+                ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] shadow-[var(--ff-shadow-button)]"
+                : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,252,244,0.86)] hover:text-[var(--ff-primary)]"
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">settings</span>
             <span>Beállítások</span>
           </Link>
-
-          {/* Gyors hozzáadás — kisebb, integrált */}
-          <button className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-200 mb-2 cursor-pointer">
-            <span className="material-symbols-outlined text-[20px]">add</span>
-          </button>
         </div>
       </div>
     </nav>

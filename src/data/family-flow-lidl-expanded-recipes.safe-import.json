@@ -1,0 +1,1779 @@
+{
+  "schemaVersion": "2.0.0",
+  "createdAt": "2026-05-11T19:38:17.489893+00:00",
+  "source": {
+    "name": "Lidl Konyha",
+    "baseUrl": "https://konyha.lidl.hu",
+    "importMode": "external-reference-with-original-family-flow-version",
+    "contentPolicy": [
+      "The source URL is retained for attribution and later manual checking.",
+      "The recipe text in this file is not copied from Lidl; it is an original Family Flow home-cooking version inspired by the recipe title.",
+      "No Lidl images are downloaded or stored.",
+      "Use user-uploaded, AI-generated, licensed, or placeholder images only.",
+      "This format allows the user to stay inside Family Flow while keeping a visible link to the original source."
+    ]
+  },
+  "recipes": [
+    {
+      "id": "lidl-gombafasirt-csicsokapurevel",
+      "title": "Gombafasírt, csicsókapürével",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/gombafasirt-csicsokapurevel",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 80,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "vegetáriánus",
+        "gombás",
+        "hétvégi",
+        "családi"
+      ],
+      "safeShortDescription": "Saját, otthoni verzió gombás fasírttal és krémes csicsókás körettel. Jó választás húsmentes ebédhez vagy előre elkészíthető vacsorához.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Modern overhead food photo of vegetarian mushroom patties with creamy root vegetable puree, warm family dinner table, natural light, no brand logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Gombafasírt",
+          "items": [
+            {
+              "name": "csiperkegomba",
+              "amount": 500,
+              "unit": "g"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "tojás",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "zsemlemorzsa",
+              "amount": 5,
+              "unit": "ek"
+            },
+            {
+              "name": "petrezselyem",
+              "amount": 1,
+              "unit": "csokor"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "olaj",
+              "amount": 3,
+              "unit": "ek",
+              "note": "sütéshez"
+            }
+          ]
+        },
+        {
+          "name": "Csicsókapüré",
+          "items": [
+            {
+              "name": "csicsóka",
+              "amount": 600,
+              "unit": "g"
+            },
+            {
+              "name": "burgonya",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "vaj",
+              "amount": 40,
+              "unit": "g"
+            },
+            {
+              "name": "tej vagy tejszín",
+              "amount": 100,
+              "unit": "ml"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A csicsókát és a burgonyát hámozd meg, darabold fel, majd sós vízben főzd puhára.",
+        "Közben a gombát aprítsd finomra. A hagymát és fokhagymát kevés olajon párold meg, majd add hozzá a gombát.",
+        "Pirítsd addig, amíg a gomba levet ereszt, majd a leve nagy része elpárolog. Hagyd langyosra hűlni.",
+        "Keverd össze a gombás alapot tojással, zsemlemorzsával és aprított petrezselyemmel. Sózd, borsozd.",
+        "Formázz kisebb pogácsákat, majd serpenyőben mindkét oldalukat süsd aranybarnára.",
+        "A megfőtt csicsókát és burgonyát szűrd le, add hozzá a vajat és a tejet vagy tejszínt, majd törd krémes pürévé.",
+        "Tálald a gombafasírtot a csicsókapürével. Friss saláta vagy savanyúság jól illik mellé."
+      ],
+      "familyNotes": "Ha gyerekeknek készül, a fokhagymát és borsot érdemes visszafogni. A fasírt kisebb méretben könnyebben fogyasztható.",
+      "kidFriendlyNotes": "Kis fasírtgolyóként tálalva gyerekbarátabb lehet.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-tofuval-toltott-paprika",
+      "title": "Tofuval töltött paprika",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/tofuval-toltott-paprika",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 90,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "vegetáriánus",
+        "tofu",
+        "paprika",
+        "meal-prep"
+      ],
+      "safeShortDescription": "Saját húsmentes töltött paprika verzió tofuval, rizzsel és paradicsomos alappal. Előre is elkészíthető.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Stuffed bell peppers with tofu and rice on a ceramic plate, cozy family kitchen style, realistic food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Töltött paprika",
+          "items": [
+            {
+              "name": "tv paprika vagy kaliforniai paprika",
+              "amount": 8,
+              "unit": "db"
+            },
+            {
+              "name": "natúr tofu",
+              "amount": 300,
+              "unit": "g"
+            },
+            {
+              "name": "főtt rizs",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "fűszerpaprika",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "olaj",
+              "amount": 2,
+              "unit": "ek"
+            }
+          ]
+        },
+        {
+          "name": "Paradicsomos alap",
+          "items": [
+            {
+              "name": "passzírozott paradicsom",
+              "amount": 700,
+              "unit": "ml"
+            },
+            {
+              "name": "víz vagy zöldségalaplé",
+              "amount": 300,
+              "unit": "ml"
+            },
+            {
+              "name": "cukor vagy méz",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "babérlevél",
+              "amount": 1,
+              "unit": "db",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A paprikák tetejét vágd le, a magházat távolítsd el.",
+        "A hagymát aprítsd fel, majd kevés olajon párold üvegesre. Add hozzá a fokhagymát és morzsold bele a tofut.",
+        "Fűszerezd sóval, borssal és fűszerpaprikával, majd keverd össze a főtt rizzsel.",
+        "Töltsd meg a paprikákat a tofu-rizs keverékkel.",
+        "Egy lábasban keverd össze a paradicsomos alap hozzávalóit, majd helyezd bele a töltött paprikákat.",
+        "Fedő alatt, közepes lángon főzd puhára körülbelül 35-45 perc alatt.",
+        "Tálalás előtt hagyd pár percet állni, hogy a töltelék jobban összeálljon."
+      ],
+      "familyNotes": "A tofut villával jól össze lehet törni, így jobban hasonlít darált húsos töltelékre. Gyerekeknek kevésbé savas paradicsomszósszal érdemes készíteni.",
+      "kidFriendlyNotes": "A paradicsomos szószt enyhén édesítve gyerekbarátabb.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-datolyas-mogyorovajas-brownie",
+      "title": "Datolyás-mogyoróvajas sütés nélküli brownie",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/datolyas-mogyorovajas-sutes-nelkuli-brownie",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 60,
+      "servings": 8,
+      "category": "Desszert",
+      "tags": [
+        "desszert",
+        "sütés-nélküli",
+        "gyerekekkel-is",
+        "édes"
+      ],
+      "safeShortDescription": "Sütés nélküli, datolyás-kakaós édesség mogyoróvajjal. Hűtés után szeletelhető, uzsonnára is jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "No-bake date peanut butter brownie squares on a small plate, cozy dessert photography, soft natural light, no brand logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Brownie alap",
+          "items": [
+            {
+              "name": "puha datolya",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "darált mandula vagy zabpehely",
+              "amount": 120,
+              "unit": "g"
+            },
+            {
+              "name": "kakaópor",
+              "amount": 3,
+              "unit": "ek"
+            },
+            {
+              "name": "mogyoróvaj",
+              "amount": 3,
+              "unit": "ek"
+            },
+            {
+              "name": "vanília aroma",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "só",
+              "amount": 1,
+              "unit": "csipet"
+            }
+          ]
+        },
+        {
+          "name": "Tetejére",
+          "items": [
+            {
+              "name": "étcsokoládé",
+              "amount": 100,
+              "unit": "g"
+            },
+            {
+              "name": "mogyoróvaj",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "aprított mogyoró",
+              "amount": 2,
+              "unit": "ek",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A datolyát, ha keményebb, áztasd be 10 percre langyos vízbe, majd csepegtesd le.",
+        "Aprítóban dolgozd össze a datolyát, darált mandulát vagy zabpelyhet, kakaóport, mogyoróvajat, vaníliát és egy csipet sót.",
+        "A masszát nyomkodd sütőpapírral bélelt kisebb formába.",
+        "Olvaszd fel az étcsokoládét, keverd el benne a mogyoróvajat, majd simítsd a brownie tetejére.",
+        "Szórd meg aprított mogyoróval, majd tedd hűtőbe legalább 45 percre.",
+        "Hidegen szeleteld kis kockákra."
+      ],
+      "familyNotes": "Nagyon tömény desszert, ezért kis szeletekben érdemes adni. Ha gyerekek is eszik, válassz kevésbé keserű csokit.",
+      "kidFriendlyNotes": "Kis kockákra vágva jó uzsonna lehet, de mogyoróallergiára figyelni kell.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-toltott-savanyu-kaposzta-cserepedenyben",
+      "title": "Töltött savanyú káposzta cserépedényben",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/toltott-savanyu-kaposzta-cserepedenyben",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 120,
+      "servings": 6,
+      "category": "Főétel",
+      "tags": [
+        "magyaros",
+        "káposzta",
+        "tartalmas",
+        "hétvégi"
+      ],
+      "safeShortDescription": "Tartalmas, házias töltött káposzta verzió savanyú káposztával. Nagyobb adagban készítve másnap is jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Traditional stuffed sour cabbage rolls in a rustic clay pot, warm kitchen table, realistic food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Töltelék",
+          "items": [
+            {
+              "name": "darált sertéshús vagy pulykahús",
+              "amount": 700,
+              "unit": "g"
+            },
+            {
+              "name": "rizs",
+              "amount": 120,
+              "unit": "g"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "tojás",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "fűszerpaprika",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            }
+          ]
+        },
+        {
+          "name": "Káposztás alap",
+          "items": [
+            {
+              "name": "savanyú káposzta",
+              "amount": 1.2,
+              "unit": "kg"
+            },
+            {
+              "name": "savanyított káposztalevél",
+              "amount": 12,
+              "unit": "db"
+            },
+            {
+              "name": "füstölt hús vagy kolbász",
+              "amount": 250,
+              "unit": "g",
+              "optional": true
+            },
+            {
+              "name": "babérlevél",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "tejföl",
+              "amount": 200,
+              "unit": "g",
+              "optional": true,
+              "note": "tálaláshoz"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A rizst öblítsd át. A hagymát aprítsd finomra, majd keverd össze a darált hússal, rizzsel, tojással, fokhagymával és fűszerekkel.",
+        "A káposztalevelek vastag ereit vékonyítsd el, hogy könnyebb legyen tekerni.",
+        "Tölts minden levélbe egy adag húsos tölteléket, majd hajtsd be és tekerd fel.",
+        "Egy nagy edény vagy cserépedény aljára tegyél savanyú káposztát, erre jöhetnek a töltelékek.",
+        "Rétegezd tovább káposztával, opcionálisan füstölt hússal vagy kolbásszal.",
+        "Önts rá annyi vizet, hogy majdnem ellepje, add hozzá a babérlevelet.",
+        "Lassú tűzön vagy sütőben lefedve főzd/párold puhára körülbelül 90 perc alatt.",
+        "Tejföllel és friss kenyérrel tálald."
+      ],
+      "familyNotes": "Érdemes nagy adagot készíteni, mert másnap még finomabb. Gyerekeknek a füstölt részt külön is lehet kezelni.",
+      "kidFriendlyNotes": "A savanyú káposzta erősségét átmosással lehet enyhíteni.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-sult-csirkecombos-quesadilla",
+      "title": "Sült csirkecombos quesadilla mártogatósokkal",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/sult-csirkecombos-quesadilla-martogatosokkal",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 50,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "csirkés",
+        "gyorsabb-vacsora",
+        "mexikói-hangulat",
+        "maradékmentés"
+      ],
+      "safeShortDescription": "Ropogós tortillás vacsora szaftos csirkével, sajttal és egyszerű mártogatóssal. Maradék sült csirkéhez is jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Crispy chicken quesadilla slices with colorful dips on a wooden board, casual family dinner, realistic food photo, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Quesadilla",
+          "items": [
+            {
+              "name": "sült vagy főtt csirkecomb húsa",
+              "amount": 400,
+              "unit": "g"
+            },
+            {
+              "name": "tortillalap",
+              "amount": 8,
+              "unit": "db"
+            },
+            {
+              "name": "reszelt sajt",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "kukorica",
+              "amount": 150,
+              "unit": "g",
+              "optional": true
+            },
+            {
+              "name": "kaliforniai paprika",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "lilahagyma",
+              "amount": 0.5,
+              "unit": "db",
+              "optional": true
+            },
+            {
+              "name": "olaj",
+              "amount": 1,
+              "unit": "ek"
+            }
+          ]
+        },
+        {
+          "name": "Gyors mártogatós",
+          "items": [
+            {
+              "name": "tejföl vagy görög joghurt",
+              "amount": 200,
+              "unit": "g"
+            },
+            {
+              "name": "lime vagy citromlé",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "paradicsomsalsa",
+              "amount": 150,
+              "unit": "g",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A csirkehúst szedd le a csontról, majd tépkedd vagy vágd kisebb darabokra.",
+        "A paprikát és lilahagymát vágd apróra. Keverd össze a csirkével és kukoricával.",
+        "Egy tortillalapra szórj sajtot, kanalazz rá csirkés tölteléket, majd ismét sajtot.",
+        "Fedd le egy másik tortillalappal, és serpenyőben kevés olajon süsd mindkét oldalát ropogósra.",
+        "A mártogatóshoz keverd össze a tejfölt vagy joghurtot citromlével és sóval.",
+        "A kész quesadillát háromszögekre vágva, mártogatóssal tálald."
+      ],
+      "familyNotes": "A csípős fűszereket érdemes külön tálalni, így a gyerekek is ehetik az alapverziót.",
+      "kidFriendlyNotes": "Háromszögre vágva könnyen kézbe vehető.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-csirkepaprikas-galuskaval",
+      "title": "Csirkepaprikás galuskával, póréhagymás uborkasalátával",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/csirkepaprikas-galuskaval-porehagymas-uborkasalataval",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 80,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "magyaros",
+        "csirkés",
+        "klasszikus",
+        "hétvégi"
+      ],
+      "safeShortDescription": "Klasszikus, szaftos csirkepaprikás házi galuskával és friss uborkás salátával, családi ebédhez.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Hungarian chicken paprikash with dumplings and cucumber salad, warm family lunch, realistic food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Csirkepaprikás",
+          "items": [
+            {
+              "name": "csirkecomb vagy csirkemell",
+              "amount": 800,
+              "unit": "g"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "fűszerpaprika",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "paradicsom",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "paprika",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "tejföl",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "liszt",
+              "amount": 1,
+              "unit": "ek",
+              "note": "habaráshoz"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "olaj vagy zsír",
+              "amount": 2,
+              "unit": "ek"
+            }
+          ]
+        },
+        {
+          "name": "Galuska",
+          "items": [
+            {
+              "name": "liszt",
+              "amount": 400,
+              "unit": "g"
+            },
+            {
+              "name": "tojás",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "víz",
+              "amount": 200,
+              "unit": "ml"
+            },
+            {
+              "name": "só",
+              "amount": 1,
+              "unit": "tk"
+            }
+          ]
+        },
+        {
+          "name": "Uborkasaláta",
+          "items": [
+            {
+              "name": "uborka",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "póréhagyma",
+              "amount": 0.5,
+              "unit": "szál"
+            },
+            {
+              "name": "ecet vagy citromlé",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "cukor",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A hagymát aprítsd fel, majd olajon párold üvegesre.",
+        "Húzd le a tűzről, keverd bele a fűszerpaprikát, majd add hozzá a csirkét.",
+        "Tedd hozzá a paradicsomot, paprikát és fokhagymát, sózd, majd kevés vízzel párold puhára.",
+        "A tejfölt keverd el liszttel és kevés forró szafttal, majd sűrítsd be vele a paprikást.",
+        "A galuskához keverd össze a lisztet, tojást, vizet és sót. Nokedliszaggatóval szaggasd forró sós vízbe.",
+        "Az uborkát vékonyra szeleteld, sózd le, majd keverd össze póréhagymával, ecettel vagy citromlével és kevés cukorral.",
+        "Tálald a csirkepaprikást galuskával és uborkasalátával."
+      ],
+      "familyNotes": "A galuska előkészítése miatt hétvégére kényelmesebb, de csirkemellből gyorsítható.",
+      "kidFriendlyNotes": "A szaftból érdemes kevésbé borsos, lágyabb verziót készíteni.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-carbonara",
+      "title": "Carbonara",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/carbonara",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 30,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "tészta",
+        "gyors-vacsora",
+        "olaszos",
+        "komfort"
+      ],
+      "safeShortDescription": "Gyors, krémes tészta tojásos-sajtos alappal és pirított szalonnával. Hétköznap estére ideális.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Creamy carbonara pasta in a white bowl, minimal modern food photography, warm kitchen light, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Carbonara",
+          "items": [
+            {
+              "name": "spagetti",
+              "amount": 400,
+              "unit": "g"
+            },
+            {
+              "name": "tojássárgája",
+              "amount": 4,
+              "unit": "db"
+            },
+            {
+              "name": "egész tojás",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "parmezán vagy pecorino",
+              "amount": 80,
+              "unit": "g"
+            },
+            {
+              "name": "bacon vagy pancetta",
+              "amount": 180,
+              "unit": "g"
+            },
+            {
+              "name": "frissen őrölt bors",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A tésztát főzd al dentére bő, sós vízben. A főzővízből tegyél félre egy bögrényit.",
+        "A bacont vagy pancettát kockázd fel, majd serpenyőben pirítsd ropogósra.",
+        "A tojássárgákat, az egész tojást, a reszelt sajtot és sok borsot keverd össze egy tálban.",
+        "A leszűrt forró tésztát forgasd össze a szalonnával, majd húzd le a tűzről.",
+        "Gyorsan keverd hozzá a tojásos-sajtos alapot. Kevés főzővízzel lazítsd krémesre.",
+        "Azonnal tálald extra sajttal és borssal."
+      ],
+      "familyNotes": "A tojásos szószt ne közvetlen lángon keverd hozzá, különben rántottás állagú lehet.",
+      "kidFriendlyNotes": "Gyerekeknek kevesebb borssal és kisebb szalonnadarabokkal jobb.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-oszi-almas-pite",
+      "title": "Őszi almás pite vaníliafagyival",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/oszi-almas-pite-vaniliafagyival",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 120,
+      "servings": 8,
+      "category": "Desszert",
+      "tags": [
+        "desszert",
+        "alma",
+        "sütemény",
+        "hétvégi"
+      ],
+      "safeShortDescription": "Otthonos almás pite fahéjas töltelékkel. Melegen vaníliafagyival vagy hidegen uzsonnára is jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Homemade lattice apple pie with a scoop of vanilla ice cream, cozy autumn kitchen, realistic dessert photo, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Tészta",
+          "items": [
+            {
+              "name": "liszt",
+              "amount": 350,
+              "unit": "g"
+            },
+            {
+              "name": "hideg vaj",
+              "amount": 200,
+              "unit": "g"
+            },
+            {
+              "name": "porcukor",
+              "amount": 80,
+              "unit": "g"
+            },
+            {
+              "name": "tojássárgája",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "tejföl vagy hideg víz",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": 1,
+              "unit": "csipet"
+            }
+          ]
+        },
+        {
+          "name": "Almás töltelék",
+          "items": [
+            {
+              "name": "alma",
+              "amount": 1.2,
+              "unit": "kg"
+            },
+            {
+              "name": "cukor",
+              "amount": 80,
+              "unit": "g"
+            },
+            {
+              "name": "fahéj",
+              "amount": 2,
+              "unit": "tk"
+            },
+            {
+              "name": "citromlé",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "zsemlemorzsa vagy darált dió",
+              "amount": 3,
+              "unit": "ek"
+            }
+          ]
+        },
+        {
+          "name": "Tálalás",
+          "items": [
+            {
+              "name": "vaníliafagyi",
+              "amount": 4,
+              "unit": "gombóc",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A tészta hozzávalóit gyors mozdulatokkal gyúrd össze, majd csomagold be és pihentesd hűtőben legalább 30 percet.",
+        "Az almát hámozd meg, reszeld vagy szeleteld, majd keverd össze cukorral, fahéjjal és citromlével.",
+        "A tészta kétharmadát nyújtsd ki, bélelj ki vele egy piteformát.",
+        "Szórd meg az alját zsemlemorzsával vagy darált dióval, majd oszlasd el rajta az almás tölteléket.",
+        "A maradék tésztából készíts rácsot vagy fedőlapot a tetejére.",
+        "180 °C-on süsd aranybarnára körülbelül 40-45 perc alatt.",
+        "Langyosan, vaníliafagyival tálald."
+      ],
+      "familyNotes": "Ha az alma nagyon lédús, érdemes előtte kicsit kinyomkodni.",
+      "kidFriendlyNotes": "A fahéjas alma általában gyerekbarát, a fagyi extra motiváció.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-burrata-quinoa-salataval",
+      "title": "Burrata, quinoa salátával és nektarinnal",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/burrata-quinoa-salataval-es-nektarinnal",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 40,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "saláta",
+        "könnyed",
+        "nyári",
+        "vegetáriánus"
+      ],
+      "safeShortDescription": "Friss, nyárias saláta quinoával, burratával és nektarinnal. Könnyű ebédnek vagy vacsorának jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Burrata with quinoa salad, nectarines and tomatoes on a ceramic plate, bright summer food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Saláta",
+          "items": [
+            {
+              "name": "quinoa",
+              "amount": 200,
+              "unit": "g"
+            },
+            {
+              "name": "burrata",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "nektarin",
+              "amount": 3,
+              "unit": "db"
+            },
+            {
+              "name": "koktélparadicsom",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "rukkola vagy salátakeverék",
+              "amount": 100,
+              "unit": "g"
+            },
+            {
+              "name": "pirított magvak",
+              "amount": 3,
+              "unit": "ek",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "name": "Öntet",
+          "items": [
+            {
+              "name": "olívaolaj",
+              "amount": 4,
+              "unit": "ek"
+            },
+            {
+              "name": "citromlé",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "méz",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A quinoát alaposan öblítsd át, majd kétszeres mennyiségű vízben főzd puhára.",
+        "A nektarint szeleteld fel, a paradicsomot felezd el.",
+        "Az öntet hozzávalóit keverd össze.",
+        "A kihűlt vagy langyos quinoát forgasd össze a salátával, paradicsommal és nektarinnal.",
+        "Tedd rá a burratát, locsold meg az öntettel, majd szórd meg pirított magvakkal.",
+        "Frissen tálald."
+      ],
+      "familyNotes": "Ha a gyerekek nem szeretik a rukkolát, érdemes enyhébb salátakeverékkel készíteni.",
+      "kidFriendlyNotes": "A burrata és nektarin miatt édeskés, lágyabb ízvilágú lehet.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-tokeletes-turogomboc",
+      "title": "A tökéletes túrógombóc",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/a-tokeletes-turogomboc",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "category": "Desszert",
+      "tags": [
+        "desszert",
+        "magyaros",
+        "gyerekbarát",
+        "túrós"
+      ],
+      "safeShortDescription": "Puha túrógombóc pirított morzsában, tejföllel és porcukorral. Családi klasszikus.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Hungarian cottage cheese dumplings with toasted crumbs and sour cream, cozy family dessert photo, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Gombóc",
+          "items": [
+            {
+              "name": "túró",
+              "amount": 500,
+              "unit": "g"
+            },
+            {
+              "name": "búzadara",
+              "amount": 100,
+              "unit": "g"
+            },
+            {
+              "name": "tojás",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "cukor",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "citromhéj",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "só",
+              "amount": 1,
+              "unit": "csipet"
+            }
+          ]
+        },
+        {
+          "name": "Morzsa és tálalás",
+          "items": [
+            {
+              "name": "zsemlemorzsa",
+              "amount": 120,
+              "unit": "g"
+            },
+            {
+              "name": "vaj",
+              "amount": 40,
+              "unit": "g"
+            },
+            {
+              "name": "tejföl",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "porcukor",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A túrót törd át villával, majd keverd össze tojással, búzadarával, cukorral, sóval és opcionálisan citromhéjjal.",
+        "Pihentesd a masszát hűtőben legalább 30 percet, hogy a dara megszívja magát.",
+        "Közben vajon pirítsd aranybarnára a zsemlemorzsát.",
+        "Formázz nedves kézzel gombócokat a túrós masszából.",
+        "Gyöngyöző, enyhén sós vízben főzd őket addig, amíg feljönnek a víz tetejére, majd még 1-2 percig.",
+        "Szűrd le, forgasd pirított morzsába, és tejföllel, porcukorral tálald."
+      ],
+      "familyNotes": "A pihentetés fontos, különben a gombóc könnyebben széteshet.",
+      "kidFriendlyNotes": "Kisebb gombócokkal gyerekeknek könnyebb enni.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-pulykamellfalatok-sult-almas-salata",
+      "title": "Szaftos-fűszeres pulykamellfalatok, sült almás, langyos kevert salátával",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 30,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "pulyka",
+        "saláta",
+        "könnyed",
+        "hétköznapi"
+      ],
+      "safeShortDescription": "Gyors pulykás étel langyos, sült almás salátával. Könnyebb vacsorának vagy ebédnek jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Juicy turkey bites with warm roasted apple salad on a plate, clean modern food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Pulykafalatok",
+          "items": [
+            {
+              "name": "pulykamell",
+              "amount": 600,
+              "unit": "g"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "fűszerpaprika",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "méz",
+              "amount": 1,
+              "unit": "tk",
+              "optional": true
+            },
+            {
+              "name": "olaj",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            }
+          ]
+        },
+        {
+          "name": "Langyos saláta",
+          "items": [
+            {
+              "name": "alma",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "salátakeverék",
+              "amount": 150,
+              "unit": "g"
+            },
+            {
+              "name": "dió vagy tökmag",
+              "amount": 3,
+              "unit": "ek",
+              "optional": true
+            },
+            {
+              "name": "citromlé",
+              "amount": 1,
+              "unit": "ek"
+            },
+            {
+              "name": "olívaolaj",
+              "amount": 2,
+              "unit": "ek"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A pulykamelleket vágd falatnyi darabokra, majd keverd össze olajjal, fokhagymával és fűszerekkel.",
+        "Forró serpenyőben pirítsd meg a húst, majd süsd készre pár perc alatt.",
+        "Az almát szeleteld fel, és ugyanabban a serpenyőben röviden pirítsd meg.",
+        "A salátakeveréket forgasd össze citromlével, olívaolajjal, majd add hozzá a langyos almát.",
+        "Tálald a pulykafalatokat a langyos salátával, opcionálisan magvakkal megszórva."
+      ],
+      "familyNotes": "Ha tartalmasabb vacsora kell, bulgur vagy rizs is mehet mellé.",
+      "kidFriendlyNotes": "Az almás köret édeskés, ezért gyerekeknek is működhet.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-burgundi-marharagu",
+      "title": "Burgundi marharagu, avagy a boeuf bourguignon",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/burgundi-marharagu-avagy-a-boeuf-bourguignon",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Nehéz",
+      "totalTimeMinutes": 180,
+      "servings": 6,
+      "category": "Főétel",
+      "tags": [
+        "marha",
+        "ragu",
+        "hétvégi",
+        "lassú-főzés"
+      ],
+      "safeShortDescription": "Lassan készülő, gazdag marharagu zöldségekkel. Ráérős hétvégi főzéshez vagy vendégváráshoz ideális.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Rich beef bourguignon stew in a cast iron pot with vegetables, rustic dinner table, realistic food photo, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Ragu",
+          "items": [
+            {
+              "name": "marhalábszár vagy marhanyak",
+              "amount": 1,
+              "unit": "kg"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "sárgarépa",
+              "amount": 3,
+              "unit": "db"
+            },
+            {
+              "name": "gomba",
+              "amount": 300,
+              "unit": "g"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 3,
+              "unit": "gerezd"
+            },
+            {
+              "name": "paradicsompüré",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "vörösbor vagy marhaalaplé",
+              "amount": 500,
+              "unit": "ml"
+            },
+            {
+              "name": "marhaalaplé",
+              "amount": 500,
+              "unit": "ml"
+            },
+            {
+              "name": "babérlevél",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "kakukkfű",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "liszt",
+              "amount": 1,
+              "unit": "ek",
+              "optional": true
+            },
+            {
+              "name": "olaj",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A marhahúst vágd nagyobb kockákra, sózd, borsozd, majd forró edényben pirítsd körbe.",
+        "Vedd ki a húst, majd ugyanabban az edényben pirítsd meg a hagymát, répát és gombát.",
+        "Add hozzá a fokhagymát és paradicsompürét, majd keverd át.",
+        "Tedd vissza a húst, szórd meg kevés liszttel, majd öntsd fel borral vagy alaplével.",
+        "Add hozzá a babérlevelet és kakukkfüvet, majd alacsony lángon, lefedve főzd 2-2,5 órán át.",
+        "Akkor jó, amikor a hús könnyen szétnyomható villával.",
+        "Krumplipürével, friss kenyérrel vagy tésztával tálald."
+      ],
+      "familyNotes": "Alkoholmentes verzióhoz vörösbor helyett marhaalaplét használj.",
+      "kidFriendlyNotes": "Gyerekeknek a bor nélküli, lágyabb verzió javasolt.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-tavaszi-tekercs",
+      "title": "Tavaszi tekercs",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/tavaszi-tekercs",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "ázsiai",
+        "snack",
+        "gyerekekkel-is",
+        "mártogatós"
+      ],
+      "safeShortDescription": "Ropogós, zöldséges tekercs egyszerű mártogatóssal. Közös családi vacsorához vagy snacknek is jó.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Crispy spring rolls with dipping sauces on a plate, bright casual family food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Tekercs",
+          "items": [
+            {
+              "name": "rizspapír vagy tavaszi tekercs lap",
+              "amount": 12,
+              "unit": "db"
+            },
+            {
+              "name": "sárgarépa",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "káposzta",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "újhagyma",
+              "amount": 2,
+              "unit": "szál"
+            },
+            {
+              "name": "üvegtészta",
+              "amount": 80,
+              "unit": "g",
+              "optional": true
+            },
+            {
+              "name": "szójaszósz",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "olaj",
+              "amount": "sütéshez"
+            }
+          ]
+        },
+        {
+          "name": "Mártogatós",
+          "items": [
+            {
+              "name": "szójaszósz",
+              "amount": 3,
+              "unit": "ek"
+            },
+            {
+              "name": "méz",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "citromlé vagy rizsecet",
+              "amount": 1,
+              "unit": "ek"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A zöldségeket vágd vékony csíkokra. Az üvegtésztát készítsd el a csomagolás szerint.",
+        "Serpenyőben kevés olajon pirítsd át a zöldségeket, majd ízesítsd szójaszósszal.",
+        "A lapokat töltsd meg a zöldséges keverékkel, majd szorosan tekerd fel.",
+        "Forró olajban vagy air fryerben süsd ropogósra.",
+        "A mártogatós hozzávalóit keverd össze.",
+        "Frissen, ropogósan tálald."
+      ],
+      "familyNotes": "Sütés előtt érdemes mindent előkészíteni, mert a tekerés után gyorsan kell dolgozni.",
+      "kidFriendlyNotes": "Szójaszószból kevesebbet használj, ha kevésbé sós verziót szeretnél.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-sajtos-nudli-specli",
+      "title": "Sajtos nudli (specli), hegyi sajttal sütve, pirított hagymával és tökmagolajos salátával",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/sajtos-nudli-specli-hegyi-sajttal-sutve-piritott-hagymaval-es-tokmagolajos-salataval",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Közepes",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "tészta",
+        "sajtos",
+        "komfort",
+        "vegetáriánus"
+      ],
+      "safeShortDescription": "Sajtos, laktató specli pirított hagymával és friss salátával. Komfortos, alpesi hangulatú vacsora.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Cheesy spätzle noodles with crispy onions and green salad, cozy alpine style food photo, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Specli",
+          "items": [
+            {
+              "name": "liszt",
+              "amount": 400,
+              "unit": "g"
+            },
+            {
+              "name": "tojás",
+              "amount": 4,
+              "unit": "db"
+            },
+            {
+              "name": "tej vagy víz",
+              "amount": 180,
+              "unit": "ml"
+            },
+            {
+              "name": "só",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "reszelt sajt",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "vaj",
+              "amount": 40,
+              "unit": "g"
+            }
+          ]
+        },
+        {
+          "name": "Feltét és saláta",
+          "items": [
+            {
+              "name": "vöröshagyma",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "liszt",
+              "amount": 1,
+              "unit": "ek",
+              "optional": true
+            },
+            {
+              "name": "salátakeverék",
+              "amount": 150,
+              "unit": "g"
+            },
+            {
+              "name": "tökmagolaj",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "citromlé",
+              "amount": 1,
+              "unit": "ek"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A lisztből, tojásból, tejből vagy vízből és sóból készíts sűrű, nokedliszerű tésztát.",
+        "Forró sós vízbe szaggasd bele, majd amikor feljön a víz tetejére, szűrd le.",
+        "A hagymát szeleteld vékonyra, kevés liszttel forgasd össze, majd pirítsd ropogósra.",
+        "A speclit vajon forgasd át, majd keverd össze reszelt sajttal.",
+        "Tedd hőálló tálba, és sütőben pár perc alatt olvaszd rá a sajtot.",
+        "A salátát keverd össze tökmagolajjal és citromlével.",
+        "Tálald a sajtos speclit pirított hagymával és salátával."
+      ],
+      "familyNotes": "Bolti speclivel vagy nokedlivel gyorsítható.",
+      "kidFriendlyNotes": "A sajtos tészta általában gyerekbarát, a hagyma külön is tálalható.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-azsiai-zoldseges-piritott-teszta",
+      "title": "Ázsiai zöldséges pirított tészta szójaszósszal sült tojással",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 30,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "ázsiai",
+        "tészta",
+        "zöldséges",
+        "gyors-vacsora"
+      ],
+      "safeShortDescription": "Gyors wokos tészta sok zöldséggel és sült tojással. Hétköznap estére ideális.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Asian stir fried vegetable noodles with sliced fried egg, wok style dinner bowl, realistic food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Pirított tészta",
+          "items": [
+            {
+              "name": "ázsiai tészta vagy spagetti",
+              "amount": 300,
+              "unit": "g"
+            },
+            {
+              "name": "sárgarépa",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "kaliforniai paprika",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "brokkoli",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "újhagyma",
+              "amount": 2,
+              "unit": "szál"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 2,
+              "unit": "gerezd"
+            },
+            {
+              "name": "szójaszósz",
+              "amount": 4,
+              "unit": "ek"
+            },
+            {
+              "name": "szezámolaj vagy olaj",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "tojás",
+              "amount": 4,
+              "unit": "db"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A tésztát főzd meg, majd szűrd le.",
+        "A zöldségeket vágd vékony csíkokra vagy kisebb rózsákra.",
+        "Forró serpenyőben vagy wokban pirítsd meg a fokhagymát, majd add hozzá a zöldségeket.",
+        "Pár perc pirítás után forgasd hozzá a tésztát és szójaszószt.",
+        "Külön serpenyőben süsd meg a tojásokat tükörtojásként vagy lazán rántottaként.",
+        "A tésztát tojással a tetején, újhagymával megszórva tálald."
+      ],
+      "familyNotes": "A zöldségek szabadon cserélhetők arra, ami épp otthon van.",
+      "kidFriendlyNotes": "A szójaszósz mennyiségét érdemes mérsékelni gyerekeknek.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-ratatouille-francia-lecso",
+      "title": "Ratatouille – francia lecsó",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/ratatouille-francia-lecso",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "category": "Főétel",
+      "tags": [
+        "zöldséges",
+        "vegetáriánus",
+        "francia",
+        "nyári"
+      ],
+      "safeShortDescription": "Színes, paradicsomos zöldségragu padlizsánnal, cukkinivel és paprikával. Köretként és főételként is működik.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Colorful ratatouille vegetables in a shallow pan, rustic French kitchen, realistic food photography, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Ratatouille",
+          "items": [
+            {
+              "name": "padlizsán",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "cukkini",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "kaliforniai paprika",
+              "amount": 2,
+              "unit": "db"
+            },
+            {
+              "name": "paradicsom",
+              "amount": 4,
+              "unit": "db"
+            },
+            {
+              "name": "vöröshagyma",
+              "amount": 1,
+              "unit": "db"
+            },
+            {
+              "name": "fokhagyma",
+              "amount": 3,
+              "unit": "gerezd"
+            },
+            {
+              "name": "passzírozott paradicsom",
+              "amount": 300,
+              "unit": "ml"
+            },
+            {
+              "name": "olívaolaj",
+              "amount": 4,
+              "unit": "ek"
+            },
+            {
+              "name": "bazsalikom vagy kakukkfű",
+              "amount": 1,
+              "unit": "tk"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A zöldségeket mosd meg, majd vágd hasonló méretű darabokra vagy szeletekre.",
+        "A hagymát és fokhagymát olívaolajon párold meg.",
+        "Add hozzá a paprikát, padlizsánt és cukkinit, majd pirítsd át.",
+        "Keverd hozzá a paradicsomot és a passzírozott paradicsomot.",
+        "Fűszerezd sóval, borssal és zöldfűszerekkel.",
+        "Fedő alatt főzd puhára, majd fedő nélkül sűrítsd a kívánt állagúra.",
+        "Friss kenyérrel, rizzsel vagy grillezett hússal tálalható."
+      ],
+      "familyNotes": "Ha a gyerekek nem szeretik a nagy zöldségdarabokat, kisebbre vágva vagy kicsit sűrűbbre főzve jobb lehet.",
+      "kidFriendlyNotes": "Édesebb paradicsommal és kevesebb borssal gyerekbarátabb.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    },
+    {
+      "id": "lidl-villamreggeli-turoval",
+      "title": "Villámreggeli túróval, szalámival, abonettel",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/villamreggeli-turoval-szalamival-abonettel",
+      "contentMode": "original-family-flow-version-inspired-by-title",
+      "difficulty": "Könnyű",
+      "totalTimeMinutes": 15,
+      "servings": 2,
+      "category": "Reggeli",
+      "tags": [
+        "reggeli",
+        "gyors",
+        "túrós",
+        "hétköznap"
+      ],
+      "safeShortDescription": "Gyors, sós reggeli túrókrémmel, ropogós alappal és szalámival. Akkor jó, amikor nincs idő főzni.",
+      "image": {
+        "type": "placeholder-or-ai-generated",
+        "url": null,
+        "aiPrompt": "Quick cottage cheese breakfast with crispbread and salami on a small plate, clean morning light, no logos"
+      },
+      "ingredientGroups": [
+        {
+          "name": "Reggeli",
+          "items": [
+            {
+              "name": "túró",
+              "amount": 250,
+              "unit": "g"
+            },
+            {
+              "name": "tejföl vagy joghurt",
+              "amount": 2,
+              "unit": "ek"
+            },
+            {
+              "name": "só",
+              "amount": "ízlés szerint"
+            },
+            {
+              "name": "bors",
+              "amount": "ízlés szerint",
+              "optional": true
+            },
+            {
+              "name": "snidling vagy újhagyma",
+              "amount": 1,
+              "unit": "ek",
+              "optional": true
+            },
+            {
+              "name": "abonett vagy ropogós kenyér",
+              "amount": 6,
+              "unit": "db"
+            },
+            {
+              "name": "szalámi",
+              "amount": 80,
+              "unit": "g"
+            },
+            {
+              "name": "paradicsom vagy paprika",
+              "amount": 2,
+              "unit": "db"
+            }
+          ]
+        }
+      ],
+      "customPreparationSteps": [
+        "A túrót keverd krémesre tejföllel vagy joghurttal.",
+        "Sózd, borsozd, majd keverj hozzá snidlinget vagy újhagymát, ha szereted.",
+        "Kend a túrókrémet abonett lapokra vagy ropogós kenyérre.",
+        "Tálald szalámival és friss zöldségekkel.",
+        "Azonnal fogyaszd, hogy az alap ropogós maradjon."
+      ],
+      "familyNotes": "Gyerekeknek natúrabb túrókrémmel és külön tálalt zöldséggel kényelmesebb.",
+      "kidFriendlyNotes": "A krémet kis tálkában is adhatod mártogatósnak.",
+      "shoppingListReady": true,
+      "openOriginalRecipeLabel": "Eredeti Lidl recept megnyitása"
+    }
+  ]
+}

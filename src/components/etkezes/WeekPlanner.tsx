@@ -41,17 +41,32 @@ function getDayState(day: WeekDay, batches: MealBatch[]): DayMealState {
   };
 }
 
-function EmptyDay({ state, onAddBatch }: { state: DayMealState; onAddBatch: () => void }) {
+function EmptyDay({
+  state,
+  isToday,
+  onAddBatch,
+}: {
+  state: DayMealState;
+  isToday: boolean;
+  onAddBatch: () => void;
+}) {
   return (
     <button
       onClick={onAddBatch}
-      className="flex h-full min-w-0 flex-col items-center justify-center gap-2.5 rounded-[26px] border border-dashed border-surface-variant/45 bg-[rgba(255,255,255,0.72)] p-4 text-center transition-colors hover:bg-[rgba(255,255,255,0.88)] cursor-pointer"
+      className={`ff-glass-card-subtle flex h-full min-w-0 flex-col items-center justify-center gap-2 rounded-[24px] border-dashed p-3 text-center transition-colors hover:bg-[rgba(255,252,244,0.88)] cursor-pointer ${isToday ? "border-[rgba(55,67,50,0.18)] bg-[linear-gradient(145deg,rgba(255,252,244,0.88),rgba(238,244,232,0.78))]" : ""}`}
     >
-      <div className="w-full text-left text-[11px] font-semibold text-on-surface-variant/80">{formatShortDate(state.day)}</div>
-      <span className="flex size-9 items-center justify-center rounded-full bg-white/80 text-on-surface-variant/75 shadow-none ring-1 ring-surface-variant/35">
+      <div className="flex w-full items-center justify-between gap-2 text-left text-[11px] font-semibold text-[var(--ff-text-muted)]">
+        <span>{formatShortDate(state.day)}</span>
+        {isToday && (
+          <span className="ff-chip px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--ff-primary)] shadow-none">
+            Ma
+          </span>
+        )}
+      </div>
+      <span className="ff-chip flex size-8 items-center justify-center text-[var(--ff-text-muted)] shadow-none">
         <span className="material-symbols-outlined text-[16px]">add</span>
       </span>
-      <span className="text-[11px] font-medium text-on-surface-variant/75">Még üres</span>
+      <span className="text-[10px] font-medium text-[var(--ff-text-soft)]">Üres</span>
     </button>
   );
 }
@@ -208,7 +223,7 @@ export default function WeekPlanner({ weekDays, batches, onAddBatch, onRemoveBat
     }
 
     if (!state.hasMeals) {
-      items.push(<EmptyDay key={state.day.dateKey} state={state} onAddBatch={onAddBatch} />);
+      items.push(<EmptyDay key={state.day.dateKey} state={state} isToday={state.day.dateKey === todayKey} onAddBatch={onAddBatch} />);
       continue;
     }
 
@@ -233,11 +248,11 @@ export default function WeekPlanner({ weekDays, batches, onAddBatch, onRemoveBat
   return (
     <section className="flex flex-col gap-3">
       <div className="flex items-end justify-between gap-3">
-        <h2 className="text-[16px] font-semibold tracking-tight text-on-surface">Gyors heti áttekintés</h2>
-        <button className="text-[11px] font-medium text-on-surface-variant hover:underline cursor-pointer">Részletes naptár</button>
+        <h2 className="text-[16px] font-semibold tracking-tight text-[var(--ff-text)]">Gyors heti áttekintés</h2>
+        <button className="text-[11px] font-medium text-[var(--ff-text-muted)] hover:underline cursor-pointer">Részletes naptár</button>
       </div>
 
-      <div className="rounded-[40px] border border-surface-variant/55 bg-[rgba(255,255,255,0.72)] px-5 py-6 shadow-inner md:px-8">
+      <div className="ff-glass-card rounded-[36px] px-4 py-5 md:px-6">
         <div className="grid grid-cols-7 gap-4">{items}</div>
       </div>
     </section>

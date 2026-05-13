@@ -21,28 +21,30 @@ export default function WelcomeHeader() {
   const day = now.getDate();
 
   return (
-    <div className="flex items-center justify-between w-full">
-      <h2 className="text-lg font-semibold text-on-surface flex items-center gap-2">
-        {greeting}, Nexus
-        <span className="text-outline/40 font-light">—</span>
-        <span className="text-outline font-medium">
-          {dayName}, {month} {day}.
-        </span>
-      </h2>
+    <div className="flex w-full items-center justify-between gap-4">
+      <div>
+        <h2 className="flex items-center gap-2 text-[22px] font-semibold tracking-tight text-[var(--ff-text)]">
+          {greeting}, Nexus
+        </h2>
+        <p className="mt-1 text-sm text-[var(--ff-text-muted)]">
+          {dayName}, {month} {day}. Ma itt látod a család ritmusát, az étkezéseket és a következő lépéseket.
+        </p>
+      </div>
 
       <div className="hidden md:flex items-center gap-2">
-        <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer">
+        <button className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
           <span className="material-symbols-outlined text-[20px]">notifications</span>
         </button>
         <ThemeToggle
           iconOnly
-          className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer"
+          className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer"
         />
-        <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors ambient-shadow cursor-pointer">
-          <span className="material-symbols-outlined text-[20px]">settings</span>
-        </button>
-        <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-error hover:bg-error-container transition-colors ambient-shadow cursor-pointer">
-          <span className="material-symbols-outlined text-[20px]">logout</span>
+        <button className="ff-icon-button flex items-center gap-2 rounded-full px-2.5 py-2 text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--ff-primary-glass)] text-[11px] font-bold text-[var(--ff-primary)]">
+            FN
+          </span>
+          <span className="text-sm font-medium text-[var(--ff-text)]">Profil</span>
+          <span className="material-symbols-outlined text-[18px] text-[var(--ff-text-soft)]">expand_more</span>
         </button>
       </div>
     </div>

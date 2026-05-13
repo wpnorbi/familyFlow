@@ -129,7 +129,7 @@ export default function EtkezesClient() {
 
       <div className="mx-auto hidden w-full min-w-0 max-w-[1400px] flex-col gap-4 overflow-x-hidden px-4 py-4 md:flex md:px-5 lg:px-6">
         {!hydrated && (
-          <div className="rounded-2xl border border-surface-variant/70 bg-white/92 px-4 py-3 text-sm text-outline">
+          <div className="ff-glass-card rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
             Adatok betöltése...
           </div>
         )}
@@ -161,30 +161,6 @@ export default function EtkezesClient() {
         </section>
 
         <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Link
-            href="/bevasarlas"
-            className="group relative col-span-1 overflow-hidden rounded-[32px] border border-[rgba(197,154,133,0.2)] bg-[linear-gradient(180deg,rgba(255,241,235,0.76),rgba(255,247,243,0.91))] px-6 py-6 shadow-[0_10px_22px_-22px_rgba(121,83,64,0.24)] transition-colors hover:bg-[linear-gradient(180deg,rgba(255,243,238,0.82),rgba(255,249,246,0.95))]"
-          >
-            <div className="absolute -right-5 -top-5 size-24 rounded-full bg-[rgba(220,164,134,0.12)] blur-xl" />
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline/90">Bevásárlás</p>
-            <div className="relative z-10 mt-3 flex h-full flex-col justify-between gap-6">
-              <div>
-                <div className="mb-2 flex items-center gap-2 text-[rgb(120,73,47)]">
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>shopping_basket</span>
-                  <h3 className="text-base font-bold">Bevásárlás</h3>
-                </div>
-                <p className="text-[rgb(120,73,47)] text-sm leading-snug">
-                  <strong className="mb-1 block text-[26px] font-semibold">{shoppingItems.length} tétel</strong>
-                  hiányzik a következő étkezésekhez.
-                </p>
-              </div>
-              <div className="inline-flex items-center justify-center gap-2 rounded-full border border-[rgba(148,95,63,0.14)] bg-[rgba(148,95,63,0.09)] px-4 py-3 text-sm font-semibold text-[rgb(120,73,47)] transition-colors group-hover:bg-[rgba(148,95,63,0.13)] cursor-pointer">
-                Lista megnyitása
-                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-              </div>
-            </div>
-          </Link>
-
           <PantryIdeasPanel
             pantryItems={pantryItems}
             catalog={catalog}
@@ -194,10 +170,36 @@ export default function EtkezesClient() {
               setIsModalOpen(true);
             }}
           />
+
+          <Link
+            href="/bevasarlas"
+            className="ff-glass-card-warm group relative overflow-hidden rounded-[30px] px-5 py-5 transition-colors hover:bg-[linear-gradient(180deg,rgba(255,243,238,0.84),rgba(255,249,246,0.94))]"
+          >
+            <div className="absolute -right-5 -top-5 size-24 rounded-full bg-[rgba(220,164,134,0.12)] blur-xl" />
+            <div className="relative z-10 flex h-full flex-col gap-5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Bevásárlás</p>
+                <div className="mt-3 flex items-start gap-3">
+                  <div className="rounded-[16px] border border-[rgba(185,130,71,0.18)] bg-[rgba(255,249,240,0.48)] p-2 text-[var(--ff-caramel-strong)] shadow-[0_10px_20px_-18px_rgba(154,99,49,0.4)]">
+                    <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>shopping_basket</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[20px] font-semibold tracking-tight text-[var(--ff-text)]">{shoppingItems.length} tétel hiányzik</h3>
+                    <p className="mt-1 text-[11px] leading-snug text-[var(--ff-text-muted)]">A heti főzésekhez.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ff-button-secondary inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[11px] font-semibold text-[var(--ff-caramel-strong)] transition-colors group-hover:bg-[rgba(148,95,63,0.13)] cursor-pointer">
+                Lista megnyitása
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </div>
+            </div>
+          </Link>
         </section>
 
         <section className="flex flex-col gap-2.5">
-          <h3 className="text-[16px] font-semibold tracking-tight text-on-surface">Neked válogatva</h3>
+          <h3 className="text-[16px] font-semibold tracking-tight text-[var(--ff-text)]">Neked válogatva</h3>
           <RecipeRecommendations onGenerate={() => setIsModalOpen(true)} />
         </section>
       </div>

@@ -46,26 +46,23 @@ export default function PantryIdeasModal({ pantryItems, catalog, onClose, onUpda
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-end">
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="relative z-10 h-[100dvh] w-full max-w-3xl bg-surface-container-lowest border-l border-surface-variant/40 shadow-[-18px_0_60px_rgba(17,20,18,0.16)] flex flex-col">
-        <div className="px-5 sm:px-6 py-5 border-b border-surface-variant/40 flex items-start justify-between gap-4">
+      <div className="ff-modal-shell relative z-10 flex h-[100dvh] w-full max-w-3xl flex-col border-l border-[var(--ff-glass-border)]">
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--ff-card-border)] px-5 py-5 sm:px-6">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-outline mb-2">Kamra alapú ajánló</p>
-            <h2 className="text-2xl font-bold text-on-surface">Mi van itthon?</h2>
-            <p className="mt-1 text-sm text-on-surface-variant">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[var(--ff-text-soft)]">Kamra alapú ajánló</p>
+            <h2 className="text-2xl font-semibold text-[var(--ff-text)]">Mi van itthon?</h2>
+            <p className="mt-1 text-sm text-[var(--ff-text-muted)]">
               Adj hozzá alapanyagokat, és az app rangsorolja, melyik recept áll hozzád a legközelebb.
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors cursor-pointer"
-          >
+          <button onClick={onClose} className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(255,240,227,0.7)] cursor-pointer">
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 flex flex-col gap-6">
-          <section className="rounded-3xl border border-surface-variant/40 bg-surface-container-low p-4 sm:p-5">
-            <p className="text-sm font-bold text-on-surface mb-3">Otthoni alapanyagok</p>
+          <section className="ff-glass-card rounded-3xl p-4 sm:p-5">
+            <p className="mb-3 text-sm font-semibold text-[var(--ff-text)]">Otthoni alapanyagok</p>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
                 value={draftValue}
@@ -77,11 +74,11 @@ export default function PantryIdeasModal({ pantryItems, catalog, onClose, onUpda
                   }
                 }}
                 placeholder="pl. tej, rizs, tojás, csirkemell"
-                className="flex-1 rounded-2xl border border-surface-variant/50 bg-surface-container-lowest px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary"
+                className="ff-input flex-1 rounded-2xl px-4 py-3 text-sm"
               />
               <button
                 onClick={() => void addDraftItem()}
-                className="rounded-2xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+                className="ff-button-primary rounded-2xl px-4 py-3 text-sm font-semibold cursor-pointer"
               >
                 Hozzáadom
               </button>
@@ -92,13 +89,13 @@ export default function PantryIdeasModal({ pantryItems, catalog, onClose, onUpda
                 <button
                   key={item}
                   onClick={() => void removeItem(item)}
-                  className="inline-flex items-center gap-2 rounded-full border border-secondary-fixed-dim/40 bg-secondary-fixed/25 px-3 py-1.5 text-xs font-medium text-on-surface hover:bg-secondary-fixed/35 transition-colors cursor-pointer"
+                  className="ff-chip inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium hover:bg-[rgba(255,240,227,0.72)] transition-colors cursor-pointer"
                 >
                   {item}
                   <span className="material-symbols-outlined text-[14px]">close</span>
                 </button>
               )) : (
-                <p className="text-sm text-on-surface-variant">Adj hozzá pár alapanyagot, hogy pontosabb legyen az ajánló.</p>
+                <p className="text-sm text-[var(--ff-text-muted)]">Adj hozzá pár alapanyagot, hogy pontosabb legyen az ajánló.</p>
               )}
             </div>
           </section>
