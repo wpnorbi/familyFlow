@@ -86,10 +86,7 @@ function applyStyleRanking(recipes: Recipe[], style: StyleChoice, pantryItems: s
   const ordered = [...recipes].sort((a, b) => {
     const aTags = a.tags ?? [];
     const bTags = b.tags ?? [];
-    const aPantry = rankedByPantry.find((item) => item.recipe.id === a.id)?.score ?? 0;
-    const bPantry = rankedByPantry.find((item) => item.recipe.id === b.id)?.score ?? 0;
-
-    const scoreRecipe = (recipe: Recipe, tags: string[], pantryScore: number) => {
+    const scoreRecipe = (recipe: Recipe, tags: string[]) => {
       let score = 0;
       if (style === "Gyors vacsora" && (recipe.duration <= 30 || tags.includes("gyors"))) score += 120;
       if (style === "Gyerekbarát" && tags.includes("gyerekbarát")) score += 140;
@@ -102,7 +99,7 @@ function applyStyleRanking(recipes: Recipe[], style: StyleChoice, pantryItems: s
       return score;
     };
 
-    return scoreRecipe(b, bTags, bPantry) - scoreRecipe(a, aTags, aPantry) || a.duration - b.duration || a.name.localeCompare(b.name, "hu");
+    return scoreRecipe(b, bTags) - scoreRecipe(a, aTags) || a.duration - b.duration || a.name.localeCompare(b.name, "hu");
   });
 
   return ordered;
@@ -147,8 +144,8 @@ function MobileRecipeCard({
           </span>
         </div>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
-          {meta.map((item) => (
-            <span key={`${recipe.id}-${item.label}`} className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--ff-text-muted)]">
+          {meta.map((item, index) => (
+            <span key={`${recipe.id}-${item.icon}-${item.label}-${index}`} className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--ff-text-muted)]">
               <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
               {item.label}
             </span>
@@ -160,7 +157,6 @@ function MobileRecipeCard({
 }
 
 export default function EtkezesMobileView({
-  nextMealData,
   weekDays,
   batches,
   shoppingItems,
@@ -203,16 +199,16 @@ export default function EtkezesMobileView({
           <>
             <header className="flex items-center justify-between gap-3 pb-5">
               <div className="flex items-center gap-3">
-                <div className="ff-glass-card flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
-                  <span className="text-sm font-bold">A</span>
+                <div className="overflow-hidden rounded-full border border-white/80 shadow-[0_12px_24px_-16px_rgba(61,49,34,0.24)]">
+                  <div className="flex h-12 w-12 items-center justify-center bg-[linear-gradient(145deg,rgba(255,241,230,0.98),rgba(220,229,208,0.88))] text-[var(--ff-primary)]">
+                    <span className="text-sm font-semibold">A</span>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Étkezés</p>
-                  <h1 className="text-lg font-semibold text-[var(--ff-text)]">{greeting}</h1>
-                </div>
+                <h1 className="text-[19px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">{greeting}</h1>
               </div>
-              <button className="ff-icon-button flex h-11 w-11 items-center justify-center rounded-full text-[var(--ff-text-muted)]">
-                <span className="material-symbols-outlined text-[20px]">notifications</span>
+              <button className="relative flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(74,67,54,0.08)] bg-[rgba(255,251,244,0.88)] text-[var(--ff-text-muted)] shadow-[0_12px_24px_-18px_rgba(61,49,34,0.2)] backdrop-blur-[18px]">
+                <span className="material-symbols-outlined text-[22px]">notifications</span>
+                <span className="absolute right-1.5 top-1.5 h-3 w-3 rounded-full bg-[var(--ff-caramel)]" />
               </button>
             </header>
 

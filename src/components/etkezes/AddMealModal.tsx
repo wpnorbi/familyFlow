@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
-import { RECIPES, toDateKey } from "@/lib/etkezes-data";
+import { toDateKey } from "@/lib/etkezes-data";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
 import type { MealBatch, Recipe } from "@/types/etkezes";
@@ -121,7 +121,7 @@ const FLOW_STEPS = [
 
 const CLIENT_FALLBACK_RECIPES = Array.from(
   new Map(
-    [...getUserImportedRecipes(), ...RECIPES].map((recipe) => [recipe.id, recipe]),
+    getUserImportedRecipes().map((recipe) => [recipe.id, recipe]),
   ).values(),
 );
 

@@ -14,40 +14,37 @@ export default function SideNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="ff-dock fixed left-0 top-0 z-50 hidden h-full w-24 flex-col items-center rounded-r-[var(--ff-radius-xl)] p-3 md:flex">
+    <nav className="ff-dock fixed left-0 top-0 z-50 hidden h-full w-52 flex-col rounded-r-[24px] p-4 md:flex">
       <Link
         href="/iranyitopult"
-        className="ff-glass-card mt-3 mb-7 flex w-full flex-col items-center gap-2 rounded-[24px] px-2 py-3 text-center transition-colors hover:bg-[rgba(255,252,244,0.92)]"
+        className="mb-7 mt-1 flex w-full items-center gap-2.5 rounded-[20px] px-1.5 py-2 text-left transition-colors hover:bg-[rgba(255,252,244,0.58)]"
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-[var(--ff-radius-md)] bg-[var(--ff-primary-glass)] text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-[var(--ff-primary-glass)] text-[var(--ff-primary)] shadow-[var(--ff-shadow-soft)]">
           <span
-            className="material-symbols-outlined text-[28px]"
+            className="material-symbols-outlined text-[25px]"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             family_home
           </span>
         </div>
-        <div className="space-y-0.5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Family</p>
-          <p className="text-[12px] font-semibold text-[var(--ff-primary)]">Flow</p>
-        </div>
+        <p className="whitespace-nowrap text-[17px] font-extrabold tracking-[-0.03em] text-[var(--ff-primary)]">Family Flow</p>
       </Link>
 
-      <div className="flex w-full flex-grow flex-col items-center gap-2.5">
+      <div className="flex w-full flex-grow flex-col gap-4">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (pathname === "/" && item.href === "/iranyitopult");
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[22px] px-2 py-3 text-[11px] font-medium transition-all duration-200 ${
+              className={`flex w-full items-center gap-3 rounded-[17px] px-3 py-3.5 text-[13px] font-semibold transition-all duration-200 ${
                 isActive
-                  ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] shadow-[var(--ff-shadow-button)]"
-                  : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,252,244,0.86)] hover:text-[var(--ff-primary)]"
+                  ? "bg-[rgba(221,219,198,0.66)] text-[var(--ff-primary)] shadow-[0_14px_26px_-22px_rgba(61,49,34,0.3)]"
+                  : "text-[var(--ff-text)] hover:bg-[rgba(255,252,244,0.66)] hover:text-[var(--ff-primary)]"
               }`}
             >
               <span
-                className="material-symbols-outlined text-[22px]"
+                className="material-symbols-outlined text-[21px]"
                 style={
                   isActive && item.fillActive
                     ? { fontVariationSettings: "'FILL' 1" }
@@ -61,18 +58,37 @@ export default function SideNav() {
           );
         })}
 
-        <div className="mt-auto flex w-full flex-col items-center gap-2 border-t border-[var(--ff-card-border)] pt-3">
+        <div className="mt-auto flex w-full flex-col gap-4">
           <Link
             href="/beallitasok"
-            className={`flex w-full flex-col items-center justify-center gap-1.5 rounded-[20px] py-3 text-[11px] font-medium transition-all duration-200 ${
+            className={`flex w-full items-center gap-3 rounded-[17px] px-3 py-3.5 text-[13px] font-semibold transition-all duration-200 ${
               pathname === "/beallitasok"
-                ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] shadow-[var(--ff-shadow-button)]"
-                : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,252,244,0.86)] hover:text-[var(--ff-primary)]"
+                ? "bg-[rgba(221,219,198,0.66)] text-[var(--ff-primary)] shadow-[0_14px_26px_-22px_rgba(61,49,34,0.3)]"
+                : "text-[var(--ff-text)] hover:bg-[rgba(255,252,244,0.66)] hover:text-[var(--ff-primary)]"
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">settings</span>
             <span>Beállítások</span>
           </Link>
+
+          <div className="overflow-hidden rounded-[20px] bg-[rgba(255,246,231,0.82)] px-4 pb-4 pt-3.5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.25)]">
+            <p className="max-w-[150px] text-[12px] font-extrabold leading-tight text-[var(--ff-text)]">
+              Tarts rendet a kamrában
+            </p>
+            <p className="mt-2 max-w-[150px] text-[10px] font-semibold leading-snug text-[var(--ff-text-muted)]">
+              Olvasd be, követhető legyen minden.
+            </p>
+            <div className="my-3 flex h-[76px] items-center justify-center rounded-[16px] bg-[rgba(255,250,241,0.58)] text-[var(--ff-caramel-strong)]">
+              <span className="material-symbols-outlined text-[48px]">inventory_2</span>
+            </div>
+            <Link
+              href="/kamra"
+              className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,252,244,0.82)] px-3.5 py-2 text-[10px] font-extrabold text-[var(--ff-text)]"
+            >
+              Megnézem
+              <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

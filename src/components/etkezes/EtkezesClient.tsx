@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   getWeekDays,
@@ -13,13 +12,10 @@ import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 import { useMealData } from "@/hooks/useMealData";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
 
-import NextMealHero from "./NextMealHero";
-import WeekPlanner from "./WeekPlanner";
-import RecipeRecommendations from "./RecipeRecommendations";
 import AddMealModal from "./AddMealModal";
-import PantryIdeasPanel from "./PantryIdeasPanel";
 import CookingSessionModal from "./CookingSessionModal";
 import EtkezesMobileView from "./EtkezesMobileView";
+import DesktopEtkezesView from "./DesktopEtkezesView";
 
 function getNextBatch(batches: MealBatch[], todayKey: string) {
   const upcoming = getUpcomingBatches(batches, todayKey, 1);
@@ -31,7 +27,7 @@ function getNextBatch(batches: MealBatch[], todayKey: string) {
 }
 
 export default function EtkezesClient() {
-  const { mealBatches: batches, shoppingItems, pantryItems, updateMealData, updatePantryItems, hydrated } = useMealData();
+  const { mealBatches: batches, shoppingItems, pantryItems, updateMealData, hydrated } = useMealData();
   const [weekDays] = useState<WeekDay[]>(() => getWeekDays());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCookingOpen, setIsCookingOpen] = useState(false);
@@ -127,20 +123,24 @@ export default function EtkezesClient() {
         onGenerateIdeas={() => setIsModalOpen(true)}
       />
 
-      <div className="mx-auto hidden w-full min-w-0 max-w-[1400px] flex-col gap-4 overflow-x-hidden px-4 py-4 md:flex md:px-5 lg:px-6">
+      <div className="hidden md:block">
         {!hydrated && (
-          <div className="ff-glass-card rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
+          <div className="ff-glass-card fixed left-1/2 top-5 z-[60] -translate-x-1/2 rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
             Adatok betöltése...
           </div>
         )}
 
-        <NextMealHero
+        <DesktopEtkezesView
           nextMealData={nextMealData}
+          weekDays={weekDays}
+          batches={batches}
+          catalog={catalog}
           pantryItems={pantryItems}
           shoppingItems={shoppingItems}
           plannedDaysCount={plannedDaysCount}
           openDaysCount={openDaysCount}
           onAddMeal={() => setIsModalOpen(true)}
+          onRemoveBatch={handleRemoveBatch}
           onStartCooking={(recipe) => {
             setCookingRecipe(recipe);
             setIsCookingOpen(true);
@@ -150,58 +150,6 @@ export default function EtkezesClient() {
             setIsModalOpen(true);
           }}
         />
-
-        <section className="flex flex-col gap-3">
-          <WeekPlanner
-            weekDays={weekDays}
-            batches={batches}
-            onAddBatch={() => setIsModalOpen(true)}
-            onRemoveBatch={handleRemoveBatch}
-          />
-        </section>
-
-        <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <PantryIdeasPanel
-            pantryItems={pantryItems}
-            catalog={catalog}
-            onUpdatePantryItems={updatePantryItems}
-            onChooseRecipe={(recipe) => {
-              setInitialRecipe(recipe);
-              setIsModalOpen(true);
-            }}
-          />
-
-          <Link
-            href="/bevasarlas"
-            className="ff-glass-card-warm group relative overflow-hidden rounded-[30px] px-5 py-5 transition-colors hover:bg-[linear-gradient(180deg,rgba(255,243,238,0.84),rgba(255,249,246,0.94))]"
-          >
-            <div className="absolute -right-5 -top-5 size-24 rounded-full bg-[rgba(220,164,134,0.12)] blur-xl" />
-            <div className="relative z-10 flex h-full flex-col gap-5">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Bevásárlás</p>
-                <div className="mt-3 flex items-start gap-3">
-                  <div className="rounded-[16px] border border-[rgba(185,130,71,0.18)] bg-[rgba(255,249,240,0.48)] p-2 text-[var(--ff-caramel-strong)] shadow-[0_10px_20px_-18px_rgba(154,99,49,0.4)]">
-                    <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>shopping_basket</span>
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-[20px] font-semibold tracking-tight text-[var(--ff-text)]">{shoppingItems.length} tétel hiányzik</h3>
-                    <p className="mt-1 text-[11px] leading-snug text-[var(--ff-text-muted)]">A heti főzésekhez.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="ff-button-secondary inline-flex items-center justify-center gap-2 px-4 py-2.5 text-[11px] font-semibold text-[var(--ff-caramel-strong)] transition-colors group-hover:bg-[rgba(148,95,63,0.13)] cursor-pointer">
-                Lista megnyitása
-                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-              </div>
-            </div>
-          </Link>
-        </section>
-
-        <section className="flex flex-col gap-2.5">
-          <h3 className="text-[16px] font-semibold tracking-tight text-[var(--ff-text)]">Neked válogatva</h3>
-          <RecipeRecommendations onGenerate={() => setIsModalOpen(true)} />
-        </section>
       </div>
 
       {isModalOpen && (

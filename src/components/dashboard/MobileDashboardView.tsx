@@ -6,12 +6,13 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { useMealData } from "@/hooks/useMealData";
 import { useSchedule } from "@/hooks/useSchedule";
-import { getBatchRecipe, getBatchesForDate, getUpcomingBatches, getWeekDays, toDateKey } from "@/lib/etkezes-data";
-import { DAY_NAMES, getTodayDayIndex } from "@/lib/schedule-store";
+import { RECIPES, getBatchRecipe, getBatchesForDate, getUpcomingBatches, getWeekDays, toDateKey } from "@/lib/etkezes-data";
+import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
+import { getTodayDayIndex } from "@/lib/schedule-store";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 import type { ScheduleEvent } from "@/types/schedule";
 
-const USER_NAME = "Norbi";
+const USER_NAME = "Anna";
 const DASHBOARD_HERO_IMAGE = "/images/dashboard/hero-bread.jpg";
 
 function getGreeting(name: string) {
@@ -49,10 +50,12 @@ function getReminderData(events: ScheduleEvent[]) {
 function FocusChip({
   icon,
   label,
+  href,
   accent = "sage",
 }: {
   icon: string;
   label: string;
+  href: string;
   accent?: "sage" | "peach" | "cream";
 }) {
   const accentClass = {
@@ -62,10 +65,10 @@ function FocusChip({
   }[accent];
 
   return (
-    <div className={`flex items-center gap-2 rounded-[20px] px-3.5 py-2.5 shadow-[0_12px_22px_-18px_rgba(61,49,34,0.22)] ${accentClass}`}>
+    <Link href={href} className={`flex items-center gap-2 rounded-[20px] px-3.5 py-2.5 shadow-[0_12px_22px_-18px_rgba(61,49,34,0.22)] ${accentClass}`}>
       <span className="material-symbols-outlined shrink-0 text-[18px]">{icon}</span>
       <span className="text-[13px] font-medium leading-tight tracking-[-0.01em]">{label}</span>
-    </div>
+    </Link>
   );
 }
 
@@ -80,18 +83,25 @@ export default function MobileDashboardView() {
 
   const todayEvents = scheduleHydrated ? (schedule[getTodayDayIndex()] ?? []) : [];
   const reminderData = getReminderData(todayEvents);
-  const weekendCount = scheduleHydrated
-    ? [5, 6].reduce((sum, dayIndex) => sum + (schedule[dayIndex]?.length ?? 0), 0)
-    : 0;
 
   const todayPrimaryMeal = dashboardData.todayMeals[0] ? getBatchRecipe(dashboardData.todayMeals[0]) ?? null : null;
   const heroRecipe = dashboardData.nextMeal ?? todayPrimaryMeal;
-  const nextMealLabel = dashboardData.nextMeal?.name ?? "Nincs vacsora";
-  const nextMealCompactLabel = nextMealLabel.length > 18 ? `${nextMealLabel.slice(0, 18).trim()}…` : nextMealLabel;
-  const heroKidLabel = heroRecipe?.tags?.includes("gyerekbarát") ? "Gyerekbarát" : heroRecipe?.kidFriendlyNotes ? "Családi" : "Nincs jelölés";
-  const heroDurationLabel = heroRecipe?.duration ? `${heroRecipe.duration} perc` : "Nincs idő";
-  const pantryStatus = shoppingItems.length > 0 ? `${shoppingItems.length} tétel hiányzik` : "Minden rendben";
-  const mealProgressText = `${Math.min(dashboardData.todayMeals.length, 3)}/3 kész`;
+  const heroMealLabel = heroRecipe?.name ?? "Nincs mai ebéd";
+  const heroMealCompactLabel = heroMealLabel.length > 18 ? `${heroMealLabel.slice(0, 18).trim()}…` : heroMealLabel;
+  const heroKidLabel = heroRecipe
+    ? heroRecipe.tags?.includes("gyerekbarát")
+      ? "Gyerekbarát"
+      : heroRecipe.kidFriendlyNotes
+        ? "Családi"
+        : heroRecipe.category
+    : `${dashboardData.plannedDaysCount}/7 nap`;
+  const heroDurationLabel = heroRecipe?.duration ? `${heroRecipe.duration} perc` : `${shoppingItems.length} lista tétel`;
+  const heroCtaLabel = todayPrimaryMeal ? "Mai ebéd megnyitása" : "Kaja kiválasztása";
+  const openDaysCount = 7 - dashboardData.plannedDaysCount;
+  const pantryIdeaCount = rankRecipesForPantry(RECIPES, pantryItems).slice(0, 3).length;
+  const pantryStatus = pantryItems.length > 0 ? `${pantryIdeaCount} receptötlet` : "Kamra feltöltése";
+  const pantryDescription = pantryItems.length > 0 ? "Otthoni alapanyagokból" : "Adj hozzá alapanyagokat";
+  const todayMealStatus = todayPrimaryMeal ? "Betervezve" : "Nincs kiválasztva";
   const compactCardClass =
     "relative overflow-hidden rounded-[30px] border border-white/80 p-3.5 shadow-[0_24px_42px_-28px_rgba(61,49,34,0.22)]";
 
@@ -130,14 +140,16 @@ export default function MobileDashboardView() {
               <span className="material-symbols-outlined text-[17px] text-[rgba(247,197,108,1)]">wb_twilight</span>
               Mai ritmus
             </p>
-            <h2 className="max-w-[11rem] text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-[rgba(255,252,246,1)] [text-shadow:0_2px_14px_rgba(24,16,10,0.42)]">Ma együtt</h2>
+            <h2 className="max-w-[13rem] text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-[rgba(255,252,246,1)] [text-shadow:0_2px_14px_rgba(24,16,10,0.42)]">
+              {todayPrimaryMeal ? "Mai ebéd" : "Mit főzzünk ma?"}
+            </h2>
             <p className="mt-2 max-w-[13rem] text-[16px] leading-snug text-[rgba(255,246,234,0.98)] [text-shadow:0_1px_12px_rgba(24,16,10,0.38)]">
-              Pár gyors döntés, és mutatjuk az ötleteket.
+              {todayPrimaryMeal ? "Megvan a mai fő étkezés." : "Válassz egy ételt, és indulhat a napi terv."}
             </p>
 
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
-                { icon: "restaurant", label: nextMealCompactLabel },
+                { icon: "restaurant", label: heroMealCompactLabel },
                 { icon: "sentiment_satisfied", label: heroKidLabel },
                 { icon: "schedule", label: heroDurationLabel },
               ].map((item) => (
@@ -154,7 +166,7 @@ export default function MobileDashboardView() {
               href="/etkezes"
               className="mt-5 flex items-center justify-between rounded-[32px] bg-[linear-gradient(135deg,#de9c4f,#cb8432)] px-6 py-5 text-[var(--ff-text-inverse)] shadow-[0_20px_36px_-18px_rgba(185,130,71,0.48)]"
             >
-              <span className="text-[19px] font-semibold tracking-[-0.02em]">Mit főzzünk ma?</span>
+              <span className="text-[19px] font-semibold tracking-[-0.02em]">{heroCtaLabel}</span>
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#c68437] shadow-[0_12px_22px_-16px_rgba(61,49,34,0.24)]">
                 <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
               </span>
@@ -179,11 +191,13 @@ export default function MobileDashboardView() {
                 </div>
               </div>
               <div className="text-right">
-                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Mai étkezések</h3>
-                <p className="mt-0.5 text-[18px] font-semibold text-[var(--ff-primary)]">{mealProgressText}</p>
-                <div className="mt-3 h-2.5 rounded-full bg-[rgba(61,49,34,0.08)]">
-                  <div className="h-full rounded-full bg-[linear-gradient(135deg,var(--ff-primary-soft),var(--ff-primary))]" style={{ width: `${Math.max(dashboardData.planningPercent / 2.3, 24)}%` }} />
-                </div>
+                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Mai ebéd</h3>
+                <p className="mt-0.5 line-clamp-2 text-[16px] font-semibold text-[var(--ff-primary)]">
+                  {todayPrimaryMeal?.name ?? todayMealStatus}
+                </p>
+                <p className="mt-2 text-[12px] font-semibold text-[var(--ff-text-muted)]">
+                  {todayPrimaryMeal ? `${todayPrimaryMeal.duration} perc` : "Válassz egy ételt"}
+                </p>
               </div>
             </div>
           </div>
@@ -194,15 +208,13 @@ export default function MobileDashboardView() {
                 <span className="material-symbols-outlined text-[22px]">calendar_month</span>
               </div>
               <div>
-                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Hétvégi terv</h3>
-                <p className="mt-1 text-[15px] font-medium text-[var(--ff-caramel-strong)]">{weekendCount > 0 ? "Készülünk" : "Még szervezzük"}</p>
-                <div className="mt-3 flex items-center gap-1">
-                  {[0, 1, 2, 3].map((index) => (
-                    <div key={index} className="flex h-8 w-8 items-center justify-center rounded-full border border-white/70 bg-[rgba(255,249,237,0.94)] text-[10px] font-bold text-[var(--ff-primary)]">
-                      {USER_NAME.slice(0, 1)}
-                    </div>
-                  ))}
-                  <div className="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(255,249,237,0.78)] text-[13px] font-semibold text-[var(--ff-text-muted)]">+2</div>
+                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Heti terv</h3>
+                <p className="mt-1 text-[18px] font-semibold text-[var(--ff-caramel-strong)]">{dashboardData.plannedDaysCount}/7 nap</p>
+                <p className="mt-1 text-[13px] font-semibold text-[var(--ff-text-muted)]">
+                  {openDaysCount > 0 ? `${openDaysCount} nap még üres` : "Teljes hét megvan"}
+                </p>
+                <div className="mt-3 h-2.5 rounded-full bg-[rgba(61,49,34,0.08)]">
+                  <div className="h-full rounded-full bg-[linear-gradient(135deg,#e7a34e,#c98535)]" style={{ width: `${Math.max(dashboardData.planningPercent, 8)}%` }} />
                 </div>
               </div>
             </div>
@@ -220,8 +232,9 @@ export default function MobileDashboardView() {
                 </div>
               </div>
               <div>
-                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Kamra</h3>
+                <h3 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Kamra ötletek</h3>
                 <p className="mt-1 text-[15px] font-medium text-[var(--ff-primary)]">{pantryStatus}</p>
+                <p className="mt-1 text-[12px] font-semibold text-[var(--ff-text-muted)]">{pantryDescription}</p>
                 <div className="mt-3 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(195,219,178,0.96)] text-[var(--ff-primary)]">
                   <span className="material-symbols-outlined text-[18px]">eco</span>
                 </div>
@@ -251,17 +264,17 @@ export default function MobileDashboardView() {
 
         <section className="mt-6">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[24px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">Mai fókusz</h2>
+            <h2 className="text-[24px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">Gyors választás</h2>
             <Link href="/etkezes" className="flex items-center gap-1 text-[15px] font-medium text-[var(--ff-text-muted)]">
-              Testreszabás
+              Összes
               <span className="material-symbols-outlined text-[20px]">tune</span>
             </Link>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5">
-            <FocusChip icon="bolt" label="Gyors vacsora" accent="sage" />
-            <FocusChip icon="sentiment_satisfied" label="Gyerekbarát ötletek" accent="peach" />
-            <FocusChip icon="eco" label="Egyszerű alapanyagok" accent="cream" />
+            <FocusChip icon="bolt" label="30 perc alatt" href="/etkezes?filter=gyors" accent="sage" />
+            <FocusChip icon="sentiment_satisfied" label="Gyerekbarát" href="/etkezes?filter=gyerekbarat" accent="peach" />
+            <FocusChip icon="eco" label="Kamrából" href="/etkezes?filter=kamra" accent="cream" />
           </div>
         </section>
       </div>
