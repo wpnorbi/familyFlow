@@ -4,23 +4,31 @@ import { useEffect, useState, type ReactNode } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { toDateKey } from "@/lib/etkezes-data";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
+import {
+  MEAL_TYPE_OPTIONS,
+  PROTEIN_OPTIONS,
+  TIME_BUCKET_OPTIONS,
+  getRecipeMealType,
+  getRecipeMealTypeLabel,
+  getRecipeTimeBucket,
+  isKidFriendlyRecipe,
+  isQuickRecipe,
+  matchesRecipeTaxonomy,
+  type RecipeMealType,
+  type RecipeTimeBucket,
+} from "@/lib/recipes/recipe-taxonomy";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 
 const TIME_FILTERS = [
-  { label: "Villám", sublabel: "< 15 perc", max: 15, icon: "bolt" },
-  { label: "Közepes", sublabel: "< 30 perc", max: 30, icon: "timer" },
-  { label: "Hosszabb", sublabel: "< 60 perc", max: 60, icon: "hourglass_bottom" },
-  { label: "Bármennyi", sublabel: "Nincs limit", max: Infinity, icon: "all_inclusive" },
+  { label: "Rövid", sublabel: "kb. 20 perc", max: 20, bucket: "short" as const, icon: "bolt" },
+  { label: "Közepes", sublabel: "kb. 50 perc", max: 50, bucket: "medium" as const, icon: "timer" },
+  { label: "Hosszú", sublabel: "akár 2 óra", max: Infinity, bucket: "long" as const, icon: "hourglass_bottom" },
+  { label: "Mindegy", sublabel: "Nincs limit", max: Infinity, bucket: "mind" as const, icon: "all_inclusive" },
 ];
 
 const PROTEIN_FILTERS: { label: string; value: Recipe["protein"] | "mind"; icon: string }[] = [
-  { label: "Csirke", value: "csirke", icon: "egg_alt" },
-  { label: "Hal", value: "hal", icon: "set_meal" },
-  { label: "Marha", value: "marha", icon: "lunch_dining" },
-  { label: "Sertés", value: "sertés", icon: "nutrition" },
-  { label: "Vegetáriánus", value: "vegetáriánus", icon: "eco" },
-  { label: "Egyéb", value: "egyéb", icon: "restaurant" },
+  ...PROTEIN_OPTIONS,
   { label: "Mind", value: "mind", icon: "all_inclusive" },
 ];
 
@@ -33,11 +41,10 @@ const DAY_PLAN_OPTIONS = [
 ] as const;
 
 const COOKING_TIME_OPTIONS = [
-  { label: "Villám", value: 15, note: "15 perc alatt", icon: "bolt" },
-  { label: "Gyors", value: 30, note: "15-30 perc", icon: "timer" },
-  { label: "Kényelmes", value: 45, note: "30-45 perc", icon: "schedule" },
-  { label: "Ráérősen", value: 60, note: "Van idő főzni", icon: "hourglass_bottom" },
-  { label: "Mindegy", value: Infinity, note: "Csak legyen jó ötlet", icon: "all_inclusive" },
+  { label: "Rövid", value: 20, bucket: "short" as const, note: "20 perc körül", icon: "bolt" },
+  { label: "Közepes", value: 50, bucket: "medium" as const, note: "50 perc körül", icon: "timer" },
+  { label: "Hosszú", value: Infinity, bucket: "long" as const, note: "akár 2 óra", icon: "hourglass_bottom" },
+  { label: "Mindegy", value: Infinity, bucket: "mind" as const, note: "Csak legyen jó ötlet", icon: "all_inclusive" },
 ] as const;
 
 const STARTING_POINT_OPTIONS = [
@@ -58,11 +65,11 @@ const CHILD_FRIENDLY_OPTIONS = [
 const DIRECTION_OPTIONS = [
   { label: "Egyszerű házias", value: "hazias", note: "Biztos, ismerős ízek", icon: "home" },
   { label: "Tészta", value: "teszta", note: "Gyors comfort vonal", icon: "menu_book" },
+  { label: "Főzelék", value: "fozelek", note: "Puha, kanalas családi étel", icon: "eco" },
   { label: "Leves", value: "leves", note: "Kanállal is jól esik", icon: "soup_kitchen" },
+  { label: "Desszert", value: "desszert", note: "Édes opció is jöhet", icon: "bakery_dining" },
   { label: "Sütőben készülő", value: "suto", note: "Kevesebb aktív idő", icon: "oven" },
   { label: "Egyserpenyős", value: "egyserpenyos", note: "Kevesebb mosogatás", icon: "skillet" },
-  { label: "Könnyű", value: "konnyu", note: "Frissebb, lazább", icon: "wb_sunny" },
-  { label: "Comfort food", value: "comfort", note: "Megnyugtató vacsora", icon: "blanket" },
   { label: "Mindegy, csak működjön", value: "mind", note: "Válogass helyettem", icon: "auto_awesome" },
 ] as const;
 
@@ -77,12 +84,11 @@ const QUICK_PRESETS = [
 
 const FAST_STYLE_OPTIONS = [
   { label: "Gyerekbarát", note: "Biztosabb családi választás", icon: "favorite", tone: "peach" },
-  { label: "Gyors vacsora", note: "Kevés gondolkodás, gyors megoldás", icon: "bolt", tone: "sage" },
-  { label: "Kamrából", note: "A meglévőkből induljunk", icon: "kitchen", tone: "caramel" },
-  { label: "Egyszerű", note: "Házias, könnyű döntés", icon: "home", tone: "cream" },
+  { label: "Gyors", note: "30 perc körüli vagy rövidebb", icon: "bolt", tone: "sage" },
   { label: "Tészta", note: "Gyors comfort vonal", icon: "ramen_dining", tone: "peach" },
-  { label: "Húsos", note: "Laktatóbb főétel", icon: "lunch_dining", tone: "sage" },
+  { label: "Főzelék", note: "Kanalas, puhább családi étel", icon: "eco", tone: "sage" },
   { label: "Leves", note: "Kanállal is jól esik", icon: "soup_kitchen", tone: "caramel" },
+  { label: "Desszert", note: "Édesség is megjelenhet", icon: "bakery_dining", tone: "peach" },
   { label: "Mindegy", note: "Csak mutass jó ötletet", icon: "auto_awesome", tone: "cream" },
 ] as const;
 
@@ -159,7 +165,7 @@ function getProteinLabel(protein: Recipe["protein"]) {
 }
 
 function isChildFriendly(recipe: Recipe): boolean {
-  return (recipe.tags ?? []).includes("gyerekbarát");
+  return isKidFriendlyRecipe(recipe);
 }
 
 function scaleIngredientLabel(ingredient: string, days: number): string {
@@ -181,11 +187,11 @@ function buildPlannedRecipeSnapshot(recipe: Recipe, days: number): Recipe {
 }
 
 function getRecipeCategories(): string[] {
-  return Array.from(new Set(CLIENT_FALLBACK_RECIPES.map((recipe) => recipe.category)));
+  return MEAL_TYPE_OPTIONS.map((option) => option.label);
 }
 
 function getRecipeTags(): string[] {
-  return Array.from(new Set(CLIENT_FALLBACK_RECIPES.flatMap((recipe) => recipe.tags ?? [])));
+  return ["gyerekbarát", "gyors", "rövid", "közepes idő", "hosszú"];
 }
 
 function DecisionCard({
@@ -342,6 +348,9 @@ function matchesRecipe(
   maxDuration: number,
   protein: Recipe["protein"] | "mind",
   childFriendlyOnly: boolean,
+  mealType: RecipeMealType | "mind",
+  timeBucket: RecipeTimeBucket | "mind",
+  quickOnly: boolean,
 ) {
   const normalizedQuery = searchTerm.trim().toLowerCase();
   const searchable = [
@@ -355,14 +364,18 @@ function matchesRecipe(
     .toLowerCase();
 
   const timeOk = recipe.duration <= maxDuration;
-  const proteinOk = protein === "mind" || recipe.protein === protein;
-  const categoryOk = category === "mind" || recipe.category === category;
+  const taxonomyOk = matchesRecipeTaxonomy(recipe, {
+    protein,
+    mealType,
+    timeBucket,
+    quickOnly,
+    childFriendlyOnly,
+  });
+  const categoryOk = category === "mind" || recipe.category === category || getRecipeMealTypeLabel(recipe) === category;
   const tagOk = tag === "mind" || (recipe.tags ?? []).includes(tag);
   const searchOk = !normalizedQuery || searchable.includes(normalizedQuery);
 
-  const childFriendlyOk = !childFriendlyOnly || isChildFriendly(recipe);
-
-  return timeOk && proteinOk && categoryOk && tagOk && searchOk && childFriendlyOk;
+  return timeOk && taxonomyOk && categoryOk && tagOk && searchOk;
 }
 
 function getPrimaryReason(recipe: Recipe, pantryItems: string[]): string {
@@ -373,7 +386,7 @@ function getPrimaryReason(recipe: Recipe, pantryItems: string[]): string {
   if (missingCount <= 2) return `Csak ${missingCount} hozzávaló hiányzik`;
   if (recipe.duration <= 20) return "20 perc alatt kész";
   if (isChildFriendly(recipe)) return "Gyerekbarát kedvenc";
-  if ((recipe.tags ?? []).includes("gyors")) return "Gyors hétköznapi vacsora";
+  if (isQuickRecipe(recipe)) return "Gyors hétköznapi vacsora";
   if (recipe.servings && recipe.servings >= 4) return "Több adagra is jó választás";
   return "Most könnyen beilleszthető a heti tervbe";
 }
@@ -391,8 +404,8 @@ function getSecondaryReason(recipe: Recipe, pantryItems: string[]): string {
 
 function getDisplayTags(recipe: Recipe): string[] {
   const tags = recipe.tags ?? [];
-  const preferred = tags.filter((tag) => ["gyerekbarát", "gyors", "egészséges", "család", "kamrabarát"].includes(tag));
-  const fallback = [recipe.category, getProteinLabel(recipe.protein), ...tags];
+  const preferred = tags.filter((tag) => ["gyerekbarát", "gyors", "rövid", "közepes idő", "hosszú"].includes(tag));
+  const fallback = [getRecipeMealTypeLabel(recipe), getProteinLabel(recipe.protein), ...tags];
   return Array.from(new Set([...preferred, ...fallback])).slice(0, 2);
 }
 
@@ -422,12 +435,15 @@ function FlowSection({
 export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pantryItems = [] }: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(initialRecipe ? 3 : 1);
   const [timeFilter, setTimeFilter] = useState<number>(30);
+  const [timeBucketFilter, setTimeBucketFilter] = useState<RecipeTimeBucket | "mind">("medium");
   const [proteinFilter, setProteinFilter] = useState<Recipe["protein"] | "mind">("mind");
   const [childFriendlyOnly, setChildFriendlyOnly] = useState(true);
+  const [mealTypeFilter, setMealTypeFilter] = useState<RecipeMealType | "mind">("mind");
+  const [quickOnly, setQuickOnly] = useState(false);
   const [startingPoint, setStartingPoint] = useState<StartingPointValue>("mind");
   const [childPreference, setChildPreference] = useState<ChildFriendlyPreference>("nice");
   const [directionPreference, setDirectionPreference] = useState<DirectionValue>("hazias");
-  const [fastStyle, setFastStyle] = useState<FastStyleValue>("Egyszerű");
+  const [fastStyle, setFastStyle] = useState<FastStyleValue>("Mindegy");
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("mind");
   const [tagFilter, setTagFilter] = useState<string>("mind");
@@ -446,7 +462,18 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   const [exactMatchCount, setExactMatchCount] = useState(0);
 
   const fallbackRecipes = CLIENT_FALLBACK_RECIPES.filter((recipe) =>
-    matchesRecipe(recipe, searchTerm, categoryFilter, tagFilter, timeFilter, proteinFilter, childFriendlyOnly),
+    matchesRecipe(
+      recipe,
+      searchTerm,
+      categoryFilter,
+      tagFilter,
+      timeFilter,
+      proteinFilter,
+      childFriendlyOnly,
+      mealTypeFilter,
+      timeBucketFilter,
+      quickOnly,
+    ),
   );
   const filtered = recipesError ? fallbackRecipes : availableRecipes;
   const visibleRecipes = filtered.slice(0, visibleRecipeCount);
@@ -474,6 +501,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
 
     if (value === "teszta") {
       setProteinFilter("mind");
+      setMealTypeFilter("teszta");
       setSearchTerm("tészta");
       setTagFilter("mind");
       return;
@@ -495,12 +523,14 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
 
     if (value === "kamra") {
       setProteinFilter("mind");
+      setMealTypeFilter("mind");
       setSearchTerm("");
-      setTagFilter("kamrabarát");
+      setTagFilter("mind");
       return;
     }
 
     setProteinFilter("mind");
+    setMealTypeFilter("mind");
     setSearchTerm("");
     setTagFilter("mind");
   }
@@ -515,10 +545,26 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
     setDirectionPreference(value);
     setVisibleRecipeCount(20);
     setCategoryFilter("mind");
+    setMealTypeFilter("mind");
 
     if (value === "leves") {
-      setCategoryFilter("Leves");
+      setMealTypeFilter("leves");
       setTagFilter("mind");
+      if (startingPoint === "mind") setSearchTerm("");
+      return;
+    }
+
+    if (value === "fozelek") {
+      setMealTypeFilter("fozelek");
+      setTagFilter("mind");
+      if (startingPoint === "mind") setSearchTerm("");
+      return;
+    }
+
+    if (value === "desszert") {
+      setMealTypeFilter("desszert");
+      setTagFilter("mind");
+      setProteinFilter("mind");
       if (startingPoint === "mind") setSearchTerm("");
       return;
     }
@@ -536,19 +582,8 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
     }
 
     if (value === "teszta") {
+      setMealTypeFilter("teszta");
       setSearchTerm("tészta");
-      setTagFilter("mind");
-      return;
-    }
-
-    if (value === "konnyu") {
-      setTagFilter("egészséges");
-      if (startingPoint === "mind") setSearchTerm("");
-      return;
-    }
-
-    if (value === "comfort") {
-      setSearchTerm("krémes");
       setTagFilter("mind");
       return;
     }
@@ -566,6 +601,8 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   function applyQuickPreset(preset: (typeof QUICK_PRESETS)[number]) {
     setEatDays(preset.days);
     setTimeFilter(preset.time);
+    setTimeBucketFilter(preset.time <= 20 ? "short" : preset.time <= 50 ? "medium" : "mind");
+    setQuickOnly(preset.time <= 30);
     applyChildPreference(preset.child);
     applyStartingPoint(preset.start);
     applyDirection(preset.direction);
@@ -576,28 +613,17 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
     setVisibleRecipeCount(20);
 
     if (value === "Gyerekbarát") {
+      setQuickOnly(false);
       applyChildPreference("important");
       applyStartingPoint("mind");
       applyDirection("hazias");
       return;
     }
 
-    if (value === "Gyors vacsora") {
+    if (value === "Gyors") {
       setTimeFilter(30);
-      applyChildPreference("nice");
-      applyStartingPoint("mind");
-      applyDirection("hazias");
-      return;
-    }
-
-    if (value === "Kamrából") {
-      applyChildPreference("nice");
-      applyStartingPoint("kamra");
-      applyDirection("mind");
-      return;
-    }
-
-    if (value === "Egyszerű") {
+      setTimeBucketFilter("mind");
+      setQuickOnly(true);
       applyChildPreference("nice");
       applyStartingPoint("mind");
       applyDirection("hazias");
@@ -605,26 +631,38 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
     }
 
     if (value === "Tészta") {
+      setQuickOnly(false);
       applyChildPreference("nice");
       applyStartingPoint("teszta");
       applyDirection("teszta");
       return;
     }
 
-    if (value === "Húsos") {
+    if (value === "Főzelék") {
+      setQuickOnly(false);
       applyChildPreference("nice");
-      applyStartingPoint("csirke");
-      applyDirection("mind");
+      applyStartingPoint("mind");
+      applyDirection("fozelek");
       return;
     }
 
     if (value === "Leves") {
+      setQuickOnly(false);
       applyChildPreference("nice");
       applyStartingPoint("mind");
       applyDirection("leves");
       return;
     }
 
+    if (value === "Desszert") {
+      setQuickOnly(false);
+      applyChildPreference("off");
+      applyStartingPoint("mind");
+      applyDirection("desszert");
+      return;
+    }
+
+    setQuickOnly(false);
     applyChildPreference("off");
     applyStartingPoint("mind");
     applyDirection("mind");
@@ -682,6 +720,9 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
         search: searchTerm,
         category: categoryFilter,
         tag: tagFilter,
+        mealType: mealTypeFilter,
+        timeBucket: timeBucketFilter,
+        quickOnly: String(quickOnly),
         childFriendly: String(childFriendlyOnly),
       });
 
@@ -729,7 +770,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [step, proteinFilter, timeFilter, searchTerm, categoryFilter, tagFilter, childFriendlyOnly]);
+  }, [step, proteinFilter, timeFilter, timeBucketFilter, searchTerm, categoryFilter, tagFilter, mealTypeFilter, quickOnly, childFriendlyOnly]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_38%),rgba(14,18,15,0.42)] p-0 backdrop-blur-md sm:p-3 md:p-6">
@@ -863,6 +904,8 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                         selected={timeFilter === option.value}
                         onClick={() => {
                           setTimeFilter(option.value);
+                          setTimeBucketFilter(option.bucket);
+                          setQuickOnly(option.bucket === "short");
                           resetRecipeFilters();
                         }}
                       />
@@ -927,11 +970,14 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                     <button
                       onClick={() => {
                         setEatDays(2);
-                        setTimeFilter(30);
-                        setFastStyle("Egyszerű");
+                        setTimeFilter(50);
+                        setTimeBucketFilter("medium");
+                        setQuickOnly(false);
+                        setFastStyle("Mindegy");
                         applyChildPreference("nice");
                         applyStartingPoint("mind");
                         applyDirection("hazias");
+                        setMealTypeFilter("mind");
                         setCategoryFilter("mind");
                         setSearchTerm("");
                         setSelected(null);
@@ -1004,6 +1050,11 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                   onClick={() => {
                     setCategoryFilter("mind");
                     setTagFilter("mind");
+                    setMealTypeFilter("mind");
+                    setProteinFilter("mind");
+                    setTimeBucketFilter("mind");
+                    setTimeFilter(Infinity);
+                    setQuickOnly(false);
                     setSearchTerm("");
                     setVisibleRecipeCount(20);
                   }}
@@ -1021,31 +1072,31 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                   <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => {
-                        setCategoryFilter("mind");
+                        setProteinFilter("mind");
                         setVisibleRecipeCount(20);
                       }}
                       className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                        categoryFilter === "mind"
+                        proteinFilter === "mind"
                           ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
                           : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
                       }`}
                     >
-                      Minden kategória
+                      Minden hús
                     </button>
-                    {availableCategories.slice(0, 6).map((category) => (
+                    {PROTEIN_OPTIONS.map((option) => (
                       <button
-                        key={category}
+                        key={option.value}
                         onClick={() => {
-                          setCategoryFilter(category);
+                          setProteinFilter(option.value);
                           setVisibleRecipeCount(20);
                         }}
                         className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                          categoryFilter === category
+                          proteinFilter === option.value
                             ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
                             : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
                         }`}
                       >
-                        {category}
+                        {option.label}
                       </button>
                     ))}
                   </div>
@@ -1054,34 +1105,86 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => {
-                      setTagFilter("mind");
+                      setMealTypeFilter("mind");
                       setVisibleRecipeCount(20);
                     }}
                     className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                      tagFilter === "mind"
+                      mealTypeFilter === "mind"
                         ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
                         : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
                     }`}
                   >
-                    Minden címke
+                    Minden ételtípus
                   </button>
-                  {availableTags.slice(0, 8).map((tag) => (
+                  {MEAL_TYPE_OPTIONS.map((option) => (
                     <button
-                      key={tag}
+                      key={option.value}
                       onClick={() => {
-                        setTagFilter(tag);
+                        setMealTypeFilter(option.value);
                         setVisibleRecipeCount(20);
                       }}
                       className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                        tagFilter === tag
+                        mealTypeFilter === option.value
                           ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
                           : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
                       }`}
                     >
-                      {tag}
+                      {option.label}
                     </button>
                   ))}
                 </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {TIME_BUCKET_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setTimeBucketFilter(option.value);
+                        setTimeFilter(option.max);
+                        setQuickOnly(option.value === "short");
+                        setVisibleRecipeCount(20);
+                      }}
+                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                        timeBucketFilter === option.value
+                          ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
+                          : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => {
+                      setQuickOnly((value) => !value);
+                      setVisibleRecipeCount(20);
+                    }}
+                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                      quickOnly
+                        ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
+                        : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
+                    }`}
+                  >
+                    Gyors kaják
+                  </button>
+                  <button
+                    onClick={() => {
+                      setChildFriendlyOnly((value) => !value);
+                      setChildPreference((value) => (value === "off" ? "important" : "off"));
+                      setVisibleRecipeCount(20);
+                    }}
+                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
+                      childFriendlyOnly
+                        ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
+                        : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
+                    }`}
+                  >
+                    Gyerekbarát
+                  </button>
+                </div>
+
+                <p className="text-xs leading-relaxed text-[var(--ff-text-muted)]">
+                  Gyerekbarát étel: kisgyerekeknek is könnyen ehető, biztonságosan tálalható, enyhébb ízvilágú étel, amely jól beilleszthető a családi étkezésbe.
+                </p>
               </div>
             </div>
 
@@ -1106,6 +1209,11 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                     setSearchTerm("");
                     setCategoryFilter("mind");
                     setTagFilter("mind");
+                    setMealTypeFilter("mind");
+                    setProteinFilter("mind");
+                    setTimeBucketFilter("mind");
+                    setTimeFilter(Infinity);
+                    setQuickOnly(false);
                     setChildFriendlyOnly(false);
                   }}
                   className="mt-3 text-primary text-sm font-semibold cursor-pointer"

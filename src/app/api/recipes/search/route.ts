@@ -1,4 +1,15 @@
 import { getHybridRecipeCatalog } from "@/lib/recipes/hybrid.provider";
+import {
+  MEAL_TYPE_OPTIONS,
+  TIME_BUCKET_OPTIONS,
+  getRecipeMealType,
+  getRecipeTimeBucket,
+  isKidFriendlyRecipe,
+  isQuickRecipe,
+  matchesRecipeTaxonomy,
+  type RecipeMealType,
+  type RecipeTimeBucket,
+} from "@/lib/recipes/recipe-taxonomy";
 import type { Recipe } from "@/types/etkezes";
 
 const MIN_RECIPE_RESULTS = 20;
@@ -38,6 +49,10 @@ function getRelaxedScore(
     category: string;
     tag: string;
     maxDuration: number;
+    mealType: RecipeMealType | "mind";
+    timeBucket: RecipeTimeBucket | "mind";
+    quickOnly: boolean;
+    childFriendly: boolean;
   },
 ): number {
   let score = 0;
@@ -59,6 +74,21 @@ function getRelaxedScore(
   } else if ((recipe.tags ?? []).includes(filters.tag)) {
     score += 30;
   }
+
+  if (filters.mealType === "mind") {
+    score += 4;
+  } else if (getRecipeMealType(recipe) === filters.mealType) {
+    score += 80;
+  }
+
+  if (filters.timeBucket === "mind") {
+    score += 4;
+  } else if (getRecipeTimeBucket(recipe) === filters.timeBucket) {
+    score += 70;
+  }
+
+  if (filters.quickOnly && isQuickRecipe(recipe)) score += 80;
+  if (filters.childFriendly && isKidFriendlyRecipe(recipe)) score += 100;
 
   if (!Number.isFinite(filters.maxDuration)) {
     score += 30;
@@ -91,17 +121,30 @@ export async function GET(request: Request) {
     const search = (searchParams.get("search") ?? "").trim();
     const category = (searchParams.get("category") ?? "mind").trim();
     const tag = (searchParams.get("tag") ?? "mind").trim();
+    const mealType = (searchParams.get("mealType") ?? "mind") as RecipeMealType | "mind";
+    const timeBucket = (searchParams.get("timeBucket") ?? "mind") as RecipeTimeBucket | "mind";
+    const quickOnly = searchParams.get("quickOnly") === "true";
     const childFriendly = searchParams.get("childFriendly") === "true";
+    const limitParam = searchParams.get("limit");
     const maxDurationParam = searchParams.get("maxDuration");
     const maxDuration = maxDurationParam === "Infinity" || !maxDurationParam ? Infinity : Number(maxDurationParam);
+    const resultLimit = limitParam === "all" ? Infinity : Number(limitParam ?? 180);
 
     const catalog = await getHybridRecipeCatalog();
 
     const baseFiltered = catalog
       .filter((recipe) => recipe.duration <= maxDuration)
-      .filter((recipe) => matchesProtein(recipe, protein))
+      .filter((recipe) =>
+        matchesRecipeTaxonomy(recipe, {
+          protein,
+          mealType,
+          timeBucket,
+          quickOnly,
+          childFriendlyOnly: childFriendly,
+        }),
+      )
       .filter((recipe) => matchesSearch(recipe, search))
-      .filter((recipe) => !childFriendly || (recipe.tags ?? []).includes("gyerekbarát"));
+      .filter((recipe) => matchesProtein(recipe, protein));
 
     const categories = Array.from(new Set(baseFiltered.map((recipe) => recipe.category))).sort((a, b) =>
       a.localeCompare(b, "hu"),
@@ -113,14 +156,13 @@ export async function GET(request: Request) {
     const strictRecipes = baseFiltered
       .filter((recipe) => category === "mind" || recipe.category === category)
       .filter((recipe) => tag === "mind" || (recipe.tags ?? []).includes(tag))
-      .filter((recipe) => !childFriendly || (recipe.tags ?? []).includes("gyerekbarát"))
       .sort((a, b) => {
         const priorityDiff = Number(isPriorityImportedRecipe(b)) - Number(isPriorityImportedRecipe(a));
         if (priorityDiff !== 0) return priorityDiff;
         return a.duration - b.duration || a.name.localeCompare(b.name, "hu");
       });
 
-    let recipes = strictRecipes.slice(0, 180);
+    let recipes = strictRecipes.slice(0, resultLimit);
     let usedFallback = false;
 
     if (!search && strictRecipes.length < MIN_RECIPE_RESULTS) {
@@ -130,9 +172,17 @@ export async function GET(request: Request) {
         .filter((recipe) => !strictIds.has(recipe.id))
         .map((recipe) => ({
           recipe,
-          score: getRelaxedScore(recipe, { protein, category, tag, maxDuration }),
+          score: getRelaxedScore(recipe, { protein, category, tag, maxDuration, mealType, timeBucket, quickOnly, childFriendly }),
         }))
-        .filter((item) => !childFriendly || (item.recipe.tags ?? []).includes("gyerekbarát"))
+        .filter((item) =>
+          matchesRecipeTaxonomy(item.recipe, {
+            protein,
+            mealType,
+            timeBucket,
+            quickOnly,
+            childFriendlyOnly: childFriendly,
+          }),
+        )
         .filter((item) => item.score > 0)
         .sort(
           (a, b) =>
@@ -142,18 +192,20 @@ export async function GET(request: Request) {
         )
         .map((item) => item.recipe);
 
-      recipes = [...strictRecipes, ...fallbackRecipes].slice(0, 180);
+      recipes = [...strictRecipes, ...fallbackRecipes].slice(0, resultLimit);
       usedFallback = recipes.length > strictRecipes.length;
     }
 
-    if (recipes.length > MIN_RECIPE_RESULTS) {
-      recipes = recipes.slice(0, 180);
+    if (Number.isFinite(resultLimit) && recipes.length > MIN_RECIPE_RESULTS) {
+      recipes = recipes.slice(0, resultLimit);
     }
 
     return Response.json({
       recipes,
       categories,
       tags,
+      mealTypes: MEAL_TYPE_OPTIONS,
+      timeBuckets: TIME_BUCKET_OPTIONS,
       exactMatchCount: strictRecipes.length,
       usedFallback,
     });

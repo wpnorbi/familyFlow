@@ -1,9 +1,11 @@
-import recipeImport from "@/data/family-flow-lidl-expanded-recipes.safe-import.json";
+import lidlRecipeImport from "@/data/family-flow-lidl-expanded-recipes.safe-import.json";
+import nosaltyRecipeImport from "@/data/family-flow-nosalty-recipes.safe-import.json";
 import type {
   ExternalRecipeImportItem,
   ExternalRecipeImportPackage,
 } from "@/lib/recipes/external-import.types";
 import { LIDL_RECIPE_IMAGE_BY_ID } from "@/lib/recipes/lidl-image-map";
+import { getRecipeMealTypeLabel, normalizeRecipeTags } from "@/lib/recipes/recipe-taxonomy";
 import type { Recipe } from "@/types/etkezes";
 
 function formatIngredientAmount(amount?: number | string, unit?: string): string {
@@ -35,7 +37,7 @@ function inferProtein(recipe: ExternalRecipeImportItem): Recipe["protein"] {
   if (haystack.includes("vegetáriánus") || haystack.includes("gomba") || haystack.includes("zöldség")) {
     return "vegetáriánus";
   }
-  if (/(lazac|hal|tonhal|pisztráng|tőkehal)/.test(haystack)) return "hal";
+  if (/(lazac|hal|tonhal|pisztráng|tőkehal|ponty|harcsa|makréla|makrela)/.test(haystack)) return "hal";
   if (/(csirke|csirkemell|csirkecomb|pulyka)/.test(haystack)) return "csirke";
   if (/(marha|marhahús|steak|hátszín)/.test(haystack)) return "marha";
   if (/(sertés|karaj|tarja|szűzérme|kolbász)/.test(haystack)) return "sertés";
@@ -49,18 +51,16 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
   }));
 
   const ingredients = ingredientGroups.flatMap((group) => group.items);
-  const tags = Array.from(
+  const rawTags = Array.from(
     new Set([
       ...item.tags,
-      "lidl",
       "importált",
       item.sourceName,
-      ...(item.kidFriendlyNotes ? ["gyerekbarát"] : []),
       ...(item.shoppingListReady ? ["bevásárlólista"] : []),
     ]),
   );
 
-  return {
+  const mapped: Recipe = {
     id: item.id,
     sourceId: item.id,
     name: item.title.trim(),
@@ -71,7 +71,7 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     image: item.image.url ?? LIDL_RECIPE_IMAGE_BY_ID[item.id] ?? undefined,
     ingredients,
     instructions: item.customPreparationSteps.map((step) => step.trim()),
-    tags,
+    tags: rawTags,
     source: "user-import",
     sourceUrl: item.sourceUrl,
     sourceName: item.sourceName,
@@ -83,9 +83,20 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     shoppingListReady: item.shoppingListReady,
     openOriginalRecipeLabel: item.openOriginalRecipeLabel,
   };
+
+  const normalizedTags = normalizeRecipeTags(mapped);
+
+  return {
+    ...mapped,
+    category: getRecipeMealTypeLabel(mapped),
+    tags: normalizedTags,
+    kidFriendlyNotes: normalizedTags.includes("gyerekbarát")
+      ? (mapped.kidFriendlyNotes || "Kisgyerekeknek is könnyen ehető, enyhébb családi változatban tálalható.")
+      : "",
+  };
 }
 
 export function getUserImportedRecipes(): Recipe[] {
-  const pkg = recipeImport as ExternalRecipeImportPackage;
-  return pkg.recipes.map(mapImportedRecipe);
+  const packages = [lidlRecipeImport, nosaltyRecipeImport] as ExternalRecipeImportPackage[];
+  return packages.flatMap((pkg) => pkg.recipes.map(mapImportedRecipe));
 }

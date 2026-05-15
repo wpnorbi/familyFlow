@@ -6,7 +6,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchesForDate } from "@/lib/etkezes-data";
-import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
+import { getRecipeMealType, isKidFriendlyRecipe, isQuickRecipe } from "@/lib/recipes/recipe-taxonomy";
 import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 
 interface NextMealData {
@@ -24,6 +24,7 @@ interface Props {
   pantryItems: string[];
   catalog: Recipe[];
   onAddMeal: () => void;
+  onOpenRecipeLibrary: () => void;
   onStartCooking: (recipe: Recipe) => void;
   onViewRecipe: (recipe: Recipe) => void;
   onGenerateIdeas: () => void;
@@ -35,13 +36,13 @@ type DayChoice = 1 | 2 | 3 | 7;
 type StyleChoice =
   | "Gyors vacsora"
   | "Gyerekbarát"
-  | "Kamrából"
   | "30 perc alatt"
   | "2 napra"
   | "Egyszerű"
   | "Tészta"
+  | "Főzelék"
   | "Leves";
-type FilterChoice = "Összes" | "Gyors" | "Gyerekbarát" | "Kamra";
+type FilterChoice = "Összes" | "Gyors" | "Gyerekbarát" | "Tészta" | "Főzelék";
 const LANDING_HERO_IMAGE = "/images/dashboard/hero-kitchen.jpg";
 
 const STYLE_OPTIONS: Array<{
@@ -51,7 +52,7 @@ const STYLE_OPTIONS: Array<{
 }> = [
   { label: "Gyors vacsora", icon: "bolt", tone: "bg-[linear-gradient(145deg,rgba(238,243,231,0.98),rgba(221,230,211,0.92))] text-[var(--ff-primary)] border-[rgba(94,113,87,0.18)]" },
   { label: "Gyerekbarát", icon: "favorite", tone: "bg-[linear-gradient(145deg,rgba(255,240,227,0.98),rgba(248,220,198,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(230,168,121,0.18)]" },
-  { label: "Kamrából", icon: "kitchen", tone: "bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(246,228,203,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(185,130,71,0.18)]" },
+  { label: "Főzelék", icon: "eco", tone: "bg-[linear-gradient(145deg,rgba(238,243,231,0.98),rgba(221,230,211,0.92))] text-[var(--ff-primary)] border-[rgba(94,113,87,0.18)]" },
   { label: "30 perc alatt", icon: "timer", tone: "bg-[linear-gradient(145deg,rgba(244,249,239,0.98),rgba(221,230,211,0.88))] text-[var(--ff-primary)] border-[rgba(124,145,111,0.16)]" },
   { label: "2 napra", icon: "history_2", tone: "bg-[linear-gradient(145deg,rgba(244,249,239,0.98),rgba(238,243,231,0.9))] text-[var(--ff-primary)] border-[rgba(124,145,111,0.16)]" },
   { label: "Egyszerű", icon: "home", tone: "bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(246,235,216,0.9))] text-[var(--ff-text)] border-[rgba(74,67,54,0.12)]" },
@@ -59,36 +60,29 @@ const STYLE_OPTIONS: Array<{
   { label: "Leves", icon: "soup_kitchen", tone: "bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(246,228,203,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(185,130,71,0.18)]" },
 ];
 
-function matchesFilter(recipe: Recipe, filter: FilterChoice, pantryItems: string[]) {
+function matchesFilter(recipe: Recipe, filter: FilterChoice, _pantryItems: string[]) {
   if (filter === "Összes") return true;
-  if (filter === "Gyors") return recipe.duration <= 30 || (recipe.tags ?? []).includes("gyors");
-  if (filter === "Gyerekbarát") return (recipe.tags ?? []).includes("gyerekbarát");
-  if (filter === "Kamra") {
-    const match = rankRecipesForPantry([recipe], pantryItems)[0];
-    return (match?.matchedIngredients.length ?? 0) > 0 || recipe.source === "user-import";
-  }
+  if (filter === "Gyors") return isQuickRecipe(recipe);
+  if (filter === "Gyerekbarát") return isKidFriendlyRecipe(recipe);
+  if (filter === "Tészta") return getRecipeMealType(recipe) === "teszta";
+  if (filter === "Főzelék") return getRecipeMealType(recipe) === "fozelek";
   return true;
 }
 
-function applyStyleRanking(recipes: Recipe[], style: StyleChoice, pantryItems: string[]) {
-  const rankedByPantry = rankRecipesForPantry(recipes, pantryItems);
-
-  if (style === "Kamrából") {
-    return rankedByPantry.map((item) => item.recipe);
-  }
-
+function applyStyleRanking(recipes: Recipe[], style: StyleChoice, _pantryItems: string[]) {
   const ordered = [...recipes].sort((a, b) => {
     const aTags = a.tags ?? [];
     const bTags = b.tags ?? [];
     const scoreRecipe = (recipe: Recipe, tags: string[]) => {
       let score = 0;
-      if (style === "Gyors vacsora" && (recipe.duration <= 30 || tags.includes("gyors"))) score += 120;
-      if (style === "Gyerekbarát" && tags.includes("gyerekbarát")) score += 140;
+      if (style === "Gyors vacsora" && isQuickRecipe(recipe)) score += 120;
+      if (style === "Gyerekbarát" && isKidFriendlyRecipe(recipe)) score += 140;
       if (style === "30 perc alatt" && recipe.duration <= 30) score += 120;
       if (style === "2 napra" && (tags.includes("2 napra elég") || recipe.servings && recipe.servings >= 4)) score += 110;
-      if (style === "Egyszerű" && (recipe.duration <= 30 || tags.includes("gyors") || tags.includes("család"))) score += 100;
-      if (style === "Tészta" && (recipe.category.toLowerCase().includes("tészta") || recipe.name.toLowerCase().includes("tészta"))) score += 130;
-      if (style === "Leves" && recipe.category.toLowerCase().includes("leves")) score += 130;
+      if (style === "Egyszerű" && isQuickRecipe(recipe)) score += 100;
+      if (style === "Tészta" && getRecipeMealType(recipe) === "teszta") score += 130;
+      if (style === "Főzelék" && getRecipeMealType(recipe) === "fozelek") score += 130;
+      if (style === "Leves" && getRecipeMealType(recipe) === "leves") score += 130;
       if (recipe.source === "user-import") score += 40;
       return score;
     };
@@ -157,6 +151,7 @@ export default function EtkezesMobileView({
   pantryItems,
   catalog,
   onAddMeal,
+  onOpenRecipeLibrary,
   onViewRecipe,
 }: Props) {
   const [screen, setScreen] = useState<MobileScreen>("landing");
@@ -316,6 +311,18 @@ export default function EtkezesMobileView({
                   <span className="material-symbols-outlined text-[18px]">chevron_right</span>
                 </button>
               </div>
+              <button
+                onClick={onOpenRecipeLibrary}
+                className="mb-3 flex w-full items-center justify-between rounded-[24px] border border-white/78 bg-[linear-gradient(145deg,rgba(255,252,244,0.96),rgba(238,243,231,0.78))] px-4 py-3 text-left shadow-[0_18px_36px_-28px_rgba(61,49,34,0.22)]"
+              >
+                <span>
+                  <span className="block text-[15px] font-semibold text-[var(--ff-text)]">Recepttár</span>
+                  <span className="mt-0.5 block text-[12px] font-medium text-[var(--ff-text-muted)]">Keresés és szűrés az összes receptben</span>
+                </span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--ff-primary)] text-[var(--ff-text-inverse)]">
+                  <span className="material-symbols-outlined text-[18px]">menu_book</span>
+                </span>
+              </button>
 
               <div className="flex flex-col gap-3">
                 {landingRecipes.length > 0 ? (
@@ -464,7 +471,7 @@ export default function EtkezesMobileView({
             </header>
 
             <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
-              {(["Összes", "Gyors", "Gyerekbarát", "Kamra"] as FilterChoice[]).map((item) => (
+              {(["Összes", "Gyors", "Gyerekbarát", "Tészta", "Főzelék"] as FilterChoice[]).map((item) => (
                 <button
                   key={item}
                   onClick={() => setFilter(item)}

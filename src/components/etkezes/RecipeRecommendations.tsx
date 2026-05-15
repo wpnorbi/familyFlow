@@ -4,6 +4,7 @@ import RecipeImage from "@/components/etkezes/RecipeImage";
 import { useEffect, useMemo, useState } from "react";
 import { getBatchRecipe } from "@/lib/etkezes-data";
 import { useMealData } from "@/hooks/useMealData";
+import { getRecipeMealType, isKidFriendlyRecipe, isQuickRecipe } from "@/lib/recipes/recipe-taxonomy";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 
 const CARD_LIMIT = 3;
@@ -58,19 +59,19 @@ function scoreRecipe(candidate: Recipe, history: Recipe[]): number {
       score += 24 * weight;
     }
 
-    if (recipe.category === candidate.category) {
+    if (getRecipeMealType(recipe) === getRecipeMealType(candidate)) {
       score += 12 * weight;
     }
 
     const sharedTags = (candidate.tags ?? []).filter((tag) => (recipe.tags ?? []).includes(tag)).length;
     score += sharedTags * 6 * weight;
 
-    if ((recipe.duration <= 30) === (candidate.duration <= 30)) {
+    if (isQuickRecipe(recipe) === isQuickRecipe(candidate)) {
       score += 5 * weight;
     }
   });
 
-  if ((candidate.tags ?? []).includes("gyerekbarát")) score += 8;
+  if (isKidFriendlyRecipe(candidate)) score += 8;
   if ((candidate.tags ?? []).includes("maradékbarát")) score += 6;
   if ((candidate.tags ?? []).includes("2 napra elég")) score += 6;
   if (isPriorityImportedRecipe(candidate)) score += 90;

@@ -16,6 +16,8 @@ import AddMealModal from "./AddMealModal";
 import CookingSessionModal from "./CookingSessionModal";
 import EtkezesMobileView from "./EtkezesMobileView";
 import DesktopEtkezesView from "./DesktopEtkezesView";
+import RecipeDetailModal from "./RecipeDetailModal";
+import RecipeLibraryView from "./RecipeLibraryView";
 
 function getNextBatch(batches: MealBatch[], todayKey: string) {
   const upcoming = getUpcomingBatches(batches, todayKey, 1);
@@ -33,7 +35,9 @@ export default function EtkezesClient() {
   const [isCookingOpen, setIsCookingOpen] = useState(false);
   const [initialRecipe, setInitialRecipe] = useState<Recipe | null>(null);
   const [cookingRecipe, setCookingRecipe] = useState<Recipe | null>(null);
+  const [detailRecipe, setDetailRecipe] = useState<Recipe | null>(null);
   const [catalog, setCatalog] = useState<Recipe[]>([]);
+  const [viewMode, setViewMode] = useState<"planner" | "recipes">("planner");
 
   const todayKey = toDateKey(new Date());
   const nextMealData = getNextBatch(batches, todayKey);
@@ -104,53 +108,65 @@ export default function EtkezesClient() {
 
   return (
     <>
-      <EtkezesMobileView
-        nextMealData={nextMealData}
-        weekDays={weekDays}
-        batches={batches}
-        shoppingItems={shoppingItems}
-        pantryItems={pantryItems}
-        catalog={catalog}
-        onAddMeal={() => setIsModalOpen(true)}
-        onStartCooking={(recipe) => {
-          setCookingRecipe(recipe);
-          setIsCookingOpen(true);
-        }}
-        onViewRecipe={(recipe) => {
-          setInitialRecipe(recipe);
-          setIsModalOpen(true);
-        }}
-        onGenerateIdeas={() => setIsModalOpen(true)}
-      />
-
-      <div className="hidden md:block">
-        {!hydrated && (
-          <div className="ff-glass-card fixed left-1/2 top-5 z-[60] -translate-x-1/2 rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
-            Adatok betöltése...
-          </div>
-        )}
-
-        <DesktopEtkezesView
-          nextMealData={nextMealData}
-          weekDays={weekDays}
-          batches={batches}
-          catalog={catalog}
-          pantryItems={pantryItems}
-          shoppingItems={shoppingItems}
-          plannedDaysCount={plannedDaysCount}
-          openDaysCount={openDaysCount}
-          onAddMeal={() => setIsModalOpen(true)}
-          onRemoveBatch={handleRemoveBatch}
-          onStartCooking={(recipe) => {
-            setCookingRecipe(recipe);
-            setIsCookingOpen(true);
-          }}
-          onViewRecipe={(recipe) => {
-            setInitialRecipe(recipe);
-            setIsModalOpen(true);
-          }}
+      {viewMode === "recipes" ? (
+        <RecipeLibraryView
+          initialCatalog={catalog}
+          onBack={() => setViewMode("planner")}
+          onViewRecipe={(recipe) => setDetailRecipe(recipe)}
         />
-      </div>
+      ) : (
+        <>
+          <EtkezesMobileView
+            nextMealData={nextMealData}
+            weekDays={weekDays}
+            batches={batches}
+            shoppingItems={shoppingItems}
+            pantryItems={pantryItems}
+            catalog={catalog}
+            onAddMeal={() => setIsModalOpen(true)}
+            onOpenRecipeLibrary={() => setViewMode("recipes")}
+            onStartCooking={(recipe) => {
+              setCookingRecipe(recipe);
+              setIsCookingOpen(true);
+            }}
+            onViewRecipe={(recipe) => {
+              setInitialRecipe(recipe);
+              setIsModalOpen(true);
+            }}
+            onGenerateIdeas={() => setIsModalOpen(true)}
+          />
+
+          <div className="hidden md:block">
+            {!hydrated && (
+              <div className="ff-glass-card fixed left-1/2 top-5 z-[60] -translate-x-1/2 rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
+                Adatok betöltése...
+              </div>
+            )}
+
+            <DesktopEtkezesView
+              nextMealData={nextMealData}
+              weekDays={weekDays}
+              batches={batches}
+              catalog={catalog}
+              pantryItems={pantryItems}
+              shoppingItems={shoppingItems}
+              plannedDaysCount={plannedDaysCount}
+              openDaysCount={openDaysCount}
+              onAddMeal={() => setIsModalOpen(true)}
+              onOpenRecipeLibrary={() => setViewMode("recipes")}
+              onRemoveBatch={handleRemoveBatch}
+              onStartCooking={(recipe) => {
+                setCookingRecipe(recipe);
+                setIsCookingOpen(true);
+              }}
+              onViewRecipe={(recipe) => {
+                setInitialRecipe(recipe);
+                setIsModalOpen(true);
+              }}
+            />
+          </div>
+        </>
+      )}
 
       {isModalOpen && (
         <AddMealModal
@@ -170,6 +186,23 @@ export default function EtkezesClient() {
           onClose={() => {
             setIsCookingOpen(false);
             setCookingRecipe(null);
+          }}
+        />
+      )}
+
+      {detailRecipe && (
+        <RecipeDetailModal
+          recipe={detailRecipe}
+          onClose={() => setDetailRecipe(null)}
+          onPlan={(recipe) => {
+            setDetailRecipe(null);
+            setInitialRecipe(recipe);
+            setIsModalOpen(true);
+          }}
+          onStartCooking={(recipe) => {
+            setDetailRecipe(null);
+            setCookingRecipe(recipe);
+            setIsCookingOpen(true);
           }}
         />
       )}

@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "import:lidl-recipes": "node scripts/import-lidl-recipes.mjs",
+    "import:nosalty-recipes": "node scripts/import-nosalty-recipes.mjs",
     "start": "next start",
     "lint": "eslint"
   },

@@ -19,6 +19,11 @@ export type ExternalRecipeImage =
       type: "licensed-stock";
       url: string;
       aiPrompt?: string;
+    }
+  | {
+      type: "external-source-url";
+      url: string;
+      aiPrompt?: never;
     };
 
 export interface ExternalRecipeIngredient {
