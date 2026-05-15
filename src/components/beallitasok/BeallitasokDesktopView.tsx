@@ -1,4 +1,5 @@
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 const FAMILY_MEMBERS: Array<{ name: string; role: string; badge?: string }> = [
   { name: "Anna Kovács", role: "Családfő", badge: "Te" },
@@ -272,6 +273,13 @@ export default function BeallitasokDesktopView() {
             Kapcsolatfelvétel
             <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
           </button>
+          <LogoutButton className="mt-4 flex w-full items-center justify-between rounded-[22px] border border-[rgba(196,74,54,0.16)] bg-[rgba(255,242,236,0.82)] px-5 py-4 text-left text-[rgba(181,67,48,0.92)]">
+            <span className="flex items-center gap-3 text-[15px] font-semibold">
+              <span className="material-symbols-outlined text-[22px]">logout</span>
+              Kijelentkezés
+            </span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </LogoutButton>
         </section>
       </div>
     </div>

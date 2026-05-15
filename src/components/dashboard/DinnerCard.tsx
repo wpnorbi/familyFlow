@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getRecipeImageDataUri } from "@/lib/recipes/recipe-image";
+import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
 import type { Recipe } from "@/types/etkezes";
 
 interface Props {
@@ -59,17 +59,10 @@ export default function DinnerCard({ recipe }: Props) {
 
   return (
     <div className="group relative h-full min-h-[380px] cursor-pointer overflow-hidden rounded-[var(--ff-radius-xl)] border border-[var(--ff-glass-border)] shadow-[var(--ff-shadow-card)]">
-      {recipe.image ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-          style={{ backgroundImage: `url('${recipe.image}')` }}
-        />
-      ) : (
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-          style={{ backgroundImage: `url('${getRecipeImageDataUri(recipe)}')` }}
-        />
-      )}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+        style={{ backgroundImage: `url('${getRecipeImageSrc(recipe)}')` }}
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,249,237,0.04),rgba(55,67,50,0.08))]" />
 

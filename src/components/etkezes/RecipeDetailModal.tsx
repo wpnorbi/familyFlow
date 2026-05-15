@@ -129,7 +129,7 @@ export default function RecipeDetailModal({ recipe, onClose, onPlan, onStartCook
             Bezárás
           </button>
           <button onClick={() => onPlan(recipe)} className="ff-button-secondary px-5 py-3 text-sm font-bold">
-            Tervezéshez adom
+            Hozzáadás a heti tervhez
           </button>
           <button onClick={() => onStartCooking(recipe)} className="ff-button-primary px-5 py-3 text-sm font-bold">
             Főzés indítása

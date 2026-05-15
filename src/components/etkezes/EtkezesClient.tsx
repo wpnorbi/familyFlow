@@ -130,8 +130,7 @@ export default function EtkezesClient() {
               setIsCookingOpen(true);
             }}
             onViewRecipe={(recipe) => {
-              setInitialRecipe(recipe);
-              setIsModalOpen(true);
+              setDetailRecipe(recipe);
             }}
             onGenerateIdeas={() => setIsModalOpen(true)}
           />

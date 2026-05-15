@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { DEFAULT_FAMILY_STATE, mergeFamilyState, normalizeFamilyState } from "@/lib/family-state";
 import { createAdminClient } from "@/lib/supabase-admin";
+import { createClient as createServerSupabaseClient } from "@/lib/supabase-server";
 import type { FamilyAppState } from "@/types/family-state";
 
 export const runtime = "nodejs";
@@ -34,7 +35,21 @@ function isSupabasePersistenceConfigured() {
   );
 }
 
+async function ensureAuthenticated() {
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return user;
+}
+
 export async function GET() {
+  const user = await ensureAuthenticated();
+  if (!user) {
+    return NextResponse.json({ error: "Bejelentkezés szükséges." }, { status: 401 });
+  }
+
   if (!isSupabasePersistenceConfigured()) {
     return NextResponse.json(DEFAULT_FAMILY_STATE);
   }
@@ -62,6 +77,11 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  const user = await ensureAuthenticated();
+  if (!user) {
+    return NextResponse.json({ error: "Bejelentkezés szükséges." }, { status: 401 });
+  }
+
   try {
     const patch = (await request.json()) as Partial<FamilyAppState>;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import LogoutButton from "@/components/auth/LogoutButton";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 
@@ -47,7 +48,7 @@ export default function BeallitasokMobileView() {
           ))}
         </section>
 
-        <section className="mt-6 rounded-[28px] border border-white/84 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-5 py-5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">
+        <LogoutButton className="mt-6 w-full rounded-[28px] border border-white/84 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-5 py-5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 text-[var(--ff-caramel-strong)]">
               <span className="material-symbols-outlined text-[30px]">logout</span>
@@ -55,7 +56,7 @@ export default function BeallitasokMobileView() {
             </div>
             <span className="material-symbols-outlined text-[22px] text-[var(--ff-text-soft)]">chevron_right</span>
           </div>
-        </section>
+        </LogoutButton>
       </main>
 
       <MobileBottomNav />

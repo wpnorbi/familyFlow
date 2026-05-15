@@ -4,7 +4,6 @@ import type {
   ExternalRecipeImportItem,
   ExternalRecipeImportPackage,
 } from "@/lib/recipes/external-import.types";
-import { LIDL_RECIPE_IMAGE_BY_ID } from "@/lib/recipes/lidl-image-map";
 import { getRecipeMealTypeLabel, normalizeRecipeTags } from "@/lib/recipes/recipe-taxonomy";
 import type { Recipe } from "@/types/etkezes";
 
@@ -44,6 +43,13 @@ function inferProtein(recipe: ExternalRecipeImportItem): Recipe["protein"] {
   return "egyéb";
 }
 
+function resolveImportedRecipeImage(item: ExternalRecipeImportItem): string | undefined {
+  // Imported recipes now intentionally use only our own local category visuals.
+  // This keeps the UI stable and avoids external image licensing and availability issues.
+  void item;
+  return undefined;
+}
+
 function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
   const ingredientGroups = item.ingredientGroups.map((group) => ({
     name: group.name.trim(),
@@ -68,7 +74,7 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     category: item.category.trim(),
     protein: inferProtein(item),
     description: item.safeShortDescription.trim(),
-    image: item.image.url ?? LIDL_RECIPE_IMAGE_BY_ID[item.id] ?? undefined,
+    image: resolveImportedRecipeImage(item),
     ingredients,
     instructions: item.customPreparationSteps.map((step) => step.trim()),
     tags: rawTags,

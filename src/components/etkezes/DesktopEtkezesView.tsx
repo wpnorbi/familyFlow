@@ -33,7 +33,8 @@ interface Props {
 }
 
 const USER_NAME = "Anna";
-const HERO_IMAGE = "/images/dashboard/hero-kitchen.jpg";
+const HERO_IMAGE =
+  "/api/recipes/image?url=https%3A%2F%2Fcdn.recipes.lidl%2Fimages-v2%2Frecipes%2Fhu-HU%2Ff0cbd9af-219f-4203-acbb-81c9a7788366%2F16x9_fallback_carbonara-1774372941.jpeg";
 const ALL_RECIPES = getUserImportedRecipes();
 const LIDL_RECIPES = ALL_RECIPES.filter((r) => r.sourceName === "Lidl Konyha" && r.image);
 const FALLBACK_SHOPPING = ["Csirkemell", "Tejszín", "Brokkoli", "Sajt", "Tojás"];
@@ -174,6 +175,7 @@ function WeekDayCard({
   onViewRecipe: (recipe: Recipe) => void;
 }) {
   const dayLabel = day.isToday ? "Ma" : day.name;
+  const hasRealImage = Boolean(recipe?.image);
 
   if (!recipe) {
     return (
@@ -182,11 +184,12 @@ function WeekDayCard({
         aria-label={`Étkezés hozzáadása: ${dayLabel}`}
         className={`group flex min-h-[168px] flex-col overflow-hidden rounded-[20px] border-dashed text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2 ${
           day.isToday
-            ? "border-2 border-[rgba(90,112,80,0.38)] bg-[rgba(225,240,210,0.72)] hover:bg-[rgba(215,234,196,0.88)]"
+            ? "border border-[rgba(90,112,80,0.28)] bg-[rgba(225,240,210,0.64)] hover:border-[rgba(90,112,80,0.42)] hover:bg-[rgba(215,234,196,0.82)]"
             : isWeekend
-            ? "border border-[rgba(185,130,71,0.24)] bg-[rgba(255,247,234,0.62)] hover:bg-[rgba(255,242,220,0.80)]"
-            : "border border-[rgba(185,130,71,0.28)] bg-[rgba(255,249,237,0.54)] hover:bg-[rgba(255,245,222,0.78)]"
+            ? "border border-[rgba(185,130,71,0.16)] bg-[rgba(255,247,234,0.54)] hover:border-[rgba(185,130,71,0.26)] hover:bg-[rgba(255,242,220,0.74)]"
+            : "border border-[rgba(185,130,71,0.16)] bg-[rgba(255,249,237,0.46)] hover:border-[rgba(185,130,71,0.24)] hover:bg-[rgba(255,245,222,0.70)]"
         }`}
+        style={{ borderStyle: "dashed", borderWidth: "1px" }}
       >
         <div className="flex flex-1 flex-col items-center justify-center gap-2 px-3 py-4">
           <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(185,130,71,0.32)] bg-[rgba(255,248,232,0.92)] text-[var(--ff-caramel-strong)] transition-transform group-hover:scale-105">
@@ -216,7 +219,16 @@ function WeekDayCard({
       }`}
     >
       <div className="relative h-[96px] w-full overflow-hidden">
-        <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+        {hasRealImage ? (
+          <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,rgba(255,247,232,0.98),rgba(233,243,224,0.92))]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(255,252,244,0.94)] text-[var(--ff-caramel-strong)] shadow-[0_12px_24px_-18px_rgba(61,49,34,0.26)]">
+              <Icon name="restaurant" className="text-[24px]" />
+            </div>
+          </div>
+        )}
+        <div className={`absolute inset-0 ${hasRealImage ? "bg-[linear-gradient(180deg,rgba(28,18,10,0.08),rgba(28,18,10,0.22))]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02))]"}`} />
         {day.isToday && (
           <span className="absolute left-2 top-2 rounded-full bg-[rgba(55,67,50,0.90)] px-2 py-0.5 text-[9px] font-extrabold text-white">
             Ma
@@ -267,10 +279,12 @@ function RecipeCard({
       aria-label={`${recipe.name} recept megnyitása`}
       className="cursor-pointer overflow-hidden rounded-[20px] border border-[rgba(170,135,84,0.13)] bg-[rgba(255,249,235,0.97)] shadow-[0_16px_36px_-26px_rgba(61,49,34,0.26)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_-26px_rgba(61,49,34,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
     >
-      <RecipeImage recipe={recipe} className="h-[140px] w-full object-cover 2xl:h-[158px]" />
+      <div className="h-[148px] w-full overflow-hidden bg-[linear-gradient(145deg,rgba(255,247,232,0.92),rgba(233,243,224,0.86))]">
+        <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+      </div>
       <div className="px-4 pb-4 pt-3.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="line-clamp-1 text-[14px] font-extrabold tracking-[-0.022em] text-[var(--ff-text)]">
+          <h3 className="line-clamp-2 min-h-[2.6em] text-[14px] font-extrabold leading-[1.28] tracking-[-0.022em] text-[var(--ff-text)]">
             {recipe.name}
           </h3>
           <button
@@ -294,10 +308,12 @@ function RecipeCard({
             <Icon name="sentiment_satisfied" className="text-[14px]" />
             {isKidFriendly ? "Gyerekbarát" : getRecipeMealTypeLabel(recipe)}
           </span>
-          <span className="inline-flex items-center gap-1">
-            <Icon name="calendar_month" className="text-[14px]" />
-            2 napra
-          </span>
+          {recipe.servings && recipe.servings >= 4 && (
+            <span className="inline-flex items-center gap-1">
+              <Icon name="calendar_month" className="text-[14px]" />
+              2 napra
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -468,13 +484,7 @@ function PantryIdeasPanel({
               className="grid w-full grid-cols-[52px_1fr] gap-3 rounded-[16px] border border-[rgba(170,135,84,0.12)] bg-[rgba(248,242,228,0.88)] p-2.5 text-left transition-all hover:bg-[rgba(244,236,218,0.96)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)]"
             >
               {/* Image with fallback */}
-              {recipe.image ? (
-                <RecipeImage recipe={recipe} className="h-[52px] w-[52px] rounded-[12px] object-cover" />
-              ) : (
-                <div className="flex h-[52px] w-[52px] items-center justify-center rounded-[12px] bg-[rgba(210,228,192,0.70)] text-[var(--ff-primary)]">
-                  <Icon name="restaurant" className="text-[22px] opacity-70" />
-                </div>
-              )}
+              <RecipeImage recipe={recipe} className="h-[52px] w-[52px] rounded-[12px] object-cover" />
               <div className="min-w-0">
                 <h3 className="line-clamp-1 text-[12px] font-extrabold text-[var(--ff-text)]">{recipe.name}</h3>
                 <p className={`mt-0.5 text-[10px] font-semibold ${missingIngredients.length === 0 ? "text-[var(--ff-primary)]" : "text-[var(--ff-caramel-strong)]"}`}>

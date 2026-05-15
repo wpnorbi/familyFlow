@@ -1,4 +1,5 @@
 import ThemeToggle from "@/components/ThemeToggle";
+import type { ReactNode } from "react";
 
 const DAYS_HU = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
 const MONTHS_HU = [
@@ -13,40 +14,55 @@ function getGreeting(hour: number): string {
   return "Jó éjszakát";
 }
 
-export default function WelcomeHeader() {
+type WelcomeHeaderProps = {
+  name?: string;
+  description?: string;
+  actions?: ReactNode;
+};
+
+export default function WelcomeHeader({
+  name = "Norbi",
+  description,
+  actions,
+}: WelcomeHeaderProps) {
   const now = new Date();
   const greeting = getGreeting(now.getHours());
   const dayName = DAYS_HU[now.getDay()];
   const month = MONTHS_HU[now.getMonth()];
   const day = now.getDate();
+  const subtitle =
+    description ??
+    `${dayName}, ${month} ${day}. Ma itt látod a család ritmusát, az étkezéseket és a következő lépéseket.`;
 
   return (
     <div className="flex w-full items-center justify-between gap-4">
       <div>
         <h2 className="flex items-center gap-2 text-[22px] font-semibold tracking-tight text-[var(--ff-text)]">
-          {greeting}, Nexus
+          {greeting}, {name}
         </h2>
-        <p className="mt-1 text-sm text-[var(--ff-text-muted)]">
-          {dayName}, {month} {day}. Ma itt látod a család ritmusát, az étkezéseket és a következő lépéseket.
-        </p>
+        <p className="mt-1 text-sm text-[var(--ff-text-muted)]">{subtitle}</p>
       </div>
 
-      <div className="hidden md:flex items-center gap-2">
-        <button className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
-          <span className="material-symbols-outlined text-[20px]">notifications</span>
-        </button>
-        <ThemeToggle
-          iconOnly
-          className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer"
-        />
-        <button className="ff-icon-button flex items-center gap-2 rounded-full px-2.5 py-2 text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--ff-primary-glass)] text-[11px] font-bold text-[var(--ff-primary)]">
-            FN
-          </span>
-          <span className="text-sm font-medium text-[var(--ff-text)]">Profil</span>
-          <span className="material-symbols-outlined text-[18px] text-[var(--ff-text-soft)]">expand_more</span>
-        </button>
-      </div>
+      {actions ? (
+        <div className="hidden md:flex items-center gap-2">{actions}</div>
+      ) : (
+        <div className="hidden md:flex items-center gap-2">
+          <button className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
+            <span className="material-symbols-outlined text-[20px]">notifications</span>
+          </button>
+          <ThemeToggle
+            iconOnly
+            className="ff-icon-button flex h-10 w-10 items-center justify-center rounded-full text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer"
+          />
+          <button className="ff-icon-button flex items-center gap-2 rounded-full px-2.5 py-2 text-[var(--ff-text-muted)] transition-colors hover:bg-[rgba(216,224,203,0.28)] cursor-pointer">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--ff-primary-glass)] text-[11px] font-bold text-[var(--ff-primary)]">
+              FN
+            </span>
+            <span className="text-sm font-medium text-[var(--ff-text)]">Profil</span>
+            <span className="material-symbols-outlined text-[18px] text-[var(--ff-text-soft)]">expand_more</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

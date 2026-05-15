@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
-import SideNav from "@/components/SideNav";
+import AppShell from "@/components/AppShell";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -42,10 +42,7 @@ export default function RootLayout({
       <body
         className={`${manrope.className} flex min-h-screen w-full overflow-x-hidden bg-background text-on-background antialiased`}
       >
-        <SideNav />
-        <main className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden md:ml-55">
-          {children}
-        </main>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
