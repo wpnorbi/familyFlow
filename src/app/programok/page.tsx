@@ -1,13 +1,16 @@
-import InProgress from "@/components/InProgress";
+import ProgramokDesktopView from "@/components/programok/ProgramokDesktopView";
+import ProgramokMobileView from "@/components/programok/ProgramokMobileView";
 
 export const metadata = { title: "Programok — CsaládiNexus" };
 
 export default function ProgramokPage() {
   return (
-    <InProgress
-      title="Programok & Naptár"
-      icon="event"
-      description="Hétvégi kalandok, családi események, időjárás-integráció és pakkolási listák — hamarosan elérhető."
-    />
+    <>
+      <ProgramokMobileView />
+
+      <div className="hidden md:block">
+        <ProgramokDesktopView />
+      </div>
+    </>
   );
 }

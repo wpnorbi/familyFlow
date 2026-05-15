@@ -1,13 +1,16 @@
-import InProgress from "@/components/InProgress";
+import KamraDesktopView from "@/components/kamra/KamraDesktopView";
+import KamraMobileView from "@/components/kamra/KamraMobileView";
 
 export const metadata = { title: "Kamra — CsaládiNexus" };
 
 export default function KamraPage() {
   return (
-    <InProgress
-      title="Kamrakészlet"
-      icon="inventory_2"
-      description="Lejáratok figyelése, készletszintek, vonalkód-olvasás és maradékkezelés — hamarosan elérhető."
-    />
+    <>
+      <KamraMobileView />
+
+      <div className="hidden md:block">
+        <KamraDesktopView />
+      </div>
+    </>
   );
 }

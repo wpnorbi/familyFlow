@@ -1,0 +1,36 @@
+export const LIDL_RECIPE_IMAGE_BY_ID: Record<string, string> = {
+  "lidl-gombafasirt-csicsokapurevel":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/7d5ebb06-fc74-4337-afb8-5befdeed145a/16x9_fallback_gombafasirt-csicsokapurevel-1774372992.jpeg",
+  "lidl-tofuval-toltott-paprika":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/2523ee01-1870-4ccb-92f8-4a3eb1c8b1de/16x9_fallback_tofuval-toltott-paprika-1774373193.jpeg",
+  "lidl-datolyas-mogyorovajas-brownie":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/63ee5c74-cb05-49a3-a522-936d2c44fb52/16x9_fallback_datolyas-mogyorovajas-sutes-nelkuli-brownie-1774372959.jpeg",
+  "lidl-toltott-savanyu-kaposzta-cserepedenyben":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/f57ff57d-d3a1-4c1e-af76-bf45466ff837/16x9_fallback_toltott-savanyu-kaposzta-cserepedenyben-1774373204.jpeg",
+  "lidl-sult-csirkecombos-quesadilla":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/49bf60af-53eb-4873-af4a-757e11010bae/16x9_fallback_sult-csirkecombos-quesadilla-martogatosokkal-1774373164.jpeg",
+  "lidl-csirkepaprikas-galuskaval":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/5bdcb0d0-c9b0-438e-ba97-f0f3542feec8/16x9_fallback_csirkepaprikas-galuskaval-porehagymas-uborkasalataval-1774372950.jpeg",
+  "lidl-carbonara":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/f0cbd9af-219f-4203-acbb-81c9a7788366/16x9_fallback_carbonara-1774372941.jpeg",
+  "lidl-oszi-almas-pite":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/3bdd3a69-d312-46ad-9c05-ceca5d6e7035/16x9_fallback_oszi-almas-pite-vaniliafagyival-1774373247.jpeg",
+  "lidl-burrata-quinoa-salataval":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/8ebe9a37-6e46-4f33-b6d3-35a476593f75/16x9_fallback_burrata-quinoa-salataval-es-nektarinnal-1774372939.jpeg",
+  "lidl-tokeletes-turogomboc":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/3742337e-569b-4aa2-a800-863ff36014fd/16x9_fallback_a-tokeletes-turogomboc-1774372918.jpeg",
+  "lidl-pulykamellfalatok-sult-almas-salata":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/adee9c13-c20c-40a4-b006-1fe0f24599cd/16x9_fallback_szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval-1774373152.jpeg",
+  "lidl-burgundi-marharagu":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/a62ba500-da7a-4a91-9626-3e6ead887774/16x9_fallback_burgundi-marharagu-avagy-a-boeuf-bourguignon-1774372937.jpeg",
+  "lidl-tavaszi-tekercs":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/0e42f755-c181-47e2-bc39-6f0cc5545434/16x9_fallback_tavaszi-tekercs-1774373184.jpeg",
+  "lidl-sajtos-nudli-specli":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/d301b12c-7768-41b7-af83-ff86ca65e16b/16x9_fallback_sajtos-nudli-specli-hegyi-sajttal-sutve-piritott-hagymaval-es-tokmagolajos-salataval-1774373129.jpeg",
+  "lidl-azsiai-zoldseges-piritott-teszta":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/25a56b6b-eef9-4f8e-ab0e-218f74d9bc5d/16x9_fallback_azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal-1774373244.jpeg",
+  "lidl-ratatouille-francia-lecso":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/e6ff72b5-591f-47bf-bd18-62dcc56ed7cc/16x9_fallback_ratatouille-francia-lecso-1774373117.jpeg",
+  "lidl-villamreggeli-turoval":
+    "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/23e0dd8e-5e59-4c06-a0af-1fb7a728a28f/16x9_fallback_villamreggeli-turoval-szalamival-abonettel-1774372906.jpeg",
+};

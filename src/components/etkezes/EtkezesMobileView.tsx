@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchesForDate } from "@/lib/etkezes-data";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
@@ -57,13 +58,6 @@ const STYLE_OPTIONS: Array<{
   { label: "Tészta", icon: "ramen_dining", tone: "bg-[linear-gradient(145deg,rgba(255,240,227,0.98),rgba(255,249,237,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(230,168,121,0.18)]" },
   { label: "Leves", icon: "soup_kitchen", tone: "bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(246,228,203,0.92))] text-[var(--ff-caramel-strong)] border-[rgba(185,130,71,0.18)]" },
 ];
-
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Jó reggelt, Anna";
-  if (hour < 18) return "Jó napot, Anna";
-  return "Jó estét, Anna";
-}
 
 function matchesFilter(recipe: Recipe, filter: FilterChoice, pantryItems: string[]) {
   if (filter === "Összes") return true;
@@ -171,7 +165,6 @@ export default function EtkezesMobileView({
   const [style, setStyle] = useState<StyleChoice>("Gyerekbarát");
   const [filter, setFilter] = useState<FilterChoice>("Összes");
 
-  const greeting = useMemo(() => getGreeting(), []);
   const plannedDaysCount = useMemo(
     () => weekDays.filter((day) => getBatchesForDate(batches, day.dateKey).length > 0).length,
     [batches, weekDays],
@@ -197,20 +190,7 @@ export default function EtkezesMobileView({
       <main className="relative flex min-h-screen flex-col px-4 pb-28 pt-5">
         {screen === "landing" && (
           <>
-            <header className="flex items-center justify-between gap-3 pb-5">
-              <div className="flex items-center gap-3">
-                <div className="overflow-hidden rounded-full border border-white/80 shadow-[0_12px_24px_-16px_rgba(61,49,34,0.24)]">
-                  <div className="flex h-12 w-12 items-center justify-center bg-[linear-gradient(145deg,rgba(255,241,230,0.98),rgba(220,229,208,0.88))] text-[var(--ff-primary)]">
-                    <span className="text-sm font-semibold">A</span>
-                  </div>
-                </div>
-                <h1 className="text-[19px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">{greeting}</h1>
-              </div>
-              <button className="relative flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(74,67,54,0.08)] bg-[rgba(255,251,244,0.88)] text-[var(--ff-text-muted)] shadow-[0_12px_24px_-18px_rgba(61,49,34,0.2)] backdrop-blur-[18px]">
-                <span className="material-symbols-outlined text-[22px]">notifications</span>
-                <span className="absolute right-1.5 top-1.5 h-3 w-3 rounded-full bg-[var(--ff-caramel)]" />
-              </button>
-            </header>
+            <MobileGreetingHeader />
 
             <section className="relative overflow-hidden rounded-[36px] border border-white/72 bg-[linear-gradient(145deg,rgba(255,250,240,0.96),rgba(246,228,203,0.78))] p-4 text-[var(--ff-text-inverse)] shadow-[0_28px_60px_-30px_rgba(61,49,34,0.36)]">
               <div className="absolute inset-0">

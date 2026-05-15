@@ -3,6 +3,7 @@ import type {
   ExternalRecipeImportItem,
   ExternalRecipeImportPackage,
 } from "@/lib/recipes/external-import.types";
+import { LIDL_RECIPE_IMAGE_BY_ID } from "@/lib/recipes/lidl-image-map";
 import type { Recipe } from "@/types/etkezes";
 
 function formatIngredientAmount(amount?: number | string, unit?: string): string {
@@ -67,7 +68,7 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     category: item.category.trim(),
     protein: inferProtein(item),
     description: item.safeShortDescription.trim(),
-    image: item.image.url ?? undefined,
+    image: item.image.url ?? LIDL_RECIPE_IMAGE_BY_ID[item.id] ?? undefined,
     ingredients,
     instructions: item.customPreparationSteps.map((step) => step.trim()),
     tags,
