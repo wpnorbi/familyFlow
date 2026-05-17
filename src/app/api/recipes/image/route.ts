@@ -1,6 +1,7 @@
 const ALLOWED_HOSTS = new Set([
   "cdn.recipes.lidl",
   "image-api.nosalty.hu",
+  "images.unsplash.com",
 ]);
 
 function fallbackImageResponse() {

@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"tsx|ts$\")"
+      "Bash(grep -E \"tsx|ts$\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -)",
+      "Bash(awk -F'\"' '{print NR\": \"$2}')"
+    ],
+    "additionalDirectories": [
+      "/Users/vasnorbert/Work/FamilyFlow/public/assets/recipes/images/thumbnails"
     ]
   }
 }

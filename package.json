@@ -7,6 +7,7 @@
     "build": "next build",
     "import:lidl-recipes": "node scripts/import-lidl-recipes.mjs",
     "import:nosalty-recipes": "node scripts/import-nosalty-recipes.mjs",
+    "recipes:images:build": "node scripts/build-recipe-image-workflow.mjs",
     "start": "next start",
     "lint": "eslint"
   },

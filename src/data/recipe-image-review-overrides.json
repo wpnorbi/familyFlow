@@ -1,0 +1,555 @@
+{
+  "generatedAt": "2026-05-16T20:21:45.831Z",
+  "items": [
+    {
+      "recipeId": "nosalty-muzli-joghurttal",
+      "reviewStatus": "approved",
+      "notes": "Breakfast bowl approved"
+    },
+    {
+      "recipeId": "nosalty-protein-smoothie-banan-mandulatejjel",
+      "reviewStatus": "approved",
+      "notes": "Smoothie approved"
+    },
+    {
+      "recipeId": "nosalty-zold-turmix-spenottal",
+      "reviewStatus": "approved",
+      "notes": "Green smoothie approved"
+    },
+    {
+      "recipeId": "nosalty-acai-bowl",
+      "reviewStatus": "approved",
+      "notes": "Acai bowl approved"
+    },
+    {
+      "recipeId": "nosalty-bagel-kremsajttal-lazaccal",
+      "reviewStatus": "approved",
+      "notes": "Bagel approved"
+    },
+    {
+      "recipeId": "nosalty-chia-mag-puding",
+      "reviewStatus": "approved",
+      "notes": "Chia pudding approved"
+    },
+    {
+      "recipeId": "nosalty-hummus-talka-pitaval",
+      "reviewStatus": "approved",
+      "notes": "Hummus bowl approved"
+    },
+    {
+      "recipeId": "nosalty-insalata-caprese",
+      "reviewStatus": "approved",
+      "notes": "Caprese approved"
+    },
+    {
+      "recipeId": "nosalty-kecskesajtos-tojasrantotta",
+      "reviewStatus": "approved",
+      "notes": "Egg breakfast approved"
+    },
+    {
+      "recipeId": "nosalty-klasszikus-becsi-szelet",
+      "reviewStatus": "approved",
+      "notes": "Wiener schnitzel approved"
+    },
+    {
+      "recipeId": "nosalty-overnight-oats-gyumolccsel",
+      "reviewStatus": "approved",
+      "notes": "Overnight oats approved"
+    },
+    {
+      "recipeId": "nosalty-ricotta-piritos-mezzel-es-dioval",
+      "reviewStatus": "approved",
+      "notes": "Ricotta toast approved"
+    },
+    {
+      "recipeId": "nosalty-smoothie-bowl",
+      "reviewStatus": "approved",
+      "notes": "Smoothie bowl approved"
+    },
+    {
+      "recipeId": "nosalty-tizperces-eper-sparga-salata",
+      "reviewStatus": "approved",
+      "notes": "Strawberry asparagus salad approved"
+    },
+    {
+      "recipeId": "nosalty-tojasrantotta-sonkaval-es-sajttal",
+      "reviewStatus": "approved",
+      "notes": "Ham and cheese scrambled eggs approved"
+    },
+    {
+      "recipeId": "nosalty-rantott-csemegeuborka",
+      "reviewStatus": "approved",
+      "notes": "Fried pickle approved"
+    },
+    {
+      "recipeId": "nosalty-articsoka-szivek-olivas-marinadban",
+      "reviewStatus": "approved",
+      "notes": "Marinated artichoke hearts approved"
+    },
+    {
+      "recipeId": "nosalty-avokados-piritos-tojassal",
+      "reviewStatus": "approved",
+      "notes": "Avocado toast approved"
+    },
+    {
+      "recipeId": "lidl-az-en-kocsonyam",
+      "reviewStatus": "approved",
+      "notes": "Aspic approved"
+    },
+    {
+      "recipeId": "nosalty-bruschetta-friss-paradicsommal",
+      "reviewStatus": "approved",
+      "notes": "Bruschetta approved"
+    },
+    {
+      "recipeId": "nosalty-caprese-szendvics",
+      "reviewStatus": "approved",
+      "notes": "Caprese sandwich approved"
+    },
+    {
+      "recipeId": "lidl-citromos-petrezselymes-tonhalsalata-avokadon",
+      "reviewStatus": "approved",
+      "notes": "Tuna avocado salad approved"
+    },
+    {
+      "recipeId": "nosalty-coleslaw-salata",
+      "reviewStatus": "approved",
+      "notes": "Coleslaw approved"
+    },
+    {
+      "recipeId": "nosalty-epres-rukkola-salata-kecskesajttal",
+      "reviewStatus": "approved",
+      "notes": "Strawberry arugula salad approved"
+    },
+    {
+      "recipeId": "nosalty-fetas-gorog-salata-mentatesztaval",
+      "reviewStatus": "approved",
+      "notes": "Feta Greek salad approved"
+    },
+    {
+      "recipeId": "lidl-frissitsuk-fel-a-salatakat",
+      "reviewStatus": "approved",
+      "notes": "Mixed salad platter approved"
+    },
+    {
+      "recipeId": "nosalty-garnela-fokhagymas-vajban",
+      "reviewStatus": "approved",
+      "notes": "Garlic butter shrimp approved"
+    },
+    {
+      "recipeId": "nosalty-gorog-salata-fetaval",
+      "reviewStatus": "approved",
+      "notes": "Greek salad approved"
+    },
+    {
+      "recipeId": "lidl-grillezett-sajtos-kolbaszos-szendvics",
+      "reviewStatus": "approved",
+      "notes": "Grilled sausage cheese sandwich approved"
+    },
+    {
+      "recipeId": "lidl-hamburgerfeltetek-szoszok-zoldsegek-trukkok",
+      "reviewStatus": "approved",
+      "notes": "Burger toppings spread approved"
+    },
+    {
+      "recipeId": "nosalty-tokeletes-parolt-rizs",
+      "reviewStatus": "approved",
+      "notes": "Steamed rice approved"
+    },
+    {
+      "recipeId": "lidl-vendegvaro-toltott-datolya-hazi-chiliolajjal",
+      "reviewStatus": "approved",
+      "notes": "Stuffed dates approved"
+    },
+    {
+      "recipeId": "lidl-villamgyors-vacsoraotletek-tesztabol",
+      "reviewStatus": "approved",
+      "notes": "Quick pasta dinner approved"
+    },
+    {
+      "recipeId": "lidl-villamreggeli-turoval",
+      "reviewStatus": "approved",
+      "notes": "Savory quick breakfast approved"
+    },
+    {
+      "recipeId": "nosalty-klasszikus-waldorf-salata",
+      "reviewStatus": "approved",
+      "notes": "Waldorf salad approved"
+    },
+    {
+      "recipeId": "lidl-hazi-hasabburgonya-es-chips",
+      "reviewStatus": "approved",
+      "notes": "Homemade fries and chips approved"
+    },
+    {
+      "recipeId": "lidl-hazi-keszitesu-retro-pizza",
+      "reviewStatus": "approved",
+      "notes": "Retro homemade pizza approved"
+    },
+    {
+      "recipeId": "lidl-hazi-naan-kenyer",
+      "reviewStatus": "approved",
+      "notes": "Homemade naan bread approved"
+    },
+    {
+      "recipeId": "lidl-hazi-olajos-es-ecetes-gombakonzerv",
+      "reviewStatus": "approved",
+      "notes": "Marinated mushroom preserve approved"
+    },
+    {
+      "recipeId": "lidl-hazi-paradicsomkonzerv-and-malnas-paradicsomle",
+      "reviewStatus": "approved",
+      "notes": "Tomato preserve and raspberry tomato juice approved"
+    },
+    {
+      "recipeId": "lidl-hazi-rosejbli-fuszersoval-sultfokhagymas-martogatoval",
+      "reviewStatus": "approved",
+      "notes": "Potato rosti with roasted garlic dip approved"
+    },
+    {
+      "recipeId": "lidl-hazi-sajtos-tejfolos-langos-ujhagymaval",
+      "reviewStatus": "approved",
+      "notes": "Cheese and sour cream langos approved"
+    },
+    {
+      "recipeId": "lidl-hazi-savanyitott-nyari-kaposzta-serteshussal-gerslivel-es-zoldfuszerekkel",
+      "reviewStatus": "approved",
+      "notes": "Pickled summer cabbage with pork and barley approved"
+    },
+    {
+      "recipeId": "lidl-hazi-szalagos-fank",
+      "reviewStatus": "approved",
+      "notes": "Hungarian ring doughnut approved"
+    },
+    {
+      "recipeId": "lidl-hazi-tarhonya-bogracsban-mangalicakolbasszal",
+      "reviewStatus": "approved",
+      "notes": "Bogracs tarhonya with sausage approved"
+    },
+    {
+      "recipeId": "lidl-hazi-tatar-bifsztek",
+      "reviewStatus": "approved",
+      "notes": "Steak tartare approved"
+    },
+    {
+      "recipeId": "lidl-hedonista-extra-csokis-es-gyumolcsos-brownie",
+      "reviewStatus": "approved",
+      "notes": "Extra chocolate brownie approved"
+    },
+    {
+      "recipeId": "lidl-hejaban-sult-burgonya-sajtos-martogatoval-es-tejfollel",
+      "reviewStatus": "approved",
+      "notes": "Baked potato with cheese dip approved"
+    },
+    {
+      "recipeId": "lidl-hejaban-sult-toltott-burgonya-chorizoval-es-manchengo-sajttal",
+      "reviewStatus": "approved",
+      "notes": "Stuffed baked potato approved"
+    },
+    {
+      "recipeId": "lidl-hideg-avokadokremleves-ropogos-tortillaval",
+      "reviewStatus": "approved",
+      "notes": "Cold avocado cream soup approved"
+    },
+    {
+      "recipeId": "lidl-hideg-kacsamellfile-teli-citrussalataval",
+      "reviewStatus": "approved",
+      "notes": "Cold duck breast with citrus salad approved"
+    },
+    {
+      "recipeId": "lidl-hokuszpokusz-kokuszrombusz-fehercsokoladeval-es-erdei-gyumolcsokkel",
+      "reviewStatus": "approved",
+      "notes": "Coconut dessert square approved"
+    },
+    {
+      "recipeId": "lidl-horvat-ropogos-kenyerlepeny-szardiniaval-sultpaprikakremmel-es-tepertovel",
+      "reviewStatus": "approved",
+      "notes": "Croatian sardine flatbread approved"
+    },
+    {
+      "recipeId": "lidl-hot-dog",
+      "reviewStatus": "approved",
+      "notes": "Classic hot dog approved"
+    },
+    {
+      "recipeId": "lidl-hot-dog-hazi-burgonyas-buciban",
+      "reviewStatus": "approved",
+      "notes": "Potato bun hot dog approved"
+    },
+    {
+      "recipeId": "lidl-hurkatoltes-hazilag-majas-es-veres-hurka",
+      "reviewStatus": "approved",
+      "notes": "Homemade hurka assortment approved"
+    },
+    {
+      "recipeId": "lidl-husmentes-husleves-zoldsegeroleves",
+      "reviewStatus": "approved",
+      "notes": "Vegetable broth soup approved"
+    },
+    {
+      "recipeId": "lidl-husveti-tormas-sonkas-tojaslepeny",
+      "reviewStatus": "approved",
+      "notes": "Easter ham egg omelette approved"
+    },
+    {
+      "recipeId": "lidl-husveti-vajas-turos-kalacs-kandirozott-narancshejjal",
+      "reviewStatus": "approved",
+      "notes": "Easter braided sweet bread approved"
+    },
+    {
+      "recipeId": "lidl-husvetisonka-fozes",
+      "reviewStatus": "approved",
+      "notes": "Cooked Easter ham approved"
+    },
+    {
+      "recipeId": "lidl-huvos-habart-bab-fustolt-csulokkel",
+      "reviewStatus": "approved",
+      "notes": "Creamy bean stew with smoked knuckle approved"
+    },
+    {
+      "recipeId": "lidl-indiai-csirkes-zoldseg-curry",
+      "reviewStatus": "approved",
+      "notes": "Indian chicken vegetable curry approved"
+    },
+    {
+      "recipeId": "lidl-inycsiklando-roze-kacsamell",
+      "reviewStatus": "approved",
+      "notes": "Medium-rare duck breast approved"
+    },
+    {
+      "recipeId": "lidl-inyenc-paprikas-krumpli",
+      "reviewStatus": "approved",
+      "notes": "Hungarian potato stew approved"
+    },
+    {
+      "recipeId": "lidl-izes-koretek-nyomaban-rizibizi-es-zoldseges-rizs",
+      "reviewStatus": "approved",
+      "notes": "Rice side dish duo approved"
+    },
+    {
+      "recipeId": "lidl-jackpot-reggeli-rantottaval-and-tojassalataval",
+      "reviewStatus": "approved",
+      "notes": "Scrambled eggs and egg salad breakfast approved"
+    },
+    {
+      "recipeId": "lidl-jegsalata-csipos-edes-raguval",
+      "reviewStatus": "approved",
+      "notes": "Iceberg lettuce with spicy-sweet ragu approved"
+    },
+    {
+      "recipeId": "lidl-joghurtos-palacsinta-mezes-gyomberes-kortekompottal",
+      "reviewStatus": "approved",
+      "notes": "Yogurt pancakes with pear compote approved"
+    },
+    {
+      "recipeId": "lidl-joghurtos-citromos-sult-csirkecomb-sult-padlizsan-es-tirosalata",
+      "reviewStatus": "approved",
+      "notes": "Lemon yogurt roasted chicken approved"
+    },
+    {
+      "recipeId": "lidl-kacsamaj-pastetom-tokaji-kesoi-arany-zselevel-aszaltszilvas-lilahagyma-jammel",
+      "reviewStatus": "approved",
+      "notes": "Duck liver pate with jelly approved"
+    },
+    {
+      "recipeId": "lidl-kacsamelles-szendvics-marinalt-uborkaval-sult-hagymaval-balzsamecettel",
+      "reviewStatus": "approved",
+      "notes": "Duck breast sandwich approved"
+    },
+    {
+      "recipeId": "lidl-kacsamellfile-szalonnas-sult-kelbimboval-es-edesburgonyaval",
+      "reviewStatus": "approved",
+      "notes": "Duck breast with Brussels sprouts approved"
+    },
+    {
+      "recipeId": "lidl-kaposztas-teszta",
+      "reviewStatus": "approved",
+      "notes": "Cabbage pasta approved"
+    },
+    {
+      "recipeId": "lidl-kapros-kapribogyos-vajtokfozelek-sertes-vagdalttal",
+      "reviewStatus": "approved",
+      "notes": "Squash stew with pork patties approved"
+    },
+    {
+      "recipeId": "lidl-kapros-turos-pogacsa",
+      "reviewStatus": "approved",
+      "notes": "Dill cottage cheese pogacsa approved"
+    },
+    {
+      "recipeId": "lidl-karamell-mousse-repatorta",
+      "reviewStatus": "approved",
+      "notes": "Caramel mousse carrot cake approved"
+    },
+    {
+      "recipeId": "lidl-karamellizalt-kalacs-forro-eperrel-kremsajttal",
+      "reviewStatus": "approved",
+      "notes": "Caramelized brioche with strawberries approved"
+    },
+    {
+      "recipeId": "lidl-karfiolleves-piritott-mogyoros-karfiol-sult-lazacgomboc",
+      "reviewStatus": "approved",
+      "notes": "Cauliflower soup with salmon dumpling approved"
+    },
+    {
+      "recipeId": "lidl-katalan-reggeli-spanyol-omlett-paradicsomos-piritossal",
+      "reviewStatus": "approved",
+      "notes": "Spanish omelette breakfast approved"
+    },
+    {
+      "recipeId": "lidl-kaves-csokoladehab-grillazzsal",
+      "reviewStatus": "approved",
+      "notes": "Coffee chocolate mousse approved"
+    },
+    {
+      "recipeId": "lidl-kefir-panna-cotta-mezes-oszibarackkal",
+      "reviewStatus": "approved",
+      "notes": "Kefir panna cotta approved"
+    },
+    {
+      "recipeId": "lidl-kefires-poharas-sutemeny-afonyaval-cseresznyevel-es-csokoladeval",
+      "reviewStatus": "approved",
+      "notes": "Kefir cake with berries approved"
+    },
+    {
+      "recipeId": "lidl-keltse-eletre-a-salatakat",
+      "reviewStatus": "approved",
+      "notes": "Salad inspiration platter approved"
+    },
+    {
+      "recipeId": "lidl-keszitse-el-a-salatakat-mint-onallo-fogasokat",
+      "reviewStatus": "approved",
+      "notes": "Standalone salad meal approved"
+    },
+    {
+      "recipeId": "lidl-ket-sajtban-sult-csirkemell-retegzett-vajas-snidlinges-burgonyaval-forrolevegos-fritozben",
+      "reviewStatus": "approved",
+      "notes": "Double cheese chicken breast approved"
+    },
+    {
+      "recipeId": "lidl-ketfele-lecso-fustolt-kolbasszal",
+      "reviewStatus": "approved",
+      "notes": "Lecso with smoked sausage approved"
+    },
+    {
+      "recipeId": "lidl-kevert-salata-cezar-dresszinggel-rantott-csirkemellfalatkakkal",
+      "reviewStatus": "approved",
+      "notes": "Caesar salad with fried chicken approved"
+    },
+    {
+      "recipeId": "lidl-kezmuves-buci-keszitese-hazilag",
+      "reviewStatus": "approved",
+      "notes": "Artisan burger buns approved"
+    },
+    {
+      "recipeId": "lidl-kinai-edes-savanyu-csirke",
+      "reviewStatus": "approved",
+      "notes": "Sweet and sour chicken approved"
+    },
+    {
+      "recipeId": "lidl-kiteritett-csirke-paprikas-johurtos-pacban-uborkasalataval",
+      "reviewStatus": "approved",
+      "notes": "Spatchcock paprika yogurt chicken approved"
+    },
+    {
+      "recipeId": "lidl-klasszikus-koromporkolt",
+      "reviewStatus": "approved",
+      "notes": "Classic pork trotter stew approved"
+    },
+    {
+      "recipeId": "lidl-klasszikus-mezeskalacs",
+      "reviewStatus": "approved",
+      "notes": "Classic gingerbread approved"
+    },
+    {
+      "recipeId": "lidl-klasszikus-tiramisu-csatos-uvegben",
+      "reviewStatus": "approved",
+      "notes": "Jar tiramisu approved"
+    },
+    {
+      "recipeId": "lidl-klasszikus-gyurt-stiriai-metelt",
+      "reviewStatus": "approved",
+      "notes": "Styrian sweet noodles approved"
+    },
+    {
+      "recipeId": "lidl-klasszikus-lekvaros-linzerkarika",
+      "reviewStatus": "approved",
+      "notes": "Linzer sandwich cookies approved"
+    },
+    {
+      "recipeId": "lidl-kokuszos-energiagolyo",
+      "reviewStatus": "approved",
+      "notes": "Coconut energy balls approved"
+    },
+    {
+      "recipeId": "lidl-kokusztejes-panna-cotta-vanilias-ananaszraguval",
+      "reviewStatus": "approved",
+      "notes": "Coconut panna cotta approved"
+    },
+    {
+      "recipeId": "lidl-kolbasszal-toltott-karaj-petrezselymes-zoldborsofozelekkel",
+      "reviewStatus": "approved",
+      "notes": "Stuffed pork loin approved"
+    },
+    {
+      "recipeId": "lidl-kolozsvari-rakott-pezsgos-kaposzta",
+      "reviewStatus": "approved",
+      "notes": "Layered cabbage casserole approved"
+    },
+    {
+      "recipeId": "lidl-konfitalt-citrom-es-citromkrem-hazilag",
+      "reviewStatus": "approved",
+      "notes": "Confit lemon and lemon cream approved"
+    },
+    {
+      "recipeId": "lidl-konfitalt-gyongybab-sult-ceklakrem-chimichurri",
+      "reviewStatus": "approved",
+      "notes": "Confit pearl beans approved"
+    },
+    {
+      "recipeId": "lidl-konfitalt-lazac-pak-choi-os-spargafozelekkel",
+      "reviewStatus": "approved",
+      "notes": "Confit salmon with asparagus approved"
+    },
+    {
+      "recipeId": "lidl-konfitalt-fuszeres-csirkemaj-tejfolos-ujburgonyaval-hagymasalataval",
+      "reviewStatus": "approved",
+      "notes": "Confit chicken liver approved"
+    },
+    {
+      "recipeId": "lidl-kovaszolt-fejes-kaposzta",
+      "reviewStatus": "approved",
+      "notes": "Fermented cabbage approved"
+    },
+    {
+      "recipeId": "lidl-konnyu-zoldseges-csirkeleves",
+      "reviewStatus": "approved",
+      "notes": "Light chicken vegetable soup approved"
+    },
+    {
+      "recipeId": "lidl-aromatizalt-lazacfile-parolt-zoldsegekkel-citrusos-salataval",
+      "reviewStatus": "approved",
+      "notes": "Seared salmon with citrus salad approved"
+    },
+    {
+      "recipeId": "lidl-crepe-suzette-a-francia-palacsinta",
+      "reviewStatus": "approved",
+      "notes": "Crepe Suzette approved"
+    },
+    {
+      "recipeId": "lidl-fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "reviewStatus": "approved",
+      "notes": "Fitness salad with chicken and tofu approved"
+    },
+    {
+      "recipeId": "lidl-paprikas-burgonya-kolbasszal-es-garnelarakkal",
+      "reviewStatus": "approved",
+      "notes": "Paprikas potato with sausage and shrimp approved"
+    },
+    {
+      "recipeId": "lidl-pinceporkolt-bogracsos-kormos-pacal-faszenen-grillezett-oldalassal",
+      "reviewStatus": "approved",
+      "notes": "Pinceporkolt bogracs stew approved"
+    }
+  ]
+}

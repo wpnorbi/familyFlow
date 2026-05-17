@@ -1,11 +1,18 @@
 import lidlRecipeImport from "@/data/family-flow-lidl-expanded-recipes.safe-import.json";
 import nosaltyRecipeImport from "@/data/family-flow-nosalty-recipes.safe-import.json";
+import recipeImageManifest from "@/data/recipe-image-manifest.json";
 import type {
   ExternalRecipeImportItem,
   ExternalRecipeImportPackage,
 } from "@/lib/recipes/external-import.types";
 import { getRecipeMealTypeLabel, normalizeRecipeTags } from "@/lib/recipes/recipe-taxonomy";
 import type { Recipe } from "@/types/etkezes";
+
+const APPROVED_GENERATED_RECIPE_IMAGE_BY_ID = new Map<string, string>(
+  recipeImageManifest.items
+    .filter((item) => item.image.status === "generated" && item.image.reviewStatus === "approved")
+    .map((item) => [item.recipeId, item.image.path]),
+);
 
 function formatIngredientAmount(amount?: number | string, unit?: string): string {
   const amountPart = amount === undefined || amount === null || amount === "" ? "" : String(amount).trim();
@@ -44,10 +51,7 @@ function inferProtein(recipe: ExternalRecipeImportItem): Recipe["protein"] {
 }
 
 function resolveImportedRecipeImage(item: ExternalRecipeImportItem): string | undefined {
-  // Imported recipes now intentionally use only our own local category visuals.
-  // This keeps the UI stable and avoids external image licensing and availability issues.
-  void item;
-  return undefined;
+  return APPROVED_GENERATED_RECIPE_IMAGE_BY_ID.get(item.id);
 }
 
 function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {

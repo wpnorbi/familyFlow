@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchRecipe, getBatchesForDate } from "@/lib/etkezes-data";
+import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
 import { getRecipeMealTypeLabel, isKidFriendlyRecipe } from "@/lib/recipes/recipe-taxonomy";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
@@ -33,10 +34,11 @@ interface Props {
 }
 
 const USER_NAME = "Anna";
-const HERO_IMAGE =
-  "/api/recipes/image?url=https%3A%2F%2Fcdn.recipes.lidl%2Fimages-v2%2Frecipes%2Fhu-HU%2Ff0cbd9af-219f-4203-acbb-81c9a7788366%2F16x9_fallback_carbonara-1774372941.jpeg";
 const ALL_RECIPES = getUserImportedRecipes();
-const LIDL_RECIPES = ALL_RECIPES.filter((r) => r.sourceName === "Lidl Konyha" && r.image);
+const LIDL_RECIPES = ALL_RECIPES.filter((r) => r.sourceName === "Lidl Konyha");
+const HERO_IMAGE = LIDL_RECIPES[0]
+  ? getRecipeImageSrc(LIDL_RECIPES[0])
+  : "/images/recipes/categories/pasta.png";
 const FALLBACK_SHOPPING = ["Csirkemell", "Tejszín", "Brokkoli", "Sajt", "Tojás"];
 const FALLBACK_UNITS = ["1 kg", "2 dl", "1 fej", "20 dkg", "6 db"];
 const HU_WEEKEND = ["Szombat", "Vasárnap"];

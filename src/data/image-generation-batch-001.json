@@ -1,0 +1,168 @@
+{
+  "batchId": "image-generation-batch-001",
+  "generatedAt": "2026-05-17T18:20:37.883Z",
+  "startIndex": 0,
+  "count": 20,
+  "items": [
+    {
+      "recipeId": "lidl-aromatizalt-lazacfile-parolt-zoldsegekkel-citrusos-salataval",
+      "slug": "aromatizalt-lazacfile-parolt-zoldsegekkel-citrusos-salataval",
+      "title": "„Aromatizált” lazacfilé, párolt zöldségekkel, citrusos salátával",
+      "visualType": "fish-main",
+      "imagePrompt": "Recipe title: „Aromatizált” lazacfilé, párolt zöldségekkel, citrusos salátával. Create a fish or seafood main dish with visible lazacfile, vegyes zoldseg, citrom vagy narancs. The dish must read visually as a plated fish or seafood main dish with the protein clearly visible. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: lazacfile, vegyes zoldseg, citrom vagy narancs. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "aromatizalt-lazacfile-parolt-zoldsegekkel-citrusos-salataval.webp"
+    },
+    {
+      "recipeId": "lidl-crepe-suzette-a-francia-palacsinta",
+      "slug": "crepe-suzette-a-francia-palacsinta",
+      "title": "\"Crépe Suzette\", a francia palacsinta",
+      "visualType": "pancake-crepe",
+      "imagePrompt": "Recipe title: \"Crépe Suzette\", a francia palacsinta. Create thin pancakes or crepes on a ceramic plate . The dish must read visually as thin pancakes or crepes folded or stacked on a plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "crepe-suzette-a-francia-palacsinta.webp"
+    },
+    {
+      "recipeId": "lidl-fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "slug": "fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "title": "„Fitness” saláta roppanós csirkefalatkákkal és tofuval",
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: „Fitness” saláta roppanós csirkefalatkákkal és tofuval. Create a composed salad with visible csirkehus, tofu, salatakeverek. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkehus, tofu, salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "fitness-salata-roppanos-csirkefalatkakkal-es-tofuval.webp"
+    },
+    {
+      "recipeId": "lidl-paprikas-burgonya-kolbasszal-es-garnelarakkal",
+      "slug": "paprikas-burgonya-kolbasszal-es-garnelarakkal",
+      "title": "„Paprikás burgonya” kolbásszal és garnélarákkal",
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: „Paprikás burgonya” kolbásszal és garnélarákkal. Create a hearty stew or one-pot meal with visible garnela, burgonya. The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: garnela, burgonya. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "paprikas-burgonya-kolbasszal-es-garnelarakkal.webp"
+    },
+    {
+      "recipeId": "lidl-pinceporkolt-bogracsos-kormos-pacal-faszenen-grillezett-oldalassal",
+      "slug": "pinceporkolt-bogracsos-kormos-pacal-faszenen-grillezett-oldalassal",
+      "title": "„Pincepörkölt” Bográcsos körmös pacal, faszénen grillezett oldalassal",
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: „Pincepörkölt” Bográcsos körmös pacal, faszénen grillezett oldalassal. Create a hearty stew or one-pot meal . The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "pinceporkolt-bogracsos-kormos-pacal-faszenen-grillezett-oldalassal.webp"
+    },
+    {
+      "recipeId": "lidl-2-fele-halloweeni-ischler",
+      "slug": "2-fele-halloweeni-ischler",
+      "title": "2-féle halloweeni ischler",
+      "visualType": "cookie-dessert",
+      "imagePrompt": "Recipe title: 2-féle halloweeni ischler. Create small homemade sandwich cookies with visible halfele. The dish must read visually as a small sandwich cookie dessert with chocolate coating or visible filling. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: halfele. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "2-fele-halloweeni-ischler.webp"
+    },
+    {
+      "recipeId": "lidl-2-fele-sutes-nelkuli-mogyorokremes-sutinyaloka-husvetra",
+      "slug": "2-fele-sutes-nelkuli-mogyorokremes-sutinyaloka-husvetra",
+      "title": "2-féle sütés nélküli mogyorókrémes sütinyalóka húsvétra",
+      "visualType": "cake-pop",
+      "imagePrompt": "Recipe title: 2-féle sütés nélküli mogyorókrémes sütinyalóka húsvétra. Create decorated cake pops on small sticks with dessert styling. The dish must read visually as decorated cake pops on sticks with homemade dessert styling. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "2-fele-sutes-nelkuli-mogyorokremes-sutinyaloka-husvetra.webp"
+    },
+    {
+      "recipeId": "lidl-a-legfinomabb-sultcsirke-tepsis-gyokerzoldsegekkel",
+      "slug": "a-legfinomabb-sultcsirke-tepsis-gyokerzoldsegekkel",
+      "title": "A \"legfinomabb\" sültcsirke tepsis gyökérzöldségekkel",
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: A \"legfinomabb\" sültcsirke tepsis gyökérzöldségekkel. Create a chicken main dish with visible egesz csirke, vegyes zoldseg. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: egesz csirke, vegyes zoldseg. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legfinomabb-sultcsirke-tepsis-gyokerzoldsegekkel.webp"
+    },
+    {
+      "recipeId": "lidl-a-legfinomabb-csokolademousse",
+      "slug": "a-legfinomabb-csokolademousse",
+      "title": "A legfinomabb csokoládémousse",
+      "visualType": "mousse-dessert",
+      "imagePrompt": "Recipe title: A legfinomabb csokoládémousse. Create a mousse dessert with visible tejszin, etcsokolade. The dish must read visually as a silky chocolate or fruit mousse served in a dessert glass or bowl. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: tejszin, etcsokolade. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legfinomabb-csokolademousse.webp"
+    },
+    {
+      "recipeId": "lidl-a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "slug": "a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "title": "A legfinomabb palacsinta túrókrémmel, tejföllel sütve",
+      "visualType": "pancake-crepe",
+      "imagePrompt": "Recipe title: A legfinomabb palacsinta túrókrémmel, tejföllel sütve. Create thin pancakes or crepes on a ceramic plate with visible turo, tejfol. The dish must read visually as thin pancakes or crepes folded or stacked on a plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve.webp"
+    },
+    {
+      "recipeId": "lidl-a-legszuperebb-paradicsomos-hazi-teszta",
+      "slug": "a-legszuperebb-paradicsomos-hazi-teszta",
+      "title": "A legszuperebb paradicsomos házi tészta",
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: A legszuperebb paradicsomos házi tészta. Create a pasta plate with visible teszta, paradicsom. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: teszta, paradicsom. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legszuperebb-paradicsomos-hazi-teszta.webp"
+    },
+    {
+      "recipeId": "lidl-a-tokeletes-grillezett-marhasteak",
+      "slug": "a-tokeletes-grillezett-marhasteak",
+      "title": "A tökéletes grillezett marhasteak",
+      "visualType": "steak-main",
+      "imagePrompt": "Recipe title: A tökéletes grillezett marhasteak. Create a steak or beef main dish with visible marhahus. The dish must read visually as a sliced or plated steak main dish cooked and served on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: marhahus. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-tokeletes-grillezett-marhasteak.webp"
+    },
+    {
+      "recipeId": "lidl-tokeletes-turogomboc",
+      "slug": "a-tokeletes-turogomboc",
+      "title": "A tökéletes túrógombóc",
+      "visualType": "sweet-dumpling",
+      "imagePrompt": "Recipe title: A tökéletes túrógombóc. Create soft sweet dumplings with visible turo, buzadara, citromhej, zsemlemorzsa, tejfol. The dish must read visually as soft sweet cottage cheese dumplings served as a plated dessert. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo, buzadara, citromhej, zsemlemorzsa, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-tokeletes-turogomboc.webp"
+    },
+    {
+      "recipeId": "lidl-a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
+      "slug": "a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
+      "title": "A világ legfinomabb, legegyszerűbb paradicsomos-sajtos spagettije",
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: A világ legfinomabb, legegyszerűbb paradicsomos-sajtos spagettije. Create a pasta plate with visible teszta, paradicsom, sajt. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: teszta, paradicsom, sajt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije.webp"
+    },
+    {
+      "recipeId": "lidl-afonyalekvaros-gombas-szarvasragu-turos-polentaval",
+      "slug": "afonyalekvaros-gombas-szarvasragu-turos-polentaval",
+      "title": "Áfonyalekváros, gombás szarvasragu túrós polentával",
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: Áfonyalekváros, gombás szarvasragu túrós polentával. Create a hearty stew or one-pot meal with visible turo. The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "afonyalekvaros-gombas-szarvasragu-turos-polentaval.webp"
+    },
+    {
+      "recipeId": "lidl-afonyas-citromos-tiramisu",
+      "slug": "afonyas-citromos-tiramisu",
+      "title": "Áfonyás-citromos tiramisu",
+      "visualType": "layered-dessert",
+      "imagePrompt": "Recipe title: Áfonyás-citromos tiramisu. Create a layered chilled dessert with visible citrom. The dish must read visually as a plated tiramisu-style layered dessert with visible creamy layers. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: citrom. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "afonyas-citromos-tiramisu.webp"
+    },
+    {
+      "recipeId": "lidl-almaspite-mogyoropralineval-karamellizalt-almaval",
+      "slug": "almaspite-mogyoropralineval-karamellizalt-almaval",
+      "title": "Almáspite, mogyorópralinéval, karamellizált almával",
+      "visualType": "pie-dessert",
+      "imagePrompt": "Recipe title: Almáspite, mogyorópralinéval, karamellizált almával. Create a slice of pie with golden crust and visible filling. The dish must read visually as a slice of homemade pie with visible filling and golden crust. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "almaspite-mogyoropralineval-karamellizalt-almaval.webp"
+    },
+    {
+      "recipeId": "lidl-aranygaluska",
+      "slug": "aranygaluska",
+      "title": "Aranygaluska",
+      "visualType": "sweet-bun-dessert",
+      "imagePrompt": "Recipe title: Aranygaluska. Create a baked sweet pastry dessert with visible nudli vagy galuska. The dish must read visually as golden pull-apart sweet pastry pieces dusted or glazed like a classic baked dessert. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: nudli vagy galuska. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "aranygaluska.webp"
+    },
+    {
+      "recipeId": "lidl-az-en-amerikai-palacsintam-mogyorovajjal-juharsziruppal",
+      "slug": "az-en-amerikai-palacsintam-mogyorovajjal-juharsziruppal",
+      "title": "Az én amerikai palacsintám, mogyoróvajjal, juharsziruppal",
+      "visualType": "pancake-crepe",
+      "imagePrompt": "Recipe title: Az én amerikai palacsintám, mogyoróvajjal, juharsziruppal. Create thin pancakes or crepes on a ceramic plate . The dish must read visually as thin pancakes or crepes folded or stacked on a plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "az-en-amerikai-palacsintam-mogyorovajjal-juharsziruppal.webp"
+    },
+    {
+      "recipeId": "lidl-az-en-hortobagyi-husos-palacsintam",
+      "slug": "az-en-hortobagyi-husos-palacsintam",
+      "title": "Az én hortobágyi húsos palacsintám",
+      "visualType": "savory-crepe",
+      "imagePrompt": "Recipe title: Az én hortobágyi húsos palacsintám. Create savory stuffed crepes with rich paprika filling and sauce. The dish must read visually as a savory stuffed crepe or rolled pancake filled with paprika-rich meat sauce. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "az-en-hortobagyi-husos-palacsintam.webp"
+    }
+  ]
+}

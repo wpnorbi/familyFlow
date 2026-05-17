@@ -203,6 +203,17 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
               <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">
                 találat
               </p>
+              {(() => {
+                const withImage = initialCatalog.filter((r) => r.image?.startsWith("/")).length;
+                if (withImage === 0) return null;
+                return (
+                  <p className="mt-2 text-[10px] text-(--ff-text-soft)">
+                    <span className="font-semibold text-(--ff-primary-soft)">{withImage}</span>
+                    {" / "}
+                    {initialCatalog.length} képpel
+                  </p>
+                );
+              })()}
             </div>
           </div>
         </header>

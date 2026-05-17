@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   getWeekDays,
   toDateKey,
@@ -18,6 +19,9 @@ import EtkezesMobileView from "./EtkezesMobileView";
 import DesktopEtkezesView from "./DesktopEtkezesView";
 import RecipeDetailModal from "./RecipeDetailModal";
 import RecipeLibraryView from "./RecipeLibraryView";
+import RecipePreviewSheet from "./RecipePreviewSheet";
+import ScheduleSheet from "./ScheduleSheet";
+import MealSuccessSheet, { type MealSuccessData } from "./MealSuccessSheet";
 
 function getNextBatch(batches: MealBatch[], todayKey: string) {
   const upcoming = getUpcomingBatches(batches, todayKey, 1);
@@ -29,20 +33,34 @@ function getNextBatch(batches: MealBatch[], todayKey: string) {
 }
 
 export default function EtkezesClient() {
-  const { mealBatches: batches, shoppingItems, pantryItems, updateMealData, hydrated } = useMealData();
+  const router = useRouter();
+  const { mealBatches: batches, shoppingItems, pantryItems, updateMealData, hydrated } =
+    useMealData();
   const [weekDays] = useState<WeekDay[]>(() => getWeekDays());
+
+  // Modal/sheet state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCookingOpen, setIsCookingOpen] = useState(false);
   const [initialRecipe, setInitialRecipe] = useState<Recipe | null>(null);
   const [cookingRecipe, setCookingRecipe] = useState<Recipe | null>(null);
   const [detailRecipe, setDetailRecipe] = useState<Recipe | null>(null);
+  const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
+  const [scheduleRecipe, setScheduleRecipe] = useState<Recipe | null>(null);
+  const [successData, setSuccessData] = useState<MealSuccessData | null>(null);
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+
+  // Catalog & view
   const [catalog, setCatalog] = useState<Recipe[]>([]);
   const [viewMode, setViewMode] = useState<"planner" | "recipes">("planner");
 
   const todayKey = toDateKey(new Date());
   const nextMealData = getNextBatch(batches, todayKey);
-  const plannedDaysCount = weekDays.filter((day) => getBatchesForDate(batches, day.dateKey).length > 0).length;
+  const plannedDaysCount = weekDays.filter(
+    (day) => getBatchesForDate(batches, day.dateKey).length > 0,
+  ).length;
   const openDaysCount = weekDays.length - plannedDaysCount;
+
+  // ── Data operations ────────────────────────────────────────────────────────
 
   const handleAddBatch = async (batchData: Omit<MealBatch, "id">) => {
     const id = crypto.randomUUID();
@@ -54,8 +72,8 @@ export default function EtkezesClient() {
     if (recipe) {
       const existing = new Set(shoppingItems);
       const pantryMatch = rankRecipesForPantry([recipe], pantryItems)[0];
-      const missingIngredients = pantryMatch?.missingIngredients ?? recipe.ingredients;
-      const toAdd = missingIngredients.filter((item) => !existing.has(item));
+      const missing = pantryMatch?.missingIngredients ?? recipe.ingredients;
+      const toAdd = missing.filter((item) => !existing.has(item));
       nextShoppingItems = toAdd.length ? [...shoppingItems, ...toAdd] : shoppingItems;
     }
 
@@ -64,47 +82,106 @@ export default function EtkezesClient() {
 
   const handleRemoveBatch = async (batchId: string) => {
     await updateMealData(
-      batches.filter((batch) => batch.id !== batchId),
+      batches.filter((b) => b.id !== batchId),
       shoppingItems,
     );
   };
 
+  // ── Schedule confirmation (used by both ScheduleSheet and RecipeDetailModal) ──
+
+  function handleConfirmSchedule(recipe: Recipe, startDate: string, days: number) {
+    const eatDates: string[] = [];
+    const base = new Date(`${startDate}T12:00:00`);
+    for (let i = 0; i < days; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      eatDates.push(toDateKey(d));
+    }
+
+    const allIngredients = recipe.ingredientGroups?.length
+      ? recipe.ingredientGroups.flatMap((g) => g.items)
+      : recipe.ingredients;
+    const pantryMatch = rankRecipesForPantry([recipe], pantryItems)[0];
+    const missing = pantryMatch?.missingIngredients ?? allIngredients;
+    const atHomeCount = allIngredients.length - missing.length;
+
+    void handleAddBatch({
+      recipeId: recipe.id,
+      recipeSnapshot: recipe,
+      cookDate: eatDates[0],
+      eatDates,
+    });
+
+    setScheduleRecipe(null);
+    setPreviewRecipe(null);
+    setDetailRecipe(null);
+
+    setSuccessData({
+      recipeName: recipe.name,
+      startDate: eatDates[0],
+      endDate: eatDates[eatDates.length - 1],
+      daysCount: days,
+      shoppingAdded: missing.length,
+      atHomeCount,
+    });
+  }
+
+  function handleQuickAdd(recipe: Recipe) {
+    setPreviewRecipe(null);
+    setScheduleRecipe(recipe);
+  }
+
+  function handleToggleBookmark(recipe: Recipe) {
+    setBookmarkedIds((cur) => {
+      const has = cur.includes(recipe.id);
+      return has ? cur.filter((id) => id !== recipe.id) : [...cur, recipe.id];
+    });
+  }
+
+  function closeSuccess() {
+    setSuccessData(null);
+    router.push("/etkezes");
+  }
+
+  // ── Keyboard shortcut ──────────────────────────────────────────────────────
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsModalOpen(false);
+      if (e.key === "Escape") {
+        setIsModalOpen(false);
+        setScheduleRecipe(null);
+        setPreviewRecipe(null);
+        setSuccessData(null);
+      }
     };
     window.addEventListener("keydown", handler);
-    return () => {
-      window.removeEventListener("keydown", handler);
-    };
+    return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  // ── Catalog load ───────────────────────────────────────────────────────────
+
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
 
-    async function loadCatalog() {
+    async function load() {
       try {
-        const response = await fetch("/api/recipes/search?protein=mind&maxDuration=Infinity&search=&category=mind&tag=mind", {
-          cache: "no-store",
-        });
-
-        if (!response.ok) return;
-
-        const payload = await response.json() as { recipes?: Recipe[] };
-        if (!isCancelled && Array.isArray(payload.recipes)) {
-          setCatalog(payload.recipes);
-        }
+        const res = await fetch(
+          "/api/recipes/search?protein=mind&maxDuration=Infinity&search=&category=mind&tag=mind",
+          { cache: "no-store" },
+        );
+        if (!res.ok) return;
+        const payload = (await res.json()) as { recipes?: Recipe[] };
+        if (!cancelled && Array.isArray(payload.recipes)) setCatalog(payload.recipes);
       } catch {
-        // Ha a receptlista átmenetileg nem elérhető, a kisegítő blokkok csendesen üresen maradnak.
+        // Catalog unavailable — silent fail.
       }
     }
 
-    void loadCatalog();
-
-    return () => {
-      isCancelled = true;
-    };
+    void load();
+    return () => { cancelled = true; };
   }, []);
+
+  // ──────────────────────────────────────────────────────────────────────────
 
   return (
     <>
@@ -116,6 +193,7 @@ export default function EtkezesClient() {
         />
       ) : (
         <>
+          {/* ── Mobile view ─────────────────────────────────────── */}
           <EtkezesMobileView
             nextMealData={nextMealData}
             weekDays={weekDays}
@@ -129,15 +207,15 @@ export default function EtkezesClient() {
               setCookingRecipe(recipe);
               setIsCookingOpen(true);
             }}
-            onViewRecipe={(recipe) => {
-              setDetailRecipe(recipe);
-            }}
+            onViewRecipe={(recipe) => setPreviewRecipe(recipe)}
+            onQuickAdd={handleQuickAdd}
             onGenerateIdeas={() => setIsModalOpen(true)}
           />
 
+          {/* ── Desktop view ─────────────────────────────────────── */}
           <div className="hidden md:block">
             {!hydrated && (
-              <div className="ff-glass-card fixed left-1/2 top-5 z-[60] -translate-x-1/2 rounded-[var(--ff-radius-md)] px-4 py-3 text-sm text-[var(--ff-text-soft)]">
+              <div className="ff-glass-card fixed left-1/2 top-5 z-60 -translate-x-1/2 rounded-(--ff-radius-md) px-4 py-3 text-sm text-(--ff-text-soft)">
                 Adatok betöltése...
               </div>
             )}
@@ -167,6 +245,7 @@ export default function EtkezesClient() {
         </>
       )}
 
+      {/* ── Desktop: AddMealModal (full wizard) ─────────────────── */}
       {isModalOpen && (
         <AddMealModal
           onAdd={handleAddBatch}
@@ -179,6 +258,7 @@ export default function EtkezesClient() {
         />
       )}
 
+      {/* ── Cooking session ──────────────────────────────────────── */}
       {isCookingOpen && cookingRecipe && (
         <CookingSessionModal
           recipe={cookingRecipe}
@@ -189,6 +269,7 @@ export default function EtkezesClient() {
         />
       )}
 
+      {/* ── Desktop: Recipe detail modal ─────────────────────────── */}
       {detailRecipe && (
         <RecipeDetailModal
           recipe={detailRecipe}
@@ -198,11 +279,54 @@ export default function EtkezesClient() {
             setInitialRecipe(recipe);
             setIsModalOpen(true);
           }}
+          onQuickSchedule={(recipe) => {
+            setDetailRecipe(null);
+            setScheduleRecipe(recipe);
+          }}
           onStartCooking={(recipe) => {
             setDetailRecipe(null);
             setCookingRecipe(recipe);
             setIsCookingOpen(true);
           }}
+        />
+      )}
+
+      {/* ── Mobile: Recipe preview sheet ─────────────────────────── */}
+      {previewRecipe && (
+        <RecipePreviewSheet
+          recipe={previewRecipe}
+          bookmarked={bookmarkedIds.includes(previewRecipe.id)}
+          pantryItems={pantryItems}
+          onClose={() => setPreviewRecipe(null)}
+          onSchedule={(recipe) => {
+            setPreviewRecipe(null);
+            setScheduleRecipe(recipe);
+          }}
+          onStartCooking={(recipe) => {
+            setPreviewRecipe(null);
+            setCookingRecipe(recipe);
+            setIsCookingOpen(true);
+          }}
+          onToggleBookmark={handleToggleBookmark}
+        />
+      )}
+
+      {/* ── Mobile: Schedule sheet ────────────────────────────────── */}
+      {scheduleRecipe && (
+        <ScheduleSheet
+          recipe={scheduleRecipe}
+          batches={batches}
+          pantryItems={pantryItems}
+          onClose={() => setScheduleRecipe(null)}
+          onConfirm={handleConfirmSchedule}
+        />
+      )}
+
+      {/* ── Mobile: Success confirmation ─────────────────────────── */}
+      {successData && (
+        <MealSuccessSheet
+          data={successData}
+          onViewPlan={closeSuccess}
         />
       )}
     </>

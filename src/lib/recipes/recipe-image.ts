@@ -312,9 +312,6 @@ export function getRecipeImageDataUri(recipe: Recipe): string {
 }
 
 export function getRecipeImageSrc(recipe: Recipe): string {
-  if (recipe.image?.startsWith("/")) {
-    return recipe.image;
-  }
-
+  if (recipe.image?.startsWith("/")) return recipe.image;
   return getRecipeImageDataUri(recipe);
 }
