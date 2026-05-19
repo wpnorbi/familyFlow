@@ -1,13 +1,12 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
-const GENERATED_DIR = path.join(
+const GENERATED_ROOT = path.join(
   process.env.HOME || "",
   ".codex",
   "generated_images",
-  "019e1810-b0db-7d33-86b2-6e8855e9d798",
 );
 
 const ROOT = process.cwd();
@@ -19,7 +18,20 @@ async function main() {
     throw new Error("Usage: node scripts/register-latest-generated-recipe-image.mjs <slug>");
   }
 
-  const escapedGeneratedDir = GENERATED_DIR.replace(/'/g, "'\\''");
+  const generatedEntries = await readdir(GENERATED_ROOT, { withFileTypes: true });
+  const generatedDirs = generatedEntries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const latestGeneratedDir = generatedDirs.at(-1);
+
+  if (!latestGeneratedDir) {
+    throw new Error(`No generated image directories found in ${GENERATED_ROOT}`);
+  }
+
+  const generatedDir = path.join(GENERATED_ROOT, latestGeneratedDir);
+
+  const escapedGeneratedDir = generatedDir.replace(/'/g, "'\\''");
   const { stdout } = await execFileAsync("zsh", ["-lc", `ls -1t '${escapedGeneratedDir}'/*.png | head -n 1`], {
     cwd: ROOT,
   });
