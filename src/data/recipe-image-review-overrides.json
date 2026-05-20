@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-16T20:21:45.831Z",
+  "generatedAt": "2026-05-20T12:47:59.476Z",
   "items": [
     {
       "recipeId": "nosalty-muzli-joghurttal",
@@ -855,6 +855,251 @@
       "recipeId": "nosalty-pesto-spagetti-koktelparadicsommal",
       "reviewStatus": "approved",
       "notes": "Pesto spaghetti with cherry tomatoes approved"
+    },
+    {
+      "recipeId": "nosalty-piritott-rizs-tojassal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-pisztrang-fokhagymas-vajjal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "lidl-rizibizi-es-zoldseges-rizs",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-roston-sertesborda",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-salata-piritott-kecskesajttal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "lidl-spagetti-sziciliai-paradicsomos-pesztoval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-szalonnas-tojasos-teszta",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-szarvasgombas-tagliatelle",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-tejszines-sonkas-teszta",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from attached batch"
+    },
+    {
+      "recipeId": "nosalty-tojasos-ramentyukgomba",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-shakshuka-tojassal-paprikaban",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-tocsni-tejfollel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-vafli-gyumolccsel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-moussaka-sutoben",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-rakott-padlizsan-hussal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sutoben-sult-rizses-hus",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-egytal-csirkes-sutotokos-curry",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-goulash-leves-serteshussal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-spargas-risotto-csirkevel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-wok-zoldseges-tofuval-es-rizzsel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sutoben-sult-zoldseges-csirke",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-lencses-egytal-kolbasszal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-borscht-ceklapiros-leves",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-feherbabos-serteshus-toszkan",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-zoldseges-couscous-csicseriborsoval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-mustaros-mezes-csirkecomb-sutoben",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-csirkes-shakshuka",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-ropogos-csirkemell-parmezanban-bundazva",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sertescomb-almas-martasban",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-kinai-edes-savanyu-csirke",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-beef-stroganoff",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sertes-sorben-parolva",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-csirke-tikka",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-citromos-oreganos-csirkecomb-gorogosen",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-teriyaki-csirke-rizzsel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sved-husgolyok-tejszines-martassal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-orosz-pelmeni",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-csirkes-fajita",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-serteshus-kung-pao",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-kapros-tejszines-lazac",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sutotok-fuszeres-kremleves-csirkevel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-marha-ragu-tesztaval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-csirkes-gombas-tejszines-serpenyos",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sertestarja-paradicsomosan",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-brokkoli-sajtos-rakott",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-sutoben-sult-toltott-paprika-rizzsel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-toltott-gombafej-spinottal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-parma-sonkaval-tekerve",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "nosalty-olasz-paradicsomos-kagylo",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from sequential needs-review batch"
     }
   ]
 }

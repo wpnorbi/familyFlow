@@ -1,64 +1,81 @@
-import { copyFile, mkdir, readdir } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
-const GENERATED_ROOT = path.join(
-  process.env.HOME || "",
-  ".codex",
-  "generated_images",
-);
-
 const ROOT = process.cwd();
 const execFileAsync = promisify(execFile);
 
+function parseArgs(argv) {
+  const args = {
+    input: "",
+    slug: "",
+    recipeId: "",
+    reviewStatus: "approved",
+  };
+
+  if (argv.length === 1 && !argv[0].startsWith("--")) {
+    throw new Error(
+      "The latest-file workflow is disabled. Use: node scripts/register-latest-generated-recipe-image.mjs --slug <slug> --input <generated.png> [--recipe-id <id>]",
+    );
+  }
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const key = argv[index];
+    const value = argv[index + 1];
+
+    if (key === "--input" && value) {
+      args.input = value;
+      index += 1;
+      continue;
+    }
+    if (key === "--slug" && value) {
+      args.slug = value;
+      index += 1;
+      continue;
+    }
+    if (key === "--recipe-id" && value) {
+      args.recipeId = value;
+      index += 1;
+      continue;
+    }
+    if (key === "--review-status" && value) {
+      args.reviewStatus = value;
+      index += 1;
+    }
+  }
+
+  if (!args.input || (!args.slug && !args.recipeId)) {
+    throw new Error(
+      "Usage: node scripts/register-latest-generated-recipe-image.mjs --slug <slug> --input <generated.png> [--recipe-id <id>] [--review-status approved]",
+    );
+  }
+
+  return args;
+}
+
 async function main() {
-  const slug = process.argv[2];
-  if (!slug) {
-    throw new Error("Usage: node scripts/register-latest-generated-recipe-image.mjs <slug>");
-  }
+  const args = parseArgs(process.argv.slice(2));
+  const batchPath = path.join("/private", "tmp", `family-flow-recipe-image-${Date.now()}.json`);
+  const item = {
+    recipeId: args.recipeId || undefined,
+    slug: args.slug || undefined,
+    generatedPngPath: path.isAbsolute(args.input) ? args.input : path.join(ROOT, args.input),
+    reviewStatus: args.reviewStatus,
+    mode: "register",
+    notes: "Explicit single-image registration",
+  };
 
-  const generatedEntries = await readdir(GENERATED_ROOT, { withFileTypes: true });
-  const generatedDirs = generatedEntries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-  const latestGeneratedDir = generatedDirs.at(-1);
+  await writeFile(batchPath, `${JSON.stringify({ generatedAt: new Date().toISOString(), items: [item] }, null, 2)}\n`);
+  const { stdout } = await execFileAsync("node", [
+    "scripts/register-generated-recipe-image-batch.mjs",
+    "--batch",
+    batchPath,
+    "--review-status",
+    args.reviewStatus,
+  ], { cwd: ROOT });
 
-  if (!latestGeneratedDir) {
-    throw new Error(`No generated image directories found in ${GENERATED_ROOT}`);
-  }
-
-  const generatedDir = path.join(GENERATED_ROOT, latestGeneratedDir);
-
-  const escapedGeneratedDir = generatedDir.replace(/'/g, "'\\''");
-  const { stdout } = await execFileAsync("zsh", ["-lc", `ls -1t '${escapedGeneratedDir}'/*.png | head -n 1`], {
-    cwd: ROOT,
-  });
-  const latestPngPath = stdout.trim();
-  if (!latestPngPath) {
-    throw new Error("No generated PNG found");
-  }
-
-  const imageDir = path.join(ROOT, "public", "assets", "recipes", "images");
-  const thumbnailDir = path.join(imageDir, "thumbnails");
-
-  await mkdir(thumbnailDir, { recursive: true });
-
-  const copiedPngPath = path.join(imageDir, `${slug}.png`);
-  const webpPath = path.join(imageDir, `${slug}.webp`);
-  const thumbnailPath = path.join(thumbnailDir, `${slug}.webp`);
-
-  await copyFile(latestPngPath, copiedPngPath);
-
-  await execFileAsync("python3", ["scripts/convert-image-to-webp.py", copiedPngPath, webpPath, "--max-pixel-size", "1280"], {
-    cwd: ROOT,
-  });
-  await execFileAsync("python3", ["scripts/convert-image-to-webp.py", copiedPngPath, thumbnailPath, "--max-pixel-size", "480"], {
-    cwd: ROOT,
-  });
-
-  process.stdout.write(`${slug}\n`);
+  process.stdout.write(stdout);
 }
 
 await main();

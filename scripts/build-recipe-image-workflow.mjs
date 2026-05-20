@@ -310,8 +310,14 @@ function inferVisualType(recipe) {
   if (/\bzold turmix\b|\bturmix\b.*\bspenot\b|\bspenot\b.*\bturmix\b/.test(titleText)) {
     return titleRule("green-smoothie", "high", "a vibrant green smoothie in a clear glass, visibly blended from spinach and fruit");
   }
-  if (/\bsmoothie\b|\bshake\b/.test(titleText)) {
+  if (/\bsmoothie\b|\bshake\b|\bturmix\b/.test(titleText)) {
     return titleRule("smoothie", "high", "a thick fruit smoothie in a tall clear glass");
+  }
+  if (/\bgin tonic\b|\btonic\b|\bpuncs\b|\bnarancspuncs\b/.test(titleText)) {
+    return titleRule("cold-drink", "high", "a clear drink in a glass with citrus garnish, served as a beverage, not plated food");
+  }
+  if (/\blatte\b|\bforro csokolade\b|\bforrocsokolade\b|\bkakao\b/.test(titleText)) {
+    return titleRule("hot-drink", "high", "a warm drink in a ceramic mug or glass cup, served as a beverage, not plated food");
   }
   if (/\bacai\b/.test(titleText)) {
     return titleRule("acai-bowl", "high", "an acai breakfast bowl with deep purple base and neatly arranged fruit toppings");
@@ -324,6 +330,9 @@ function inferVisualType(recipe) {
   }
   if (/\bbagel\b/.test(titleText)) {
     return titleRule("bagel-sandwich", "high", "a bagel sandwich or open-faced bagel with visible filling");
+  }
+  if (/\bszendvics\b|\bsandwich\b|\bwrap\b/.test(titleText)) {
+    return titleRule("sandwich-wrap", "high", "a sandwich or wrap with the filling clearly visible");
   }
   if (/\bpiritos\b|\btoast\b|\bbruschetta\b/.test(titleText)) {
     return titleRule("toast", "high", "artisan toast with clearly visible topping on top");
@@ -367,6 +376,9 @@ function inferVisualType(recipe) {
   if (/\bkr[eé]mes\b|\btorta\b|\bszufle\b|\bsouffle\b/.test(titleText)) {
     return titleRule("cake-slice", "medium", "a plated slice or piece of homemade dessert with visible layers or texture", true);
   }
+  if (/\bkolbasz\b|\bvirsli\b/.test(titleText)) {
+    return titleRule("sausage-main", "high", "a sausage dish served on a ceramic plate with the sausage clearly visible");
+  }
   if (/\bpogacsa\b/.test(titleText)) {
     return titleRule("pogacsa", "high", "small golden savory pogacsa pastries on a plate or linen-lined tray");
   }
@@ -379,10 +391,10 @@ function inferVisualType(recipe) {
   if (/\bspagetti\b|\bspaghetti\b|\bcarbonara\b|\blasagne\b|\blazagne\b|\bgnocchi\b|\bravioli\b|\btagliatelle\b|\bteszta\b|\bt[eé]szta\b/.test(titleText)) {
     return titleRule("pasta", "high", "a plated pasta dish with sauce clearly coating the pasta");
   }
-  if (/\bleves\b|\bgulyas\b|\bramen\b|\bpho\b/.test(titleText)) {
+  if (/\bleves\b|\bgulyas\b|\bramen\b|\bpho\b|\bgazpacho\b|\bmiso\b/.test(titleText)) {
     return titleRule("soup", "high", "a bowl of soup served hot, with the broth or creamy texture clearly visible");
   }
-  if (/\bsalata\b|\bsal[aá]ta\b|\bcezar\b|\bcaesar\b|\bcaprese\b|\bnicoise\b/.test(titleText)) {
+  if (/\bsalata\b|\bsal[aá]ta\b|\bcezar\b|\bcaesar\b|\bcaprese\b|\bnicoise\b|\bfattoush\b|\btabbouleh\b/.test(titleText)) {
     return titleRule("salad", "high", "a fresh composed salad in a bowl or shallow plate with colorful ingredients");
   }
   if (/porkolt|ragu|curry|chili|paprikas|babgulyas/.test(titleText)) {
@@ -391,7 +403,7 @@ function inferVisualType(recipe) {
   if (/\bburgonya\b|\bkrumpli\b/.test(titleText)) {
     return titleRule("roasted-potato", "medium", "crispy roasted or fried potatoes on a plate, with golden edges and fluffy interior", true);
   }
-  if (/\blazac\b|\bhal\b|\bgarnela\b|\bgarn[eé]la\b|\btonhal\b/.test(titleText)) {
+  if (/\blazac\b|\bhal\b|\bgarnela\b|\bgarn[eé]la\b|\btonhal\b|\bponty\b|\btintahal\b|\bkalamari\b/.test(titleText)) {
     return titleRule("fish-main", "high", "a plated fish or seafood main dish with the protein clearly visible");
   }
   if (/\bmarhasteak\b|\bsteak\b|\bmarha\b/.test(titleText)) {
@@ -525,6 +537,10 @@ function buildDishDetails(recipe, visualType) {
       return `a tall glass of green smoothie ${detail || "with spinach and banana clearly visible through the glass"}`;
     case "smoothie":
       return `a thick fruit smoothie in a tall clear glass ${detail}`.trim();
+    case "cold-drink":
+      return `a cold drink in a clear glass ${detail || "with citrus garnish and ice"}`;
+    case "hot-drink":
+      return `a warm drink in a ceramic mug or glass cup ${detail || "with creamy foam or steam"}`;
     case "acai-bowl":
       return `an acai bowl with deep berry-purple base ${detail || "with sliced fruit and crunchy toppings"}`;
     case "chia-pudding":
@@ -535,6 +551,8 @@ function buildDishDetails(recipe, visualType) {
       return `savory stuffed crepes ${detail || "with rich paprika filling and sauce"}`;
     case "bagel-sandwich":
       return `a bagel with clearly visible filling ${detail}`;
+    case "sandwich-wrap":
+      return `a sandwich or wrap with the filling clearly visible ${detail}`;
     case "toast":
       return `an open-faced toast ${detail}`;
     case "omelette":
@@ -577,6 +595,8 @@ function buildDishDetails(recipe, visualType) {
       return `a composed salad ${detail}`;
     case "roasted-potato":
       return `crispy roasted or fried potatoes ${detail}`;
+    case "sausage-main":
+      return `a sausage dish on a ceramic plate ${detail || "with the sausage as the clear hero"}`;
     case "roasted-chicken":
       return `a chicken main dish ${detail}`;
     case "fish-main":
