@@ -1,0 +1,372 @@
+{
+  "generatedAt": "2026-05-22T19:07:48.076Z",
+  "strategy": "placeholder",
+  "batchSize": 20,
+  "startOffset": 0,
+  "totalCandidates": 475,
+  "exportedBatchCount": 24,
+  "totalItems": 475,
+  "totalMissingPromptCount": 0,
+  "batches": [
+    {
+      "batchId": "missing-generated-images-placeholder-0000",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0000-020.json",
+      "startIndex": 0,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-medvehagymas-majpastetom",
+        "nosalty-meggymartas-meggyszosz",
+        "nosalty-tokeletes-parolt-rizs",
+        "nosalty-avokadosalata",
+        "nosalty-andras-napi-hajas-pogacsa"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0020",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0020-020.json",
+      "startIndex": 20,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-majas-hurka-ahogy-eperjesken-keszitik",
+        "nosalty-marhahusos-clanger",
+        "nosalty-malnas-tekercsek-citromos-mazza",
+        "nosalty-olcso-hajas-pogacsa-zsuzsika-nenitol",
+        "nosalty-sajtos-rudak-hajas-tesztabol"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0040",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0040-020.json",
+      "startIndex": 40,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-csokoladeval-csurgatott-tonkoly-daralos-keksz",
+        "nosalty-disznotoros-hajas-suti",
+        "nosalty-feketeerdo-torta-dynatol",
+        "nosalty-feketeerdo-torta-ujragondolva",
+        "nosalty-hajas-suti-anett-konyhajabol"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0060",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0060-020.json",
+      "startIndex": 60,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-blanquette-de-veau",
+        "nosalty-boeuf-bourguignon",
+        "nosalty-bolognai-husmartasos-rizs",
+        "nosalty-borek-husos",
+        "nosalty-brokkoli-sajtos-rakott"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0080",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0080-020.json",
+      "startIndex": 80,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-csirkemell-mozarellaval-es-paradicsommal",
+        "nosalty-csirkemell-olajban-konfitalva",
+        "nosalty-csirkemell-parma-sonkaval-tekerve",
+        "nosalty-csirkemell-spenotos-toltve",
+        "nosalty-csirkemell-szezammaggal-bundazva"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0100",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0100-020.json",
+      "startIndex": 100,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-csirkes-pilaf",
+        "nosalty-csirkes-shakshuka",
+        "nosalty-csirkes-shakshuka-paradicsomban",
+        "nosalty-csirkes-souvlaki-tzatzikivel",
+        "nosalty-csirkes-szezamos-rozmaringos-sutoben"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0120",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0120-020.json",
+      "startIndex": 120,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-fokhagymas-vajas-sparga-grillezve",
+        "nosalty-garnela-fokhagymas-vajban",
+        "nosalty-garnelas-rizotto",
+        "nosalty-gombas-borju-tokany",
+        "nosalty-gombas-risotto-parmezannal"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0140",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0140-020.json",
+      "startIndex": 140,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-hazi-langos-fokhagymas-tejfollel",
+        "nosalty-hazi-pita-kenyer",
+        "nosalty-hoisin-csirke",
+        "nosalty-hot-dog-hazi-stilusban",
+        "nosalty-husos-cannelloni"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0160",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0160-020.json",
+      "startIndex": 160,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-kremes-gofri",
+        "nosalty-lamb-chop-rozmaringgal",
+        "nosalty-lazac-citromos-kapros-martasban",
+        "nosalty-lazac-teriyaki",
+        "nosalty-lecso-kolbasszal"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0180",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0180-020.json",
+      "startIndex": 180,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-mustaros-mezes-csirkecomb-sutoben",
+        "nosalty-negyfele-sajttal-toltott-pizza",
+        "nosalty-nyulporkolt",
+        "nosalty-olasz-csirkecomb-paradicsommal",
+        "nosalty-olasz-osso-buco"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0200",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0200-020.json",
+      "startIndex": 200,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-quiche-lorraine",
+        "nosalty-rakott-kelkaposzta",
+        "nosalty-rakott-krumpli",
+        "nosalty-rakott-zoldbab-hussal",
+        "nosalty-rantott-csirkemell"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0220",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0220-020.json",
+      "startIndex": 220,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-serteshus-ananaszos-szojaszoszban",
+        "nosalty-serteshus-bab-chili",
+        "nosalty-serteshus-cashew-dioval-kinai-modra",
+        "nosalty-serteshus-char-siu",
+        "nosalty-serteshus-kung-pao"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0240",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0240-020.json",
+      "startIndex": 240,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-sutoben-sult-toltott-paprika-rizzsel",
+        "nosalty-sutoben-sult-turogomboc",
+        "nosalty-sutotok-fuszeres-kremleves-csirkevel",
+        "nosalty-sutotokos-risotto",
+        "nosalty-svajci-gyurt-almas-retes-karamellas-dioval"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0260",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0260-020.json",
+      "startIndex": 260,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-toltott-champignon",
+        "nosalty-toltott-fank-lekvarral",
+        "nosalty-toltott-gombafej-spinottal",
+        "nosalty-toltott-kaposzta-tejfolos-martasban",
+        "nosalty-toltott-paprika-paradicsommartasban"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0280",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0280-020.json",
+      "startIndex": 280,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-csirkes-zoldseges-teszta-serpenyoben",
+        "nosalty-csulkos-pasta-fazekban",
+        "nosalty-dios-teszta-mezzel",
+        "nosalty-extra-konnyu-hajas-teszta-szilvalekvarral",
+        "nosalty-gnocchi-sutotokkos-zsalyas-vajjal"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0300",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0300-020.json",
+      "startIndex": 300,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-tejszines-sonkas-teszta",
+        "nosalty-tenger-gyumolcsei-teszta",
+        "nosalty-tintahalas-fekete-teszta",
+        "nosalty-turos-csusza-fustolt-szalonnaval",
+        "nosalty-turos-csusza-nagyon-maskepp"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0320",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0320-020.json",
+      "startIndex": 320,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-rantotta-medvehagymaval",
+        "nosalty-ricotta-piritos-mezzel-es-dioval",
+        "nosalty-shakshuka-tojassal-paprikaban",
+        "nosalty-smoothie-bowl",
+        "nosalty-spenotos-tojas-benedict"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0340",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0340-020.json",
+      "startIndex": 340,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-borsoleves-mentalevellel",
+        "nosalty-brokkoli-kremleves",
+        "nosalty-bulgur-salata-fetaval",
+        "nosalty-cekla-kecskesajtos-salata",
+        "nosalty-cezar-salata-klasszikusan"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0360",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0360-020.json",
+      "startIndex": 360,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-gombaleves-tejszinnel",
+        "nosalty-goulash-leves-serteshussal",
+        "nosalty-gorog-salata-fetaval",
+        "nosalty-gorog-spargasalata-fetaval",
+        "nosalty-grillezett-zoldseges-polenta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0380",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0380-020.json",
+      "startIndex": 380,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-mandarin-csirkesalata",
+        "nosalty-mexikoi-csirkes-egytal-1",
+        "nosalty-mexikoi-salata-fekete-babbal",
+        "nosalty-minestrone-olasz-zoldsegleves",
+        "nosalty-miso-leves-tofuval"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0400",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0400-020.json",
+      "startIndex": 400,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-spargakremleves",
+        "nosalty-spargas-risotto-csirkevel",
+        "nosalty-spenotos-tojasos-leves",
+        "nosalty-sutoben-sult-edesburgonya-csirkevel",
+        "nosalty-sutoben-sult-rizses-hus"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0420",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0420-020.json",
+      "startIndex": 420,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-banankenyer",
+        "nosalty-bananos-sajttorta-kockak",
+        "nosalty-churros-csokimartassal",
+        "nosalty-citromos-turotorta",
+        "nosalty-citromtorta-meringue-vel"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0440",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0440-020.json",
+      "startIndex": 440,
+      "requestedCount": 20,
+      "count": 20,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-gesztenyepure-tejszinhabbal",
+        "nosalty-gozgomboc-baracklekvarral",
+        "nosalty-gyumolcstorta-tejszinhabbal",
+        "nosalty-hajas-sutik",
+        "nosalty-ischler-keksz"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-placeholder-0460",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-placeholder-0460-020.json",
+      "startIndex": 460,
+      "requestedCount": 15,
+      "count": 15,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-panna-cotta-vaniliaontettel",
+        "nosalty-rakoczi-turos",
+        "nosalty-retes-almas",
+        "nosalty-retes-makos",
+        "nosalty-sacher-torta"
+      ]
+    }
+  ]
+}

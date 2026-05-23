@@ -6,7 +6,12 @@ import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchRecipe, getBatchesForDate } from "@/lib/etkezes-data";
 import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
-import { getRecipeMealTypeLabel, isKidFriendlyRecipe } from "@/lib/recipes/recipe-taxonomy";
+import {
+  getRecipeMealTypeLabel,
+  getRecipeTimeBucket,
+  isKidFriendlyRecipe,
+  isQuickRecipe,
+} from "@/lib/recipes/recipe-taxonomy";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
 import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 
@@ -90,10 +95,15 @@ function FilterChip({
 }
 
 const FILTERS = [
-  { key: "gyors",       icon: "bolt",               label: "Gyors"       },
+  { key: "gyors", icon: "bolt", label: "Gyors" },
+  { key: "kozepes", icon: "timer", label: "Közepes" },
+  { key: "lassu", icon: "hourglass_bottom", label: "Lassú" },
   { key: "gyerekbarat", icon: "sentiment_satisfied", label: "Gyerekbarát" },
-  { key: "kamra",       icon: "inventory_2",         label: "Kamrából"    },
-  { key: "30perc",      icon: "schedule",            label: "30 perc"     },
+  { key: "csirke", icon: "egg_alt", label: "Csirke" },
+  { key: "sertes", icon: "nutrition", label: "Sertés" },
+  { key: "marha", icon: "lunch_dining", label: "Marha" },
+  { key: "hal", icon: "set_meal", label: "Hal" },
+  { key: "kamra", icon: "inventory_2", label: "Kamrából" },
 ] as const;
 
 type FilterKey = typeof FILTERS[number]["key"];
@@ -591,11 +601,26 @@ export default function DesktopEtkezesView({
   // ── Recipe filtering ───────────────────────────────────────────────────────
   const filteredRecipes = useMemo(() => {
     let pool = LIDL_RECIPES;
-    if (activeFilters.has("gyors") || activeFilters.has("30perc")) {
-      pool = pool.filter((r) => r.duration <= 30);
+    const proteinFilters = [
+      activeFilters.has("csirke") ? "csirke" : null,
+      activeFilters.has("sertes") ? "sertés" : null,
+      activeFilters.has("marha") ? "marha" : null,
+      activeFilters.has("hal") ? "hal" : null,
+    ].filter(Boolean) as Recipe["protein"][];
+    const timeFilters = [
+      activeFilters.has("gyors") ? "short" : null,
+      activeFilters.has("kozepes") ? "medium" : null,
+      activeFilters.has("lassu") ? "long" : null,
+    ].filter(Boolean) as Array<"short" | "medium" | "long">;
+
+    if (timeFilters.length > 0) {
+      pool = pool.filter((r) => timeFilters.includes(getRecipeTimeBucket(r)));
     }
     if (activeFilters.has("gyerekbarat")) {
       pool = pool.filter((r) => isKidFriendlyRecipe(r));
+    }
+    if (proteinFilters.length > 0) {
+      pool = pool.filter((r) => proteinFilters.includes(r.protein));
     }
     if (activeFilters.has("kamra") && pantryItems.length > 0) {
       const ranked = rankRecipesForPantry(pool, pantryItems);
@@ -605,8 +630,8 @@ export default function DesktopEtkezesView({
     return pool
       .sort((a, b) => {
         const aK = Number(isKidFriendlyRecipe(a)), bK = Number(isKidFriendlyRecipe(b));
-        const aQ = Number(a.duration <= 30), bQ = Number(b.duration <= 30);
-        return bK - aK || bQ - aQ || a.duration - b.duration;
+        const aQ = Number(isQuickRecipe(a)), bQ = Number(isQuickRecipe(b));
+        return bK - aK || bQ - aQ || a.duration - b.duration || a.name.localeCompare(b.name, "hu");
       })
       .slice(0, 3);
   }, [activeFilters, pantryItems]);

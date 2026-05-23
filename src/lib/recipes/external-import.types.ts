@@ -1,6 +1,7 @@
 export type ExternalRecipeContentMode =
   | "external-link-catalog"
-  | "original-family-flow-version-inspired-by-title";
+  | "original-family-flow-version-inspired-by-title"
+  | "source-faithful-family-flow-adaptation";
 
 export type ExternalRecipeDifficulty = "Könnyű" | "Közepes" | "Nehéz" | null;
 
@@ -52,7 +53,12 @@ export interface ExternalRecipeImportItem {
   tags: string[];
   safeShortDescription: string;
   image: ExternalRecipeImage;
+  imageStrategy:
+    | "use-generated-image"
+    | "use-source-image-as-private-fallback"
+    | "use-placeholder";
   ingredientGroups: ExternalRecipeIngredientGroup[];
+  sourcePreparationSteps?: string[];
   customPreparationSteps: string[];
   familyNotes: string;
   kidFriendlyNotes: string;

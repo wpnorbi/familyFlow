@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import RecipeImage from "@/components/etkezes/RecipeImage";
+import RecipeImageSourceBadge from "@/components/recipes/RecipeImageSourceBadge";
 import {
   MEAL_TYPE_OPTIONS,
   PROTEIN_OPTIONS,
@@ -20,6 +21,8 @@ interface Props {
   onBack: () => void;
   onViewRecipe: (recipe: Recipe) => void;
 }
+
+type ImageFilterMode = "mind" | "generated" | "fallback";
 
 function Icon({ name, className = "text-[18px]" }: { name: string; className?: string }) {
   return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
@@ -72,6 +75,9 @@ function RecipeLibraryCard({ recipe, onClick }: { recipe: Recipe; onClick: () =>
             </span>
           )}
         </div>
+        <div className="absolute bottom-3 left-3">
+          <RecipeImageSourceBadge recipe={recipe} />
+        </div>
       </div>
       <div className="p-4">
         <h3 className="line-clamp-2 min-h-[40px] text-[16px] font-extrabold leading-tight text-[var(--ff-text)]">{recipe.name}</h3>
@@ -100,11 +106,13 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
   const [protein, setProtein] = useState<Recipe["protein"] | "mind">("mind");
   const [mealType, setMealType] = useState<RecipeMealType | "mind">("mind");
   const [timeBucket, setTimeBucket] = useState<RecipeTimeBucket | "mind">("mind");
+  const [imageFilter, setImageFilter] = useState<ImageFilterMode>("mind");
   const [quickOnly, setQuickOnly] = useState(false);
   const [childFriendly, setChildFriendly] = useState(false);
   const [recipes, setRecipes] = useState<Recipe[]>(initialCatalog);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   const maxDuration = useMemo(() => {
     if (timeBucket === "short") return "20";
@@ -117,6 +125,7 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
     protein !== "mind",
     mealType !== "mind",
     timeBucket !== "mind",
+    imageFilter !== "mind",
     quickOnly,
     childFriendly,
   ].filter(Boolean).length;
@@ -126,9 +135,32 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
     setProtein("mind");
     setMealType("mind");
     setTimeBucket("mind");
+    setImageFilter("mind");
     setQuickOnly(false);
     setChildFriendly(false);
   }
+
+  const activeFilterLabels = [
+    protein !== "mind" ? PROTEIN_OPTIONS.find((option) => option.value === protein)?.label : null,
+    mealType !== "mind" ? MEAL_TYPE_OPTIONS.find((option) => option.value === mealType)?.label : null,
+    timeBucket !== "mind" ? TIME_BUCKET_OPTIONS.find((option) => option.value === timeBucket)?.label : null,
+    imageFilter === "generated" ? "Saját kép" : null,
+    imageFilter === "fallback" ? "Forráskép / placeholder" : null,
+    quickOnly ? "Gyors" : null,
+    childFriendly ? "Gyerekbarát" : null,
+  ].filter(Boolean) as string[];
+
+  const visibleRecipes = useMemo(() => {
+    if (imageFilter === "generated") {
+      return recipes.filter((recipe) => recipe.imageStrategy === "generated");
+    }
+
+    if (imageFilter === "fallback") {
+      return recipes.filter((recipe) => recipe.imageStrategy !== "generated");
+    }
+
+    return recipes;
+  }, [imageFilter, recipes]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -199,12 +231,12 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
               </p>
             </div>
             <div className="rounded-[28px] border border-white/70 bg-[rgba(255,251,244,0.72)] px-5 py-4 text-center md:min-w-[190px]">
-              <p className="text-[34px] font-semibold leading-none text-[var(--ff-primary)]">{recipes.length}</p>
+              <p className="text-[34px] font-semibold leading-none text-[var(--ff-primary)]">{visibleRecipes.length}</p>
               <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">
                 találat
               </p>
               {(() => {
-                const withImage = initialCatalog.filter((r) => r.image?.startsWith("/")).length;
+                const withImage = initialCatalog.filter((r) => r.imageStrategy === "generated").length;
                 if (withImage === 0) return null;
                 return (
                   <p className="mt-2 text-[10px] text-(--ff-text-soft)">
@@ -219,7 +251,7 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
         </header>
 
         <section className="mt-4 rounded-[30px] border border-white/72 bg-[rgba(255,252,244,0.78)] p-4 shadow-[0_22px_54px_-42px_rgba(61,49,34,0.24)]">
-          <div className="grid gap-3 lg:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.6fr)]">
+          <div className="grid gap-3 lg:grid-cols-[minmax(260px,1fr)_auto]">
             <label className="flex items-center gap-2 rounded-[22px] border border-[rgba(74,67,54,0.1)] bg-[rgba(255,251,244,0.9)] px-4 py-3">
               <Icon name="search" className="text-[18px] text-[var(--ff-text-soft)]" />
               <input
@@ -229,13 +261,25 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
                 className="w-full bg-transparent text-sm font-semibold text-[var(--ff-text)] placeholder:text-[var(--ff-text-soft)] focus:outline-none"
               />
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <FilterButton active={childFriendly} onClick={() => setChildFriendly((value) => !value)}>
                 Gyerekbarát
               </FilterButton>
               <FilterButton active={quickOnly} onClick={() => setQuickOnly((value) => !value)}>
                 Gyors
               </FilterButton>
+              <button
+                onClick={() => setIsFilterPanelOpen(true)}
+                className="inline-flex items-center gap-2 rounded-full border border-[rgba(74,67,54,0.1)] bg-[rgba(255,251,244,0.9)] px-4 py-2 text-[12px] font-bold text-[var(--ff-text)]"
+              >
+                <Icon name="tune" className="text-[16px]" />
+                Szűrők
+                {activeFilterCount > 0 && (
+                  <span className="rounded-full bg-[var(--ff-primary)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--ff-text-inverse)]">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
               {activeFilterCount > 0 && (
                 <button
                   onClick={resetFilters}
@@ -247,33 +291,112 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
             </div>
           </div>
 
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-            <FilterButton active={protein === "mind"} onClick={() => setProtein("mind")}>Minden hús</FilterButton>
-            {PROTEIN_OPTIONS.map((option) => (
-              <FilterButton key={option.value} active={protein === option.value} onClick={() => setProtein(option.value)}>
-                {option.label}
-              </FilterButton>
-            ))}
-          </div>
-
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-            <FilterButton active={mealType === "mind"} onClick={() => setMealType("mind")}>Minden típus</FilterButton>
-            {MEAL_TYPE_OPTIONS.map((option) => (
-              <FilterButton key={option.value} active={mealType === option.value} onClick={() => setMealType(option.value)}>
-                {option.label}
-              </FilterButton>
-            ))}
-          </div>
-
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-            <FilterButton active={timeBucket === "mind"} onClick={() => setTimeBucket("mind")}>Bármennyi idő</FilterButton>
-            {TIME_BUCKET_OPTIONS.map((option) => (
-              <FilterButton key={option.value} active={timeBucket === option.value} onClick={() => setTimeBucket(option.value)}>
-                {option.label}
-              </FilterButton>
-            ))}
-          </div>
+          {activeFilterLabels.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {activeFilterLabels.map((label) => (
+                <span
+                  key={label}
+                  className="inline-flex items-center gap-1 rounded-full bg-[rgba(238,243,231,0.88)] px-3 py-1.5 text-[11px] font-bold text-[var(--ff-primary)]"
+                >
+                  <Icon name="check" className="text-[14px]" />
+                  {label}
+                </span>
+              ))}
+            </div>
+          )}
         </section>
+
+        {isFilterPanelOpen && (
+          <div className="fixed inset-0 z-[90] bg-[rgba(20,22,18,0.32)] backdrop-blur-sm">
+            <button
+              aria-label="Szűrők bezárása"
+              className="absolute inset-0"
+              onClick={() => setIsFilterPanelOpen(false)}
+            />
+            <aside className="absolute bottom-0 right-0 flex h-[min(100dvh,760px)] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[30px] border border-white/72 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(246,235,216,0.96))] shadow-[0_30px_80px_-36px_rgba(36,28,18,0.46)] md:top-0 md:h-full md:rounded-none md:rounded-l-[32px]">
+              <div className="flex items-center justify-between border-b border-white/70 px-5 py-4">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Szűrők</p>
+                  <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">
+                    Találatok pontosítása
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setIsFilterPanelOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-[rgba(255,251,244,0.88)] text-[var(--ff-text)]"
+                >
+                  <Icon name="close" className="text-[18px]" />
+                </button>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+                <div>
+                  <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Hús</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <FilterButton active={protein === "mind"} onClick={() => setProtein("mind")}>Minden hús</FilterButton>
+                    {PROTEIN_OPTIONS.map((option) => (
+                      <FilterButton key={option.value} active={protein === option.value} onClick={() => setProtein(option.value)}>
+                        {option.label}
+                      </FilterButton>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Típus</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <FilterButton active={mealType === "mind"} onClick={() => setMealType("mind")}>Minden típus</FilterButton>
+                    {MEAL_TYPE_OPTIONS.map((option) => (
+                      <FilterButton key={option.value} active={mealType === option.value} onClick={() => setMealType(option.value)}>
+                        {option.label}
+                      </FilterButton>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Idő</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <FilterButton active={timeBucket === "mind"} onClick={() => setTimeBucket("mind")}>Bármennyi idő</FilterButton>
+                    {TIME_BUCKET_OPTIONS.map((option) => (
+                      <FilterButton key={option.value} active={timeBucket === option.value} onClick={() => setTimeBucket(option.value)}>
+                        {option.label}
+                      </FilterButton>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Kép</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <FilterButton active={imageFilter === "mind"} onClick={() => setImageFilter("mind")}>Minden kép</FilterButton>
+                    <FilterButton active={imageFilter === "generated"} onClick={() => setImageFilter("generated")}>
+                      Saját kép
+                    </FilterButton>
+                    <FilterButton active={imageFilter === "fallback"} onClick={() => setImageFilter("fallback")}>
+                      Forráskép / placeholder
+                    </FilterButton>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 border-t border-white/70 px-5 py-4">
+                <button
+                  onClick={resetFilters}
+                  className="ff-button-secondary px-4 py-3 text-[13px] font-bold"
+                >
+                  Szűrők törlése
+                </button>
+                <button
+                  onClick={() => setIsFilterPanelOpen(false)}
+                  className="ff-button-primary px-5 py-3 text-[13px] font-bold"
+                >
+                  Mutasd a recepteket
+                </button>
+              </div>
+            </aside>
+          </div>
+        )}
 
         {error && (
           <div className="mt-4 rounded-[22px] border border-[rgba(185,130,71,0.2)] bg-[rgba(255,240,227,0.72)] px-4 py-3 text-sm font-semibold text-[var(--ff-caramel-strong)]">
@@ -287,9 +410,9 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
               <div key={index} className="h-[330px] animate-pulse rounded-[24px] bg-[rgba(255,251,244,0.72)]" />
             ))}
           </div>
-        ) : recipes.length > 0 ? (
+        ) : visibleRecipes.length > 0 ? (
           <section className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {recipes.map((recipe) => (
+            {visibleRecipes.map((recipe) => (
               <RecipeLibraryCard key={recipe.id} recipe={recipe} onClick={() => onViewRecipe(recipe)} />
             ))}
           </section>

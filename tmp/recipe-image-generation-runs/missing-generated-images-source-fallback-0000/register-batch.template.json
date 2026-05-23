@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-05-22T19:08:08.791Z",
+  "sourceBatchId": "missing-generated-images-source-fallback-0000",
+  "notes": "Register generated PNG files for this image generation run.",
+  "items": [
+    {
+      "recipeId": "nosalty-5-dollaros-turmix-5-dollar-milkshake",
+      "slug": "5-dollaros-turmix-5-dollar-milkshake",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/5-dollaros-turmix-5-dollar-milkshake.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
+      "slug": "a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-barackos-cseresznyeszosz",
+      "slug": "barackos-cseresznyeszosz",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/barackos-cseresznyeszosz.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-barackos-gomboc-makbundaban",
+      "slug": "barackos-gomboc-makbundaban",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/barackos-gomboc-makbundaban.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-bodvalenkei-turokrem-friss-zoldsegekkel",
+      "slug": "bodvalenkei-turokrem-friss-zoldsegekkel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/bodvalenkei-turokrem-friss-zoldsegekkel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-boroka-szirupos-mocktail",
+      "slug": "borokaszirupos-mocktail",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/borokaszirupos-mocktail.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-borsos-sertesszuz-balzsamecetes-meggyel",
+      "slug": "borsos-sertesszuz-balzsamecetes-meggyel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/borsos-sertesszuz-balzsamecetes-meggyel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-bundas-kalacs-cseresznyevel",
+      "slug": "bundas-kalacs-cseresznyevel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/bundas-kalacs-cseresznyevel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-chesapeake-meszaros-koktel",
+      "slug": "chesapeake-meszaros-koktel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/chesapeake-meszaros-koktel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-citromkrem",
+      "slug": "citromkrem",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/citromkrem.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-csirke-bontasa-a-szarnyatol-a-combjaig",
+      "slug": "csirke-bontasa-a-szarnyatol-a-combjaig",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/csirke-bontasa-a-szarnyatol-a-combjaig.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-csokis-turokrem-cseresznyevel",
+      "slug": "csokis-turokrem-cseresznyevel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/csokis-turokrem-cseresznyevel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-darapuding-feketeerdo-modra",
+      "slug": "darapuding-feketeerdo-modra",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/darapuding-feketeerdo-modra.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-egyejszakas-pizzateszta",
+      "slug": "egyejszakas-pizzateszta",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/egyejszakas-pizzateszta.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-extrem-sajtos-quesadilla",
+      "slug": "extrem-sajtos-quesadilla",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/extrem-sajtos-quesadilla.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-flirtini-koktel",
+      "slug": "flirtini-koktel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/flirtini-koktel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-fokhagymas-petrezselymes-spagetti-garnelaval",
+      "slug": "fokhagymas-petrezselymes-spagetti-garnelaval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/fokhagymas-petrezselymes-spagetti-garnelaval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "nosalty-gesztenyes-szaloncukor",
+      "slug": "gesztenyes-szaloncukor",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/gesztenyes-szaloncukor.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-ghnocchi-ketfele-sajttal-parmai-sonkaval-es-dioval",
+      "slug": "ghnocchi-ketfele-sajttal-parmai-sonkaval-es-dioval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/ghnocchi-ketfele-sajttal-parmai-sonkaval-es-dioval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    },
+    {
+      "recipeId": "lidl-grillezett-sajtos-kolbaszos-szendvics",
+      "slug": "grillezett-sajtos-kolbaszos-szendvics",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/grillezett-sajtos-kolbaszos-szendvics.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0000"
+    }
+  ]
+}

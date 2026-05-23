@@ -1,4 +1,5 @@
 import Link from "next/link";
+import RecipeImageSourceBadge from "@/components/recipes/RecipeImageSourceBadge";
 import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
 import type { Recipe } from "@/types/etkezes";
 
@@ -72,6 +73,7 @@ export default function DinnerCard({ recipe }: Props) {
             <span className="material-symbols-outlined text-sm">restaurant</span>
             Mai Étkezés
           </div>
+          <RecipeImageSourceBadge recipe={recipe} />
         </div>
 
         <h3 className="mb-2 text-4xl font-bold leading-tight text-white lg:text-5xl">

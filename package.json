@@ -8,6 +8,13 @@
     "import:lidl-recipes": "node scripts/import-lidl-recipes.mjs",
     "import:nosalty-recipes": "node scripts/import-nosalty-recipes.mjs",
     "recipes:images:build": "node scripts/build-recipe-image-workflow.mjs",
+    "recipes:images:export-missing-batch": "node scripts/export-missing-generated-image-batch.mjs",
+    "recipes:images:export-source-fallback-batch": "node scripts/export-missing-generated-image-batch.mjs --strategy source-fallback --limit 50 --offset 0",
+    "recipes:images:export-placeholder-batch": "node scripts/export-missing-generated-image-batch.mjs --strategy placeholder --limit 50 --offset 0",
+    "recipes:images:export-all-source-fallback-batches": "node scripts/export-missing-generated-image-batch.mjs --strategy source-fallback --limit 50 --all",
+    "recipes:images:export-all-placeholder-batches": "node scripts/export-missing-generated-image-batch.mjs --strategy placeholder --limit 50 --all",
+    "recipes:images:prepare-run": "node scripts/prepare-recipe-image-generation-run.mjs",
+    "recipes:images:prepare-first-source-fallback-run": "node scripts/prepare-recipe-image-generation-run.mjs --batch tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0000-050.json",
     "start": "next start",
     "lint": "eslint"
   },

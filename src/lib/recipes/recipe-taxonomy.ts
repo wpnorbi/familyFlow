@@ -24,9 +24,9 @@ export const MEAL_TYPE_OPTIONS: Array<{ label: string; value: RecipeMealType; ic
 ];
 
 export const TIME_BUCKET_OPTIONS: Array<{ label: string; value: RecipeTimeBucket; max: number; icon: string }> = [
-  { label: "Rövid", value: "short", max: 20, icon: "bolt" },
+  { label: "Gyors", value: "short", max: 20, icon: "bolt" },
   { label: "Közepes", value: "medium", max: 50, icon: "timer" },
-  { label: "Hosszú", value: "long", max: Infinity, icon: "hourglass_bottom" },
+  { label: "Lassú", value: "long", max: Infinity, icon: "hourglass_bottom" },
 ];
 
 export const PROTEIN_OPTIONS: Array<{ label: string; value: Recipe["protein"]; icon: string }> = [

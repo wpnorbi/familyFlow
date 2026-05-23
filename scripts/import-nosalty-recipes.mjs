@@ -175,6 +175,103 @@ function parseIngredientLine(line) {
   };
 }
 
+function normalizeInstructionText(value) {
+  return stripHtml(value)
+    .replace(/^\d+[\).\s-]*/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractInstructionStep(value) {
+  if (!value) return "";
+  if (typeof value === "string") return normalizeInstructionText(value);
+  if (Array.isArray(value)) {
+    return value.map(extractInstructionStep).find(Boolean) ?? "";
+  }
+  if (typeof value !== "object") return "";
+  if (typeof value.text === "string") return normalizeInstructionText(value.text);
+  if (typeof value.name === "string") return normalizeInstructionText(value.name);
+  if (Array.isArray(value.itemListElement)) {
+    return value.itemListElement.map(extractInstructionStep).find(Boolean) ?? "";
+  }
+  return "";
+}
+
+function extractRecipeInstructions(recipeInstructions) {
+  if (!recipeInstructions) return [];
+  const values = Array.isArray(recipeInstructions) ? recipeInstructions : [recipeInstructions];
+  return values.map(extractInstructionStep).filter(Boolean);
+}
+
+function rewritePreparationStep(step, index) {
+  const leadIns = ["Elsőként", "Ezután", "Utána", "Közben", "Végül"];
+  let text = normalizeInstructionText(step);
+
+  const replacements = [
+    [/\b(szépen\s+)?összekészítjük\b/gi, "készítsd elő"],
+    [/\belőkészítjük\b/gi, "készítsd elő"],
+    [/\bmegmossuk\b/gi, "mosd meg"],
+    [/\bmegmossuk és\b/gi, "mosd meg, majd"],
+    [/\bmegtisztítjuk\b/gi, "tisztítsd meg"],
+    [/\bfelaprítjuk\b/gi, "aprítsd fel"],
+    [/\bfeldaraboljuk\b/gi, "darabold fel"],
+    [/\bfelvágjuk\b/gi, "vágd fel"],
+    [/\bkarikákra vágjuk\b/gi, "vágd karikákra"],
+    [/\bcsíkokra szeljük\b/gi, "vágd csíkokra"],
+    [/\bszeleteljük\b/gi, "szeleteld fel"],
+    [/\bsózzuk\b/gi, "sózd"],
+    [/\bborsozzuk\b/gi, "borsozd"],
+    [/\bdobunk bele\b/gi, "adj hozzá"],
+    [/\bhozzáadjuk\b/gi, "add hozzá"],
+    [/\brátesszük\b/gi, "helyezd rá"],
+    [/\btesszük\b/gi, "tedd"],
+    [/\böntünk rá\b/gi, "önts rá"],
+    [/\breszelünk rá\b/gi, "reszelj rá"],
+    [/\bfiléket vágunk\b/gi, "vágd filére"],
+    [/\btálalhatunk is\b/gi, "tálald"],
+    [/\bMíg\b/g, "Közben"],
+    [/\bHa\b/g, "Amikor"],
+  ];
+
+  for (const [pattern, replacement] of replacements) {
+    text = text.replace(pattern, replacement);
+  }
+
+  text = text
+    .replace(/\s+,/g, ",")
+    .replace(/\s+;/g, ";")
+    .replace(/\s+\./g, ".")
+    .replace(/,\s*majd\s*/gi, ", majd ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const lead = leadIns[Math.min(index, leadIns.length - 1)];
+  text = text.charAt(0).toLowerCase() + text.slice(1);
+  text = `${lead} ${text}`;
+  text = text.charAt(0).toUpperCase() + text.slice(1);
+
+  if (!/[.!?]$/.test(text)) {
+    text += ".";
+  }
+
+  return text;
+}
+
+function adaptPreparationStepsFromSource(sourceSteps, title, category, tags) {
+  const rewritten = sourceSteps.map((step, index) => rewritePreparationStep(step, index)).filter(Boolean);
+  if (rewritten.length > 0) {
+    return rewritten;
+  }
+  return makePreparationSteps(title, category, tags);
+}
+
+function determineImageStrategy(imageUrl) {
+  if (imageUrl) {
+    return "use-source-image-as-private-fallback";
+  }
+  return "use-placeholder";
+}
+
 function makePreparationSteps(title, category, tags) {
   if (category === "Desszert") {
     return [
@@ -258,13 +355,14 @@ function makeImportItem(recipe, sourceUrl) {
     : [];
   const category = inferCategory(title, recipe.recipeCategory);
   const tags = inferTags(title, category, duration ?? 45, ingredients);
+  const sourcePreparationSteps = extractRecipeInstructions(recipe.recipeInstructions);
 
   return {
     id: `nosalty-${slugify(sourceUrl.replace(`${BASE_URL}/recept/`, "")) || slugify(title)}`,
     title,
     sourceName: "Nosalty",
     sourceUrl,
-    contentMode: "original-family-flow-version-inspired-by-title",
+    contentMode: "source-faithful-family-flow-adaptation",
     difficulty: normalizeDifficulty(recipe.recipeDifficulty),
     totalTimeMinutes: duration ? Math.max(duration, 10) : null,
     servings: normalizeServings(recipe.recipeYield),
@@ -275,14 +373,17 @@ function makeImportItem(recipe, sourceUrl) {
       type: "external-source-url",
       url: normalizeImage(recipe.image),
     },
+    imageStrategy: determineImageStrategy(normalizeImage(recipe.image)),
     ingredientGroups: [
       {
         name: "Hozzávalók",
         items: ingredients.map(parseIngredientLine),
       },
     ],
-    customPreparationSteps: makePreparationSteps(title, category, tags),
-    familyNotes: "Saját Family Flow változat, amely Nosalty receptötlet alapján, appon belüli tervezéshez használható.",
+    sourcePreparationSteps,
+    customPreparationSteps: adaptPreparationStepsFromSource(sourcePreparationSteps, title, category, tags),
+    familyNotes:
+      "Saját Family Flow változat, amely az eredeti Nosalty recept lépéseinek tényszerű tartalmát követi, de újrafogalmazott szöveggel jelenik meg.",
     kidFriendlyNotes: tags.includes("gyerekbarát") ? "Kisgyerekeknek is könnyen ehető, enyhébb családi változatban tálalható." : "",
     shoppingListReady: ingredients.length > 0,
     openOriginalRecipeLabel: "Eredeti Nosalty recept megnyitása",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-20T12:47:59.476Z",
+  "generatedAt": "2026-05-23T12:49:39.361Z",
   "items": [
     {
       "recipeId": "nosalty-muzli-joghurttal",
@@ -594,7 +594,7 @@
     {
       "recipeId": "lidl-a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
       "reviewStatus": "approved",
-      "notes": "Tomato cheese spaghetti approved"
+      "notes": "Explicit single-image registration"
     },
     {
       "recipeId": "lidl-afonyalekvaros-gombas-szarvasragu-turos-polentaval",
@@ -1100,6 +1100,711 @@
       "recipeId": "nosalty-olasz-paradicsomos-kagylo",
       "reviewStatus": "approved",
       "notes": "New generated image approved from sequential needs-review batch"
+    },
+    {
+      "recipeId": "lidl-vajas-rukkolas-spagetti-piritott-kolbasszal-es-koktel-paradicsommal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "lidl-villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "lidl-villamkoret",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-waldorf-salata",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-zoldseges-wok-tofuval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-arrabiata-spagetti",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-avokados-salata-grillcsirkevel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "lidl-bodvalenkei-turokrem-friss-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-brokkolit-tejszinnel-spagetti",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21"
+    },
+    {
+      "recipeId": "nosalty-cukkinicevaras-teszta",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-mangos-salsa-szosszal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-csirkes-fried-rice",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-csirkes-pesto-pasta",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-csirkes-tortellini",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-csokolades-fondant",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-gorog-teszta-fetaval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-grillezett-baranyszelet-fetas-mentaszosszal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-gyors-vegan-doner",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-hajdinasalata-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-halfile-zoldfuszeres-kereggel",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-kremes-zsozsotol",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "lidl-kremes-and-edes-tejberizs-sos-karamellaval",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-lamb-chop-rozmaringgal",
+      "reviewStatus": "approved",
+      "notes": "New generated image approved from screenshot batch 2026-05-21-02"
+    },
+    {
+      "recipeId": "nosalty-quesadilla-csirkes",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-spenotos-tojasos-leves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-tejfolos-teszta-fustolt-hussal",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-tejfolos-barackos-csirke",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-cezar-csirkes-salata-bundazott-csirkevel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-mozarellaval-es-paradicsommal",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-szezammaggal-bundazva",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkes-tacos",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-hoisin-csirke",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-kremes-csipos-mogyorovajas-udon-csirkevel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-medvehagymas-majpastetom",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-rantott-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-rozsepecsenye",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "nosalty-spenotos-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "lidl-szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "nosalty-tejszines-oszibarackos-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "nosalty-thai-kokuszes-csirkeleves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "lidl-zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-c"
+    },
+    {
+      "recipeId": "nosalty-csirke-cordon-bleu-sult-burgonya",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-csirkes-kukoricanorma-leves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-csirkes-shakshuka-paradicsomban",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-csirkes-souvlaki-tzatzikivel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-egyszeru-fokhagymas-mustaros-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-gorog-gyros-csirkebol",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-d"
+    },
+    {
+      "recipeId": "nosalty-oszibarackos-sajtos-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "lidl-szuperropogos-pulykafalatok-fuszeres-bundaban",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "nosalty-thai-csirke-foldimogyoroval",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "nosalty-csirkes-avgolemono-gorog-tojasos-leves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "nosalty-csirkes-korianderes-kokuszleves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "nosalty-csirkes-tamarindos-martasban",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-e"
+    },
+    {
+      "recipeId": "nosalty-doner-kebab-hazilag",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "nosalty-hutouritos-csirke",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "nosalty-kinai-edes-savanyu-csirke-parolt-rizzsel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "nosalty-oszibarackos-csirkemell-hot-curryvel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "lidl-rantott-csirke-es-csirkemell-szuprem",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "nosalty-barackos-tejszines-csirkemell-gnocchival",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-f"
+    },
+    {
+      "recipeId": "nosalty-csirke-curry-kokusztejjel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-spenotos-toltve",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-toltve-sajttal",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-kinai-wonton-leves",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-sargarepas-gyomberes-csirkecurry",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-tokeletes-hawaii-csirke-recept",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-g"
+    },
+    {
+      "recipeId": "nosalty-barackos-csirkemell-ahogy-csibedina-kesziti",
+      "reviewStatus": "approved",
+      "notes": "Explicit single-image registration"
+    },
+    {
+      "recipeId": "lidl-azsiai-gyomberes-szojas-csirke-furjtojassal-es-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-barna-alaple-csirke-alaple-keszitese",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "lidl-bbq-pulykaszarny-serpenyos-burgonyaval",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-citromos-soros-sult-csirke-sajat-szaftjaval-fejes-salataval-petrezselyemmel",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "lidl-csirke-fricassee-gombaval-and-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-csirkemell-piccata",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "lidl-csirkeporkolt-gombakkal-es-burgonyaval-bogracsban",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "lidl-csirkes-paella-kolbasszal-es-articsokaval",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-csirketempura-gozolt-citromnadas-pok-choi-vajas-karalabe-citrusos-szezamos-ponzuszosz",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "lidl-faszenen-grillezett-pacolt-csirkecomb-es-mell-grillezett-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-fuszeres-bbq-csirke-grillezett-zoldsegek-petrezselyempeszto",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-fuszeres-sult-pulykaszarny-oszi-tepsis-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-fuszeres-ropogos-csirkeszarnyfalatkak-cukkinivel-es-ujhagymaval-zoldfuszeres-majonezzel",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "lidl-lassan-grillezett-bbq-sertes-tarja-es-teritett-csirke-pulled-szendvics",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-lecsos-csirkeporkolt-kezzel-szaggatott-galuska",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "lidl-narancsos-csirkecomb-sult-repaval-rukkolas-burgonyapurevel",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "lidl-narancsos-olajbogyos-csirkecomb",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "lidl-omlos-sult-csirke-avokadosalataval",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "lidl-piritott-brokkolis-burgonyasalata-sult-csirkemellel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-provence-i-nyolcas-csirke",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "lidl-sult-csirkecombos-quesadilla-martogatosokkal",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "lidl-sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-szines-tarhonyasalata-grillezett-csirkemellel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-tepsis-csirkemellfile-baszk-modra",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "lidl-vendegvaro-csirke-es-sertesfalatkak-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-barbar-csirke",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "nosalty-bbq-csirkeszarny",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-chili-con-pollo-avagy-csirkes-chilis-bab",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-coq-au-vin-blanc-feherboros-csirke",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirke-adobo",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "nosalty-csirke-marsala",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-gombamartassal",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-olajban-konfitalva",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "nosalty-csirkemell-zoldseges-pesto-al-sutoben",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkepaprikas-galuskaval",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "nosalty-csirkes-bab-enchilada",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "nosalty-csirkes-bastilla",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "nosalty-csirkes-biryani",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "nosalty-csirkes-coq-au-vin",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkes-enchilada",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "nosalty-csirkes-lazagna",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "nosalty-csirkes-massaman-curry",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkes-paella",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-csirkes-pilaf",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "nosalty-csirkes-szezamos-rozmaringos-sutoben",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "nosalty-csirkes-zoldseges-teszta-serpenyoben",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-fokhagymas-csirkeszarny",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-j"
+    },
+    {
+      "recipeId": "nosalty-fokhagymas-vajban-sult-csirke",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "nosalty-lapitott-csirkes-cukkinis-taco",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "nosalty-marinalt-grillezett-csirkecomb",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "nosalty-marokkoi-csirkecomb-fuszeres-martasban",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "nosalty-mediterran-csirkecomb-zoldsegekkel",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-mexikoi-csirkes-egytal-1",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "nosalty-olasz-csirkecomb-paradicsommal",
+      "reviewStatus": "approved",
+      "notes": "Explicit single-image registration"
+    },
+    {
+      "recipeId": "nosalty-tandoori-csirke",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "nosalty-tejszin-sparga-csirke",
+      "reviewStatus": "approved",
+      "notes": "Approved existing generated chicken image batch 2026-05-22"
+    },
+    {
+      "recipeId": "lidl-csirkepaprikas-galuskaval-porehagymas-uborkasalataval",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "lidl-mandulas-csirke-spargas-epres-multicolor-salataval",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "nosalty-bambuszrugyes-gyumolcsos-kinai-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "nosalty-barackkal-toltott-csirkemell-baconbe-gongyolve",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "nosalty-barackos-sajtos-sult-csirkecomb",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "nosalty-curry-csirketorta",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-h"
+    },
+    {
+      "recipeId": "nosalty-fahejas-chilis-barackos-csirke",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-grillcsirke-egeszben-sutoben",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-gyrosos-fokhagymas-csirkecomb",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-kaliforniai-citromos-barackos-csirke-kuszkuszbatyuban",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-oszibarackos-csirkemell",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-tropusi-tejszines-csirkemell-safranyos-rizzsel",
+      "reviewStatus": "approved",
+      "notes": "Generated from 6-tile composite batch 2026-05-22-i"
+    },
+    {
+      "recipeId": "nosalty-vichyssoise-hideg-krumplileves",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-k"
+    },
+    {
+      "recipeId": "nosalty-inyenc-csibe-barackkal",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-l"
+    },
+    {
+      "recipeId": "nosalty-sutoben-sult-edesburgonya-csirkevel",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "nosalty-tajine-leves-csirkebol",
+      "reviewStatus": "approved",
+      "notes": "Regenerated after user-marked mismatch 2026-05-23 batch-m"
+    },
+    {
+      "recipeId": "nosalty-vorosboros-konyakos-facan-sult-almaval",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-n"
+    },
+    {
+      "recipeId": "nosalty-zsuzsi-barackos-husija",
+      "reviewStatus": "approved",
+      "notes": "Regenerated from user-requested batch 2026-05-23-o"
+    },
+    {
+      "recipeId": "nosalty-slow-cooker-chicken",
+      "reviewStatus": "approved",
+      "notes": "Explicit single-image registration"
     }
   ]
 }

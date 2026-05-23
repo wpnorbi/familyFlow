@@ -1,5 +1,14 @@
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import LogoutButton from "@/components/auth/LogoutButton";
+import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
+
+const IMPORTED_RECIPES = getUserImportedRecipes();
+const RECIPES_WITHOUT_GENERATED_IMAGE = IMPORTED_RECIPES.filter((recipe) => recipe.imageStrategy !== "generated");
+const SOURCE_FALLBACK_RECIPES = RECIPES_WITHOUT_GENERATED_IMAGE.filter(
+  (recipe) => recipe.imageStrategy === "source-fallback",
+);
+const PLACEHOLDER_RECIPES = RECIPES_WITHOUT_GENERATED_IMAGE.filter((recipe) => recipe.imageStrategy === "placeholder");
+const MISSING_IMAGE_PREVIEW = RECIPES_WITHOUT_GENERATED_IMAGE.slice(0, 8);
 
 const FAMILY_MEMBERS: Array<{ name: string; role: string; badge?: string }> = [
   { name: "Anna Kovács", role: "Családfő", badge: "Te" },
@@ -221,6 +230,54 @@ export default function BeallitasokDesktopView() {
       </div>
 
       <div className="grid grid-cols-[1.15fr_0.9fr_0.75fr] gap-5">
+        <DesktopCard title="Receptképek" icon="photo_library">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[22px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,252,244,0.72)] px-4 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Összes import</p>
+              <p className="mt-2 text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">{IMPORTED_RECIPES.length}</p>
+            </div>
+            <div className="rounded-[22px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,249,237,0.76)] px-4 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Forrás fallback</p>
+              <p className="mt-2 text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">{SOURCE_FALLBACK_RECIPES.length}</p>
+            </div>
+            <div className="rounded-[22px] border border-[rgba(74,67,54,0.08)] bg-[rgba(238,243,231,0.76)] px-4 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">Placeholder</p>
+              <p className="mt-2 text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">{PLACEHOLDER_RECIPES.length}</p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-[24px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,252,244,0.72)] p-4">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[15px] font-semibold text-[var(--ff-text)]">Még nincs saját generált kép</p>
+                <p className="mt-1 text-[13px] text-[var(--ff-text-muted)]">
+                  Ezek a receptek még forrásképet vagy placeholdert használnak.
+                </p>
+              </div>
+              <span className="rounded-full bg-[rgba(246,248,236,0.96)] px-3 py-1.5 text-[13px] font-semibold text-[var(--ff-primary-soft)]">
+                {RECIPES_WITHOUT_GENERATED_IMAGE.length} recept
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {MISSING_IMAGE_PREVIEW.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-[18px] bg-[rgba(255,249,237,0.86)] px-4 py-3"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-[15px] font-semibold text-[var(--ff-text)]">{recipe.name}</p>
+                    <p className="mt-1 text-[13px] text-[var(--ff-text-muted)]">{recipe.sourceName ?? "Importált recept"}</p>
+                  </div>
+                  <span className="rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--ff-text-muted)]">
+                    {recipe.imageStrategy === "source-fallback" ? "Forráskép" : "Placeholder"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DesktopCard>
+
         <DesktopCard title="Megjelenés" icon="palette">
           <div>
             <p className="text-[15px] font-medium text-[var(--ff-text)]">Téma</p>

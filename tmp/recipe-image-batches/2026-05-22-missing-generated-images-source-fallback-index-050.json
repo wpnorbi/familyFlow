@@ -1,0 +1,327 @@
+{
+  "generatedAt": "2026-05-22T18:07:42.534Z",
+  "strategy": "source-fallback",
+  "batchSize": 50,
+  "startOffset": 0,
+  "totalCandidates": 1024,
+  "exportedBatchCount": 21,
+  "totalItems": 1024,
+  "totalMissingPromptCount": 0,
+  "batches": [
+    {
+      "batchId": "missing-generated-images-source-fallback-0000",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0000-050.json",
+      "startIndex": 0,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-5-dollaros-turmix-5-dollar-milkshake",
+        "lidl-a-vilag-legfinomabb-legegyszerubb-paradicsomos-sajtos-spagettije",
+        "nosalty-barackos-cseresznyeszosz",
+        "nosalty-barackos-gomboc-makbundaban",
+        "lidl-bodvalenkei-turokrem-friss-zoldsegekkel"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0050",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0050-050.json",
+      "startIndex": 50,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+        "lidl-tavaszudvozlo-spargas-teszta",
+        "nosalty-tejfolos-oszibarackkrem",
+        "nosalty-tejfolos-barackos-csirke",
+        "nosalty-tejszines-oszibarackos-csirkemell"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0100",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0100-050.json",
+      "startIndex": 100,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-ananaszos-turodesszert",
+        "nosalty-barackos-ricotta-afonyaval",
+        "nosalty-barackos-turotorta-cukor-nelkul",
+        "nosalty-barackos-mascarpones-turotorta",
+        "nosalty-cseresznyes-sajttorta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0150",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0150-050.json",
+      "startIndex": 150,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-barackos-turogomboc-kiss-moni-konyhajabol",
+        "nosalty-barackos-turokocka-koi-konyhajabol",
+        "nosalty-barackos-turos-leveles",
+        "nosalty-barackos-pudingos-sutemeny-erzsitol",
+        "nosalty-barackos-vanilias-leveles-szelet"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0200",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0200-050.json",
+      "startIndex": 200,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-hagyomanyos-toltott-paprika",
+        "nosalty-hamis-turos",
+        "lidl-harcsaporkolt-turos-csuszaval-ahogy-en-keszitem",
+        "lidl-hazi-sajtos-tejfolos-langos-ujhagymaval",
+        "lidl-hejaban-sult-burgonya-sajtos-martogatoval-es-tejfollel"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0250",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0250-050.json",
+      "startIndex": 250,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-puha-kaposztas-csiga",
+        "nosalty-puspokkenyer-zsuzsamama-konyhajabol",
+        "lidl-rantott-csirke-es-csirkemell-szuprem",
+        "lidl-reform-turos-derelye-eperdzsemmel",
+        "lidl-sajtos-nudli-specli-hegyi-sajttal-sutve-piritott-hagymaval-es-tokmagolajos-salataval"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0300",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0300-050.json",
+      "startIndex": 300,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-tojasos-nokedli",
+        "lidl-tojasos-sult-rizs-garnelaval-es-bok-choy-jal",
+        "lidl-tonhalkremes-reggeli-kremesre-fott-tojassal-olivaval-aszalt-paradicsommal-olasz-lepennyel",
+        "nosalty-tukortojas-kocka",
+        "lidl-afonyalekvaros-gombas-szarvasragu-turos-polentaval"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0350",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0350-050.json",
+      "startIndex": 350,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-feketeerdo-trifle",
+        "lidl-fetaval-es-szardiniaval-toltott-fokhagymas-cukkini",
+        "lidl-forro-csokolade-latte",
+        "lidl-forro-fuszeres-mezes-narancspuncs",
+        "lidl-frissitsuk-fel-a-salatakat"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0400",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0400-050.json",
+      "startIndex": 400,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-vargabeles-retes-fahejas-szilvaval",
+        "nosalty-varganyas-kacsaval-toltott-ravioli",
+        "lidl-vegan-hamburgerbuci",
+        "lidl-vendegvaro-toltott-datolya-hazi-chiliolajjal",
+        "lidl-villamgyors-vacsoraotletek-tesztabol"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0450",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0450-050.json",
+      "startIndex": 450,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-habkonnyu-citromkremes-piskotatekercs",
+        "nosalty-curry-csirketorta",
+        "nosalty-cseresznyes-muffin-glaser-konyhajabol",
+        "nosalty-cseresznyes-nokedli-glaser-konyhajabol",
+        "nosalty-cseresznyes-mascarpones-turotorta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0500",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0500-050.json",
+      "startIndex": 500,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-joghurtos-sargabarack-torta",
+        "nosalty-joghurtos-barackos-sutemeny",
+        "nosalty-joghurt-eper-piskota",
+        "nosalty-kakaos-muffin-feher-csokolades-mascarpones-kalappal",
+        "nosalty-karacsonyi-feketeerdo-torta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0550",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0550-050.json",
+      "startIndex": 550,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-oszibarackos-lepeny",
+        "nosalty-oszibarackos-pezsgos-torta",
+        "nosalty-oszibarackos-sajttorta-szimran-konyhajabol",
+        "nosalty-oszibarackos-turos-suti-gabystol",
+        "nosalty-oszibarackos-turotorta-bettitol"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0600",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0600-050.json",
+      "startIndex": 600,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-tukortojas-suti-konyhamalackatol",
+        "nosalty-vaniliapudingos-meggykremes-parnak",
+        "lidl-zabpehely-palacsinta-fahejas-vanilias-barackkal-es-piritott-magvakkal",
+        "nosalty-zeppole-napolyi-egetett-teszta",
+        "nosalty-zoboomafoo-gyumolcsjoghurtos-tejszines-torta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0650",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0650-050.json",
+      "startIndex": 650,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-barackos-szelet-turoval",
+        "nosalty-barackos-unnepi-sutemeny",
+        "lidl-bbq-sertesoldalas",
+        "lidl-birkacomb-navarin-modra",
+        "lidl-bolognai-and-paradicsomos-spagetti-sofritoval"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0700",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0700-050.json",
+      "startIndex": 700,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-fuszeres-marokkoi-citrusos-kacsatal-hazi-lepenykenyerrel",
+        "nosalty-gesztenyes-csucs-amarena-meggyel",
+        "nosalty-gesztenyes-gyumolcsos-vaniliapuding",
+        "lidl-gombas-husos-hase-komennyel",
+        "lidl-gozolt-sult-karfiol"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0750",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0750-050.json",
+      "startIndex": 750,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-kaves-csokoladehab-grillazzsal",
+        "lidl-kefires-poharas-sutemeny-afonyaval-cseresznyevel-es-csokoladeval",
+        "nosalty-kek-panna-cotta-eper-narancsmartassal",
+        "nosalty-kemenyitos-aprosutemeny",
+        "lidl-klasszikus-koromporkolt"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0800",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0800-050.json",
+      "startIndex": 800,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-piritott-hatszinszeletek-zelleres-gratinirozott-burgonyaval-pikans-edeskomeny-salataval",
+        "lidl-piritott-kaposzta-sertescsaszarral",
+        "lidl-piritott-maj-kaposztas-burgonyaval",
+        "lidl-piritott-marhahatszin-zoldspargaval-hollandi-martassal",
+        "nosalty-piros-pecsenyeburgonya"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0850",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0850-050.json",
+      "startIndex": 850,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-toltott-kelkaposzta-gombas-bulgurral",
+        "lidl-toltott-nyari-tok-kapormartassal",
+        "lidl-toltott-savanyu-kaposzta-cserepedenyben",
+        "lidl-toltott-olvados-ujburgonya",
+        "lidl-toltott-pezsgos-tejszines-edeskaposzta"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0900",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0900-050.json",
+      "startIndex": 900,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "lidl-nyarson-sult-kacsamellcsikok-zelleres-zold-almas-majonezes-salata",
+        "lidl-oszi-zoldsegleves-majgaluskaval",
+        "nosalty-oszibarackos-csirkemell-hot-curryvel",
+        "lidl-papirban-sult-harcsafile-sziciliai-padlizsanraguval",
+        "lidl-parazson-sult-cekla-grillezett-endivia-salata-fuszervajas-garnela-szezammaggos-alma-vinaigrette"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-0950",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-0950-050.json",
+      "startIndex": 950,
+      "requestedCount": 50,
+      "count": 50,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-gesztenyehabos-maktorta-liszt-nelkul",
+        "nosalty-gesztenyekremes-meggyes-torta",
+        "nosalty-gesztenyes-meggyes-szelet",
+        "nosalty-glutenmentes-puncstorta",
+        "nosalty-halloween-muffin"
+      ]
+    },
+    {
+      "batchId": "missing-generated-images-source-fallback-1000",
+      "outFile": "tmp/recipe-image-batches/2026-05-22-missing-generated-images-source-fallback-1000-050.json",
+      "startIndex": 1000,
+      "requestedCount": 24,
+      "count": 24,
+      "missingPromptCount": 0,
+      "topRecipeIds": [
+        "nosalty-sajttorta-meggytetovel-gizitol",
+        "nosalty-sargarepas-meggyes-torta",
+        "lidl-sos-edes-amerikai-mogyorovajas-keksz",
+        "lidl-soros-vajas-palacsinta-palinkas-fuszeres-rebarbaraval-es-almaval",
+        "nosalty-suni-suti-csibedinatol"
+      ]
+    }
+  ]
+}

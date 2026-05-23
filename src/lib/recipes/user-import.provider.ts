@@ -50,11 +50,42 @@ function inferProtein(recipe: ExternalRecipeImportItem): Recipe["protein"] {
   return "egyéb";
 }
 
-function resolveImportedRecipeImage(item: ExternalRecipeImportItem): string | undefined {
-  return APPROVED_GENERATED_RECIPE_IMAGE_BY_ID.get(item.id);
+function resolveImportedRecipeImage(item: ExternalRecipeImportItem): {
+  image?: string;
+  imageStrategy: Recipe["imageStrategy"];
+  sourceImageUrl?: string;
+} {
+  const generatedImage = APPROVED_GENERATED_RECIPE_IMAGE_BY_ID.get(item.id);
+  const sourceImageUrl = item.image.type === "external-source-url" ? item.image.url : undefined;
+
+  if (generatedImage) {
+    return {
+      image: generatedImage,
+      imageStrategy: "generated",
+      sourceImageUrl,
+    };
+  }
+
+  if (
+    (item.imageStrategy === "use-source-image-as-private-fallback" ||
+      (item.imageStrategy === undefined && sourceImageUrl)) &&
+    sourceImageUrl
+  ) {
+    return {
+      image: sourceImageUrl,
+      imageStrategy: "source-fallback",
+      sourceImageUrl,
+    };
+  }
+
+  return {
+    imageStrategy: "placeholder",
+    sourceImageUrl,
+  };
 }
 
 function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
+  const resolvedImage = resolveImportedRecipeImage(item);
   const ingredientGroups = item.ingredientGroups.map((group) => ({
     name: group.name.trim(),
     items: group.items.map(formatIngredient),
@@ -78,7 +109,9 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     category: item.category.trim(),
     protein: inferProtein(item),
     description: item.safeShortDescription.trim(),
-    image: resolveImportedRecipeImage(item),
+    image: resolvedImage.image,
+    imageStrategy: resolvedImage.imageStrategy,
+    sourceImageUrl: resolvedImage.sourceImageUrl,
     ingredients,
     instructions: item.customPreparationSteps.map((step) => step.trim()),
     tags: rawTags,
@@ -88,6 +121,7 @@ function mapImportedRecipe(item: ExternalRecipeImportItem): Recipe {
     servings: item.servings ?? undefined,
     difficulty: item.difficulty,
     ingredientGroups,
+    sourcePreparationSteps: item.sourcePreparationSteps?.map((step) => step.trim()).filter(Boolean),
     familyNotes: item.familyNotes.trim(),
     kidFriendlyNotes: item.kidFriendlyNotes.trim(),
     shoppingListReady: item.shoppingListReady,

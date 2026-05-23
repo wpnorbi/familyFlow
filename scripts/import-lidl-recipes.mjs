@@ -22,6 +22,13 @@ function decodeRscHtml(html) {
   return html.replace(/\\"/g, '"').replace(/\\u0026/g, "&").replace(/\\u003c/g, "<").replace(/\\u003e/g, ">");
 }
 
+function stripHtml(value) {
+  return decodeRscHtml(String(value ?? ""))
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function extractBalancedJson(source, marker) {
   const markerIndex = source.indexOf(marker);
   if (markerIndex === -1) return null;
@@ -299,6 +306,100 @@ function inferIngredientGroups(title, category, tags) {
   ];
 }
 
+function normalizeInstructionText(value) {
+  return stripHtml(value)
+    .replace(/^\d+[\).\s-]*/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractLidlPreparationSteps(html) {
+  const sectionMatch = html.match(/<h2[^>]*>\s*Előkészítés\s*<\/h2>([\s\S]*?)(?:<h2[^>]*>|<\/article>|<\/main>)/i);
+  if (!sectionMatch) return [];
+
+  const listItems = Array.from(
+    sectionMatch[1].matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi),
+    (match) => normalizeInstructionText(match[1]),
+  ).filter(Boolean);
+
+  if (listItems.length > 0) {
+    return listItems;
+  }
+
+  const text = normalizeInstructionText(sectionMatch[1]);
+  return Array.from(
+    text.matchAll(/(?:^|\s)(\d+)\.\s+([\s\S]*?)(?=(?:\s+\d+\.\s)|$)/g),
+    (match) => normalizeInstructionText(match[2]),
+  ).filter(Boolean);
+}
+
+function rewritePreparationStep(step, index) {
+  const leadIns = ["Elsőként", "Ezután", "Utána", "Közben", "Végül"];
+  let text = normalizeInstructionText(step);
+
+  const replacements = [
+    [/\b(szépen\s+)?összekészítjük\b/gi, "készítsd elő"],
+    [/\belőkészítjük\b/gi, "készítsd elő"],
+    [/\bszedjük\b/gi, "szedd"],
+    [/\bvágjuk\b/gi, "vágd"],
+    [/\bszeljük\b/gi, "vágd"],
+    [/\bmegtisztítjuk\b/gi, "tisztítsd meg"],
+    [/\bátfényezzük\b/gi, "forgasd át"],
+    [/\bsózzuk\b/gi, "sózd"],
+    [/\bborsozzuk\b/gi, "borsozd"],
+    [/\beltávolítjuk\b/gi, "távolítsd el"],
+    [/\bdobunk bele\b/gi, "adj a vízhez"],
+    [/\bszortírozzuk\b/gi, "oszd szét"],
+    [/\brátesszük\b/gi, "helyezd rá"],
+    [/\btesszük\b/gi, "tedd"],
+    [/\bvágunk\b/gi, "vágj"],
+    [/\breszelünk\b/gi, "reszelj"],
+    [/\böntünk\b/gi, "önts"],
+    [/\btálalhatunk is\b/gi, "tálald"],
+    [/\bdobjuk\b/gi, "forgasd"],
+    [/\bMíg\b/g, "Közben"],
+    [/\bHa\b/g, "Amikor"],
+  ];
+
+  for (const [pattern, replacement] of replacements) {
+    text = text.replace(pattern, replacement);
+  }
+
+  text = text
+    .replace(/\s+,/g, ",")
+    .replace(/\s+;/g, ";")
+    .replace(/\s+\./g, ".")
+    .replace(/,\s*majd\s*/gi, ", majd ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const lead = leadIns[Math.min(index, leadIns.length - 1)];
+  text = text.charAt(0).toLowerCase() + text.slice(1);
+  text = `${lead} ${text}`;
+  text = text.charAt(0).toUpperCase() + text.slice(1);
+
+  if (!/[.!?]$/.test(text)) {
+    text += ".";
+  }
+
+  return text;
+}
+
+function adaptPreparationStepsFromSource(sourceSteps, title, category, tags) {
+  const rewritten = sourceSteps.map((step, index) => rewritePreparationStep(step, index)).filter(Boolean);
+  if (rewritten.length > 0) {
+    return rewritten;
+  }
+  return makePreparationSteps(title, category, tags);
+}
+
+function determineImageStrategy(imageUrl) {
+  if (imageUrl) {
+    return "use-source-image-as-private-fallback";
+  }
+  return "use-placeholder";
+}
+
 function makePreparationSteps(title, category, tags) {
   if (category === "Desszert") {
     return [
@@ -364,20 +465,21 @@ function slugFromSourceUrl(url) {
   return match?.[1] ?? null;
 }
 
-function makeImportItem(recipe) {
+function makeImportItem(recipe, sourcePreparationSteps = []) {
   const title = recipe.name.trim();
   const rawTotalTimeMinutes =
     normalizeDurationMinutes(recipe.preparationTime) + normalizeDurationMinutes(recipe.cookingTime) || null;
   const totalTimeMinutes = rawTotalTimeMinutes ? Math.max(rawTotalTimeMinutes, 15) : null;
   const category = inferCategory(title);
   const tags = inferTags(title, recipe);
+  const imageUrl = imageUrlFromInfo(recipe.imageInfo);
 
   return {
     id: `lidl-${recipe.slug}`,
     title,
     sourceName: "Lidl Konyha",
     sourceUrl: `${BASE_URL}/recept/${recipe.slug}`,
-    contentMode: "original-family-flow-version-inspired-by-title",
+    contentMode: "source-faithful-family-flow-adaptation",
     difficulty: difficultyLabel(recipe.difficulty),
     totalTimeMinutes,
     servings: null,
@@ -386,11 +488,14 @@ function makeImportItem(recipe) {
     safeShortDescription: `Family Flow verzió a(z) ${title} receptötlethez: appon belül főzhető, családi ebédre tervezett változat.`,
     image: {
       type: "external-source-url",
-      url: imageUrlFromInfo(recipe.imageInfo),
+      url: imageUrl,
     },
+    imageStrategy: determineImageStrategy(imageUrl),
     ingredientGroups: inferIngredientGroups(title, category, tags),
-    customPreparationSteps: makePreparationSteps(title, category, tags),
-    familyNotes: "Saját Family Flow változat, amely az appon belül követhető és heti tervezéshez használható.",
+    sourcePreparationSteps,
+    customPreparationSteps: adaptPreparationStepsFromSource(sourcePreparationSteps, title, category, tags),
+    familyNotes:
+      "Saját Family Flow változat, amely az eredeti Lidl recept lépéseinek tényszerű tartalmát követi, de újrafogalmazott szöveggel jelenik meg.",
     kidFriendlyNotes: tags.includes("gyerekbarát") ? "Gyerekbarát jellegű receptötlet." : "",
     shoppingListReady: true,
     openOriginalRecipeLabel: "Eredeti Lidl recept megnyitása",
@@ -416,6 +521,7 @@ function mergeRecipe(existing, scraped) {
 
   return {
     ...existing,
+    contentMode: scraped.contentMode,
     title: existing.title || scraped.title,
     sourceUrl: scraped.sourceUrl,
     difficulty: existing.difficulty ?? scraped.difficulty,
@@ -423,6 +529,14 @@ function mergeRecipe(existing, scraped) {
     category: existing.category || scraped.category,
     tags: mergedTags,
     image: scraped.image.url ? scraped.image : existing.image,
+    imageStrategy: scraped.imageStrategy,
+    ingredientGroups: scraped.ingredientGroups?.length > 0 ? scraped.ingredientGroups : existing.ingredientGroups,
+    sourcePreparationSteps:
+      scraped.sourcePreparationSteps?.length > 0 ? scraped.sourcePreparationSteps : existing.sourcePreparationSteps,
+    customPreparationSteps:
+      scraped.customPreparationSteps?.length > 0 ? scraped.customPreparationSteps : existing.customPreparationSteps,
+    familyNotes: scraped.familyNotes || existing.familyNotes,
+    kidFriendlyNotes: scraped.kidFriendlyNotes || existing.kidFriendlyNotes,
     openOriginalRecipeLabel: existing.openOriginalRecipeLabel || scraped.openOriginalRecipeLabel,
   };
 }
@@ -464,12 +578,30 @@ async function main() {
     0,
     limit ?? undefined,
   );
-  const existingBySlug = new Map(existingPackage.recipes.map((item) => [slugFromSourceUrl(item.sourceUrl), item]));
-  const merged = uniqueRecipes.map((recipe) => {
-    const scraped = makeImportItem(recipe);
+  const existingRecipes = Array.isArray(existingPackage.recipes) ? existingPackage.recipes : [];
+  const existingBySlug = new Map(existingRecipes.map((item) => [slugFromSourceUrl(item.sourceUrl), item]));
+  const merged = [];
+
+  for (const recipe of uniqueRecipes) {
+    const sourceUrl = `${BASE_URL}/recept/${recipe.slug}`;
+    let sourcePreparationSteps = [];
+
+    try {
+      const recipeHtml = await fetchText(sourceUrl);
+      sourcePreparationSteps = extractLidlPreparationSteps(recipeHtml);
+    } catch (error) {
+      console.warn(`Lidl lépések nem olvashatók: ${sourceUrl} (${error.message})`);
+    }
+
+    const scraped = makeImportItem(recipe, sourcePreparationSteps);
     const existing = existingBySlug.get(recipe.slug);
-    return existing ? mergeRecipe(existing, scraped) : scraped;
-  });
+    merged.push(existing ? mergeRecipe(existing, scraped) : scraped);
+  }
+
+  const mergedBySlug = new Map(existingRecipes.map((item) => [slugFromSourceUrl(item.sourceUrl), item]));
+  for (const item of merged) {
+    mergedBySlug.set(slugFromSourceUrl(item.sourceUrl), item);
+  }
 
   const output = {
     ...existingPackage,
@@ -483,7 +615,7 @@ async function main() {
         "Detailed Family Flow recipe text is custom or links back to the original source.",
       ],
     },
-    recipes: merged.sort((a, b) => a.title.localeCompare(b.title, "hu")),
+    recipes: Array.from(mergedBySlug.values()).sort((a, b) => a.title.localeCompare(b.title, "hu")),
   };
 
   await fs.writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`);

@@ -1,0 +1,507 @@
+{
+  "batchId": "missing-generated-images-source-fallback-0050",
+  "strategy": "source-fallback",
+  "count": 50,
+  "items": [
+    {
+      "index": 1,
+      "recipeId": "lidl-szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "slug": "szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "title": "Szaftos-fűszeres pulykamellfalatok, sült almás, langyos kevert salátával",
+      "priorityScore": 456,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: Szaftos-fűszeres pulykamellfalatok, sült almás, langyos kevert salátával. Create a composed salad with visible pulykamell. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: pulykamell. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval.png"
+    },
+    {
+      "index": 2,
+      "recipeId": "lidl-tavaszudvozlo-spargas-teszta",
+      "slug": "tavaszudvozlo-spargas-teszta",
+      "title": "Tavaszüdvözlő spárgás tészta",
+      "priorityScore": 456,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Tavaszüdvözlő spárgás tészta. Create a pasta plate with visible teszta. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: teszta. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tavaszudvozlo-spargas-teszta.png"
+    },
+    {
+      "index": 3,
+      "recipeId": "nosalty-tejfolos-oszibarackkrem",
+      "slug": "tejfolos-oszibarackkrem",
+      "title": "Tejfölös őszibarackkrém",
+      "priorityScore": 456,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Tejfölös őszibarackkrém. Create a plated homemade family meal with visible tejfol, porcukor, oszibarackdzsem hazi, teaskanal vaniliaaroma, lehet befott is. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: tejfol, porcukor, oszibarackdzsem hazi, teaskanal vaniliaaroma, lehet befott is. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tejfolos-oszibarackkrem.png"
+    },
+    {
+      "index": 4,
+      "recipeId": "nosalty-tejfolos-barackos-csirke",
+      "slug": "tejfolos-barackos-csirke",
+      "title": "Tejfölös-barackos csirke",
+      "priorityScore": 456,
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: Tejfölös-barackos csirke. Create a chicken main dish with visible csirkemellfile vekony szeletekben, feher bors, 3 gerezd fokhagyma, napraforgo olaj, oszibarackkonzerv. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkemellfile vekony szeletekben, feher bors, 3 gerezd fokhagyma, napraforgo olaj, oszibarackkonzerv. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tejfolos-barackos-csirke.png"
+    },
+    {
+      "index": 5,
+      "recipeId": "nosalty-tejszines-oszibarackos-csirkemell",
+      "slug": "tejszines-oszibarackos-csirkemell",
+      "title": "Tejszínes-őszibarackos csirkemell",
+      "priorityScore": 456,
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: Tejszínes-őszibarackos csirkemell. Create a chicken main dish with visible csirkemellfile kisebb, oszibarackkonzerv 2 doboz, mez, fozotejszin, fahej. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkemellfile kisebb, oszibarackkonzerv 2 doboz, mez, fozotejszin, fahej. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tejszines-oszibarackos-csirkemell.png"
+    },
+    {
+      "index": 6,
+      "recipeId": "nosalty-tejszin-sparga-csirke",
+      "slug": "tejszines-spargas-csirke",
+      "title": "Tejszínes-spárgás csirke",
+      "priorityScore": 456,
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: Tejszínes-spárgás csirke. Create a chicken main dish with visible csirkemellfile, zoldsparga, citromhej, zoldseg alaple, fozotejszin. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkemellfile, zoldsparga, citromhej, zoldseg alaple, fozotejszin. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tejszines-spargas-csirke.png"
+    },
+    {
+      "index": 7,
+      "recipeId": "nosalty-torok-ricottas-parfe",
+      "slug": "torok-ricottas-parfe",
+      "title": "Török ricottás parfé",
+      "priorityScore": 456,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Török ricottás parfé. Create a plated homemade family meal with visible ricotta, habtejszin, sotlan pisztacia, rozsaviz, koktelcseresznye. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: ricotta, habtejszin, sotlan pisztacia, rozsaviz, koktelcseresznye. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "torok-ricottas-parfe.png"
+    },
+    {
+      "index": 8,
+      "recipeId": "nosalty-turos-barackos-szelet",
+      "slug": "turos-barackos-szelet",
+      "title": "Túrós-barackos szelet",
+      "priorityScore": 456,
+      "visualType": "cake-slice",
+      "imagePrompt": "Recipe title: Túrós-barackos szelet. Create a plated homemade dessert slice with visible finomliszt, sutopor, citrombol nyert citromhej, tehenturo, citrombol nyert citromle. The dish must read visually as a plated slice or piece of homemade dessert with visible layers or texture. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: finomliszt, sutopor, citrombol nyert citromhej, tehenturo, citrombol nyert citromle. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "turos-barackos-szelet.png"
+    },
+    {
+      "index": 9,
+      "recipeId": "lidl-wok-os-piritott-uvegteszta-spenottal-es-serteshussal",
+      "slug": "wok-os-piritott-uvegteszta-spenottal-es-serteshussal",
+      "title": "Wok-os pirított üvegtészta spenóttal és sertéshússal",
+      "priorityScore": 456,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Wok-os pirított üvegtészta spenóttal és sertéshússal. Create a pasta plate with visible serteshus, teszta. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: serteshus, teszta. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "wok-os-piritott-uvegteszta-spenottal-es-serteshussal.png"
+    },
+    {
+      "index": 10,
+      "recipeId": "lidl-zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal",
+      "slug": "zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal",
+      "title": "Zabpelyhes csirkemell, sült-pirított cikóriával, pácolt fehér sajttal",
+      "priorityScore": 456,
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: Zabpelyhes csirkemell, sült-pirított cikóriával, pácolt fehér sajttal. Create a chicken main dish with visible csirkemellfile, sajt. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkemellfile, sajt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal.png"
+    },
+    {
+      "index": 11,
+      "recipeId": "nosalty-zabpelyhes-nasi",
+      "slug": "zabpelyhes-nasi",
+      "title": "Zabpelyhes nasi",
+      "priorityScore": 456,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Zabpelyhes nasi. Create a plated homemade family meal with visible zabpehely, kozepes db alma, barackkonzerv, tasak karamellas pudingpor. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: zabpehely, kozepes db alma, barackkonzerv, tasak karamellas pudingpor. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "zabpelyhes-nasi.png"
+    },
+    {
+      "index": 12,
+      "recipeId": "nosalty-zseles-bonbon",
+      "slug": "zseles-bonbon",
+      "title": "Zselés bonbon",
+      "priorityScore": 456,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Zselés bonbon. Create a plated homemade family meal with visible meggyle befott leve, citromle igazi citrombol, zselatin, etcsokolade. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: meggyle befott leve, citromle igazi citrombol, zselatin, etcsokolade. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "zseles-bonbon.png"
+    },
+    {
+      "index": 13,
+      "recipeId": "nosalty-carbonara-szosz-spagettihez-kriszti-konyhajabol",
+      "slug": "carbonara-szosz-spagettihez-kriszti-konyhajabol",
+      "title": "Carbonara szósz spagettihez Kriszti konyhájából",
+      "priorityScore": 454,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Carbonara szósz spagettihez Kriszti konyhájából. Create a pasta plate with visible bacon, nagy fej voroshagyma, fozotejszin 2 doboz, tojassargaja, zoldborso elhagyhato. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: bacon, nagy fej voroshagyma, fozotejszin 2 doboz, tojassargaja, zoldborso elhagyhato. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "carbonara-szosz-spagettihez-kriszti-konyhajabol.png"
+    },
+    {
+      "index": 14,
+      "recipeId": "nosalty-nokedli-tokeletes",
+      "slug": "nokedli-egyszeruen",
+      "title": "Nokedli egyszerűen",
+      "priorityScore": 454,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Nokedli egyszerűen. Create a pasta plate with visible finomliszt, repceolaj. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: finomliszt, repceolaj. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "nokedli-egyszeruen.png"
+    },
+    {
+      "index": 15,
+      "recipeId": "lidl-azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal",
+      "slug": "azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal",
+      "title": "Ázsiai zöldséges pirított tészta szójaszósszal sült tojással",
+      "priorityScore": 448,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Ázsiai zöldséges pirított tészta szójaszósszal sült tojással. Create a pasta plate with visible teszta, vegyes zoldseg. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: teszta, vegyes zoldseg. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal.png"
+    },
+    {
+      "index": 16,
+      "recipeId": "lidl-full-extras-bundas-kenyer-reggeli-ebedre",
+      "slug": "full-extras-bundas-kenyer-reggeli-ebedre",
+      "title": "Full extrás bundás kenyér „reggeli ebédre”",
+      "priorityScore": 448,
+      "visualType": "savory-bake",
+      "imagePrompt": "Recipe title: Full extrás bundás kenyér „reggeli ebédre”. Create a savory baked pastry . The dish must read visually as a savory baked pastry or bread with crisp golden crust. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "full-extras-bundas-kenyer-reggeli-ebedre.png"
+    },
+    {
+      "index": 17,
+      "recipeId": "lidl-husveti-tormas-sonkas-tojaslepeny",
+      "slug": "husveti-tormas-sonkas-tojaslepeny",
+      "title": "Húsvéti tormás-sonkás tojáslepény",
+      "priorityScore": 448,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Húsvéti tormás-sonkás tojáslepény. Create a plated egg breakfast . The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "husveti-tormas-sonkas-tojaslepeny.png"
+    },
+    {
+      "index": 18,
+      "recipeId": "lidl-jackpot-reggeli-rantottaval-and-tojassalataval",
+      "slug": "jackpot-reggeli-rantottaval-es-tojassalataval",
+      "title": "Jackpot reggeli rántottával & tojássalátával",
+      "priorityScore": 448,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Jackpot reggeli rántottával & tojássalátával. Create a plated egg breakfast . The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "jackpot-reggeli-rantottaval-es-tojassalataval.png"
+    },
+    {
+      "index": 19,
+      "recipeId": "lidl-katalan-reggeli-spanyol-omlett-paradicsomos-piritossal",
+      "slug": "katalan-reggeli-spanyol-omlett-paradicsomos-piritossal",
+      "title": "Katalán reggeli: Spanyol omlett, paradicsomos pirítóssal",
+      "priorityScore": 448,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Katalán reggeli: Spanyol omlett, paradicsomos pirítóssal. Create a plated egg breakfast with visible paradicsom. The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: paradicsom. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "katalan-reggeli-spanyol-omlett-paradicsomos-piritossal.png"
+    },
+    {
+      "index": 20,
+      "recipeId": "lidl-serpenyos-hagymas-burgonya-tejfollel-tukortojassal",
+      "slug": "serpenyos-hagymas-burgonya-tejfollel-tukortojassal",
+      "title": "Serpenyős hagymás burgonya, tejföllel, tükörtojással",
+      "priorityScore": 448,
+      "visualType": "roasted-potato",
+      "imagePrompt": "Recipe title: Serpenyős hagymás burgonya, tejföllel, tükörtojással. Create crispy roasted or fried potatoes with visible burgonya, tejfol. The dish must read visually as crispy roasted or fried potatoes on a plate, with golden edges and fluffy interior. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: burgonya, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "serpenyos-hagymas-burgonya-tejfollel-tukortojassal.png"
+    },
+    {
+      "index": 21,
+      "recipeId": "lidl-sonkas-tejfolos-teszta-lagyan-sult-tojassal",
+      "slug": "sonkas-tejfolos-teszta-lagyan-sult-tojassal",
+      "title": "Sonkás-tejfölös tészta, lágyan sült tojással",
+      "priorityScore": 448,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Sonkás-tejfölös tészta, lágyan sült tojással. Create a pasta plate with visible teszta, tejfol. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: teszta, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "sonkas-tejfolos-teszta-lagyan-sult-tojassal.png"
+    },
+    {
+      "index": 22,
+      "recipeId": "lidl-spargas-lagytojasos-medvehagyma-martasos-reggeli",
+      "slug": "spargas-lagytojasos-medvehagyma-martasos-reggeli",
+      "title": "Spárgás, lágytojásos, medvehagyma-mártásos reggeli",
+      "priorityScore": 448,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Spárgás, lágytojásos, medvehagyma-mártásos reggeli. Create a plated egg breakfast . The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "spargas-lagytojasos-medvehagyma-martasos-reggeli.png"
+    },
+    {
+      "index": 23,
+      "recipeId": "nosalty-tojas-alaku-lekvaros-linzer",
+      "slug": "tojas-alaku-lekvaros-linzer",
+      "title": "Tojás alakú lekváros linzer",
+      "priorityScore": 448,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Tojás alakú lekváros linzer. Create a plated egg breakfast with visible finomliszt, porcukor, sutopor, tejmentes margarin, oszibaracklekvar. The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: finomliszt, porcukor, sutopor, tejmentes margarin, oszibaracklekvar. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tojas-alaku-lekvaros-linzer.png"
+    },
+    {
+      "index": 24,
+      "recipeId": "lidl-villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal",
+      "slug": "villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal",
+      "title": "Villámgyors csicseriborsó-paprikás chorizoval és buggyantott tojással",
+      "priorityScore": 448,
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: Villámgyors csicseriborsó-paprikás chorizoval és buggyantott tojással. Create a hearty stew or one-pot meal . The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal.png"
+    },
+    {
+      "index": 25,
+      "recipeId": "lidl-villamreggeli-turoval-szalamival-abonettel",
+      "slug": "villamreggeli-turoval-szalamival-abonettel",
+      "title": "Villámreggeli túróval, szalámival, abonettel",
+      "priorityScore": 448,
+      "visualType": "cake-slice",
+      "imagePrompt": "Recipe title: Villámreggeli túróval, szalámival, abonettel. Create a plated homemade dessert slice with visible turo. The dish must read visually as a plated slice or piece of homemade dessert with visible layers or texture. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "villamreggeli-turoval-szalamival-abonettel.png"
+    },
+    {
+      "index": 26,
+      "recipeId": "lidl-fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "slug": "fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "title": "„Fitness” saláta roppanós csirkefalatkákkal és tofuval",
+      "priorityScore": 440,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: „Fitness” saláta roppanós csirkefalatkákkal és tofuval. Create a composed salad with visible csirkehus, tofu, salatakeverek. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkehus, tofu, salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "fitness-salata-roppanos-csirkefalatkakkal-es-tofuval.png"
+    },
+    {
+      "index": 27,
+      "recipeId": "nosalty-legegyszerubb-gyumolcssalata",
+      "slug": "a-legegyszerubb-gyumolcssalata",
+      "title": "A legegyszerűbb gyümölcssaláta",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: A legegyszerűbb gyümölcssaláta. Create a plated homemade family meal with visible oszibarackkonzerv, gorogdinnye, nektarin. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: oszibarackkonzerv, gorogdinnye, nektarin. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legegyszerubb-gyumolcssalata.png"
+    },
+    {
+      "index": 28,
+      "recipeId": "nosalty-ambrozia-salata",
+      "slug": "ambrozia-salata",
+      "title": "Ambrózia saláta",
+      "priorityScore": 440,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: Ambrózia saláta. Create a composed salad with visible ananasz, kozepes db mandarin, kozepes db narancs, kokuszreszelek, pillecukor. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: ananasz, kozepes db mandarin, kozepes db narancs, kokuszreszelek, pillecukor. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "ambrozia-salata.png"
+    },
+    {
+      "index": 29,
+      "recipeId": "nosalty-bazsalikomos-sajtsalata",
+      "slug": "bazsalikomos-sajtsalata",
+      "title": "Bazsalikomos sajtsaláta",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Bazsalikomos sajtsaláta. Create a plated homemade family meal with visible csokor bazsalikom, piros kaliforniai paprika, zold kaliforniai paprika, sarga kaliforniai paprika, oszibarackkonzerv. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csokor bazsalikom, piros kaliforniai paprika, zold kaliforniai paprika, sarga kaliforniai paprika, oszibarackkonzerv. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "bazsalikomos-sajtsalata.png"
+    },
+    {
+      "index": 30,
+      "recipeId": "lidl-citromos-petrezselymes-tonhalsalata-avokadon",
+      "slug": "citromos-petrezselymes-tonhalsalata-avokadon",
+      "title": "Citromos-petrezselymes tonhalsaláta avokádón",
+      "priorityScore": 440,
+      "visualType": "fish-main",
+      "imagePrompt": "Recipe title: Citromos-petrezselymes tonhalsaláta avokádón. Create a fish or seafood main dish with visible tonhal, salatakeverek, citrom. The dish must read visually as a plated fish or seafood main dish with the protein clearly visible. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: tonhal, salatakeverek, citrom. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "citromos-petrezselymes-tonhalsalata-avokadon.png"
+    },
+    {
+      "index": 31,
+      "recipeId": "nosalty-edes-savanyu-csicseriborso",
+      "slug": "edes-savanyu-csicseriborso",
+      "title": "Édes-savanyú csicseriborsó",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Édes-savanyú csicseriborsó. Create a plated homemade family meal with visible csicseriborso konzerv, oszibarackkonzerv, pritaminpaprika, kozepes db sargarepa, porehagyma. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csicseriborso konzerv, oszibarackkonzerv, pritaminpaprika, kozepes db sargarepa, porehagyma. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "edes-savanyu-csicseriborso.png"
+    },
+    {
+      "index": 32,
+      "recipeId": "nosalty-egyszeru-paradicsomleves-betutesztaval",
+      "slug": "egyszeru-paradicsomleves-betutesztaval",
+      "title": "Egyszerű paradicsomleves betűtésztával",
+      "priorityScore": 440,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Egyszerű paradicsomleves betűtésztával. Create a pasta plate with visible paradicsomle, evokanal finomliszt, napraforgo olaj, kis fej voroshagyma, teszta. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: paradicsomle, evokanal finomliszt, napraforgo olaj, kis fej voroshagyma, teszta. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "egyszeru-paradicsomleves-betutesztaval.png"
+    },
+    {
+      "index": 33,
+      "recipeId": "lidl-franciasalata-es-kaszinotojas-nosztalgia-kiflivel",
+      "slug": "franciasalata-es-kaszinotojas-nosztalgia-kiflivel",
+      "title": "Franciasaláta és kaszinótojás nosztalgia kiflivel",
+      "priorityScore": 440,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Franciasaláta és kaszinótojás nosztalgia kiflivel. Create a plated egg breakfast with visible salatakeverek. The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "franciasalata-es-kaszinotojas-nosztalgia-kiflivel.png"
+    },
+    {
+      "index": 34,
+      "recipeId": "lidl-mennyei-zoldborsokremleves",
+      "slug": "mennyei-zoldborsokremleves",
+      "title": "Mennyei zöldborsókrémleves",
+      "priorityScore": 440,
+      "visualType": "soup",
+      "imagePrompt": "Recipe title: Mennyei zöldborsókrémleves. Create a bowl of soup with visible zoldsegek, alaple. The dish must read visually as a bowl of soup served hot, with the broth or creamy texture clearly visible. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: zoldsegek, alaple. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "mennyei-zoldborsokremleves.png"
+    },
+    {
+      "index": 35,
+      "recipeId": "nosalty-oszi-almakremleves",
+      "slug": "oszi-almakremleves",
+      "title": "Őszi almakrémleves",
+      "priorityScore": 440,
+      "visualType": "yogurt-bowl",
+      "imagePrompt": "Recipe title: Őszi almakrémleves. Create a yogurt and muesli breakfast bowl with visible a levevel egyutt, nagy db alma, citrombol nyert citromle, vanilias cukor, 2 dl joghurt. The dish must read visually as a ceramic breakfast bowl with thick yogurt, muesli or granola, and fresh fruit. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: a levevel egyutt, nagy db alma, citrombol nyert citromle, vanilias cukor, 2 dl joghurt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "oszi-almakremleves.png"
+    },
+    {
+      "index": 36,
+      "recipeId": "nosalty-oszibarack-kremleves-evi-nenitol",
+      "slug": "oszibarack-kremleves-evi-nenitol",
+      "title": "Őszibarack-krémleves Évi nénitől",
+      "priorityScore": 440,
+      "visualType": "soup",
+      "imagePrompt": "Recipe title: Őszibarack-krémleves Évi nénitől. Create a bowl of soup with visible 3 dl szirup, 5 dkg porcukor, kk kardamom, vanilia kivonat, 2 dl joghurt. The dish must read visually as a bowl of soup served hot, with the broth or creamy texture clearly visible. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: 3 dl szirup, 5 dkg porcukor, kk kardamom, vanilia kivonat, 2 dl joghurt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "oszibarack-kremleves-evi-nenitol.png"
+    },
+    {
+      "index": 37,
+      "recipeId": "nosalty-oszibarackkremleves-ahogy-geo-kesziti",
+      "slug": "oszibarackkremleves-ahogy-geo-kesziti",
+      "title": "Őszibarackkrémleves ahogy geo készíti",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Őszibarackkrémleves ahogy geo készíti. Create a plated homemade family meal with visible oszibarackkonzerv, citrom, vanilias cukor, fozotejszin, feherbor. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: oszibarackkonzerv, citrom, vanilias cukor, fozotejszin, feherbor. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "oszibarackkremleves-ahogy-geo-kesziti.png"
+    },
+    {
+      "index": 38,
+      "recipeId": "lidl-petrezselymes-bulgursalata",
+      "slug": "petrezselymes-bulgursalata",
+      "title": "Petrezselymes bulgursaláta",
+      "priorityScore": 440,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: Petrezselymes bulgursaláta. Create a composed salad with visible salatakeverek. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "petrezselymes-bulgursalata.png"
+    },
+    {
+      "index": 39,
+      "recipeId": "nosalty-rizskoch-maradek-felhasznalas-jegyeben",
+      "slug": "rizskoch-a-maradek-felhasznalas-jegyeben",
+      "title": "Rizskoch (a maradék felhasználás jegyében)",
+      "priorityScore": 440,
+      "visualType": "omelette",
+      "imagePrompt": "Recipe title: Rizskoch (a maradék felhasználás jegyében). Create a plated egg breakfast with visible 40 dkg rizs, vanilias pudingpor, sargabarackbefott. The dish must read visually as a plated egg-based breakfast dish such as omelette or scrambled eggs. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: 40 dkg rizs, vanilias pudingpor, sargabarackbefott. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "rizskoch-a-maradek-felhasznalas-jegyeben.png"
+    },
+    {
+      "index": 40,
+      "recipeId": "nosalty-spargas-prosciuttos-tesztasalata",
+      "slug": "spargas-prosciuttos-tesztasalata",
+      "title": "Spárgás-prosciuttós tésztasaláta",
+      "priorityScore": 440,
+      "visualType": "green-smoothie",
+      "imagePrompt": "Recipe title: Spárgás-prosciuttós tésztasaláta. Create a tall glass of green smoothie with visible zoldsparga, spenot vagy bebispenot, vagy parmai sonka, rigate vagy penne, csokor medvehagyma. The dish must read visually as a vibrant green smoothie in a clear glass, visibly blended from spinach and fruit. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: zoldsparga, spenot vagy bebispenot, vagy parmai sonka, rigate vagy penne, csokor medvehagyma. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "spargas-prosciuttos-tesztasalata.png"
+    },
+    {
+      "index": 41,
+      "recipeId": "lidl-sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal",
+      "slug": "sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal",
+      "title": "Sült paprikás csirkesaláta mézes grillezett fetasajttal",
+      "priorityScore": 440,
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: Sült paprikás csirkesaláta mézes grillezett fetasajttal. Create a hearty stew or one-pot meal with visible csirkehus, salatakeverek, sajt. The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkehus, salatakeverek, sajt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal.png"
+    },
+    {
+      "index": 42,
+      "recipeId": "lidl-sult-paprikasalata-grillezett-halloumi-sajttal",
+      "slug": "sult-paprikasalata-grillezett-halloumi-sajttal",
+      "title": "Sült paprikasaláta grillezett halloumi sajttal",
+      "priorityScore": 440,
+      "visualType": "stew",
+      "imagePrompt": "Recipe title: Sült paprikasaláta grillezett halloumi sajttal. Create a hearty stew or one-pot meal with visible halfele, paprika, salatakeverek, sajt. The dish must read visually as a hearty stew, ragu, or one-pot meal in a shallow bowl or plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: halfele, paprika, salatakeverek, sajt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "sult-paprikasalata-grillezett-halloumi-sajttal.png"
+    },
+    {
+      "index": 43,
+      "recipeId": "lidl-szines-tarhonyasalata-grillezett-csirkemellel",
+      "slug": "szines-tarhonyasalata-grillezett-csirkemellel",
+      "title": "Színes tarhonyasaláta grillezett csirkemellel",
+      "priorityScore": 440,
+      "visualType": "roasted-chicken",
+      "imagePrompt": "Recipe title: Színes tarhonyasaláta grillezett csirkemellel. Create a chicken main dish with visible csirkemellfile, salatakeverek. The dish must read visually as a roasted or pan-cooked chicken main dish with visible chicken pieces. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: csirkemellfile, salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "szines-tarhonyasalata-grillezett-csirkemellel.png"
+    },
+    {
+      "index": 44,
+      "recipeId": "nosalty-tejszines-citromos-barackkremleves",
+      "slug": "tejszines-citromos-barackkremleves",
+      "title": "Tejszínes-citromos barackkrémleves",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Tejszínes-citromos barackkrémleves. Create a plated homemade family meal with visible barackkonzerv, habtejszin 20 os, lehet vanilias is, teaskanal citromle, tejszinhab a talalashoz. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: barackkonzerv, habtejszin 20 os, lehet vanilias is, teaskanal citromle, tejszinhab a talalashoz. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tejszines-citromos-barackkremleves.png"
+    },
+    {
+      "index": 45,
+      "recipeId": "nosalty-telvegi-gyumolcssalata",
+      "slug": "telvegi-gyumolcssalata",
+      "title": "Télvégi gyümölcssaláta",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Télvégi gyümölcssaláta. Create a plated homemade family meal with visible narancsbol nyert narancsle, nagy db alma, banan, sargabarackbefott, gyumolcs mix fagyasztott. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: narancsbol nyert narancsle, nagy db alma, banan, sargabarackbefott, gyumolcs mix fagyasztott. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "telvegi-gyumolcssalata.png"
+    },
+    {
+      "index": 46,
+      "recipeId": "nosalty-tizperces-eper-sparga-salata",
+      "slug": "tizperces-eper-sparga-salata",
+      "title": "Tízperces eper-spárga saláta",
+      "priorityScore": 440,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: Tízperces eper-spárga saláta. Create a composed salad with visible zoldsparga, eper, mez, citrombol nyert citromhej, citrombol nyert citromle. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: zoldsparga, eper, mez, citrombol nyert citromhej, citrombol nyert citromle. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tizperces-eper-sparga-salata.png"
+    },
+    {
+      "index": 47,
+      "recipeId": "lidl-tonhalas-tesztasalata",
+      "slug": "tonhalas-tesztasalata",
+      "title": "Tonhalas tésztasaláta",
+      "priorityScore": 440,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Tonhalas tésztasaláta. Create a pasta plate with visible tonhal, teszta, salatakeverek. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: tonhal, teszta, salatakeverek. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "tonhalas-tesztasalata.png"
+    },
+    {
+      "index": 48,
+      "recipeId": "nosalty-villamgyors-gyumolcsleves",
+      "slug": "villamgyors-gyumolcsleves",
+      "title": "Villámgyors gyümölcsleves",
+      "priorityScore": 440,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Villámgyors gyümölcsleves. Create a plated homemade family meal with visible meggybefott, oszibarackkonzerv, ananaszkonzerv, pudingpor fozes nelkuli, tejfol esetleg tej. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: meggybefott, oszibarackkonzerv, ananaszkonzerv, pudingpor fozes nelkuli, tejfol esetleg tej. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "villamgyors-gyumolcsleves.png"
+    },
+    {
+      "index": 49,
+      "recipeId": "nosalty-klasszikus-waldorf-salata",
+      "slug": "waldorf-salata",
+      "title": "Waldorf saláta",
+      "priorityScore": 440,
+      "visualType": "salad",
+      "imagePrompt": "Recipe title: Waldorf saláta. Create a composed salad with visible alma zold alma, halvanyito zeller szarzeller, dio, szolo, majonez. The dish must read visually as a fresh composed salad in a bowl or shallow plate with colorful ingredients. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: alma zold alma, halvanyito zeller szarzeller, dio, szolo, majonez. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "waldorf-salata.png"
+    },
+    {
+      "index": 50,
+      "recipeId": "lidl-a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "slug": "a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "title": "A legfinomabb palacsinta túrókrémmel, tejföllel sütve",
+      "priorityScore": 434,
+      "visualType": "pancake-crepe",
+      "imagePrompt": "Recipe title: A legfinomabb palacsinta túrókrémmel, tejföllel sütve. Create thin pancakes or crepes on a ceramic plate with visible turo, tejfol. The dish must read visually as thin pancakes or crepes folded or stacked on a plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve.png"
+    }
+  ]
+}

@@ -7,6 +7,8 @@ export interface Recipe {
   protein: "csirke" | "hal" | "marha" | "sertés" | "vegetáriánus" | "egyéb";
   description: string;
   image?: string;
+  imageStrategy?: "generated" | "source-fallback" | "placeholder";
+  sourceImageUrl?: string;
   ingredients: string[];
   instructions: string[];
   tags?: string[];
@@ -20,6 +22,7 @@ export interface Recipe {
     name: string;
     items: string[];
   }>;
+  sourcePreparationSteps?: string[];
   familyNotes?: string;
   kidFriendlyNotes?: string;
   shoppingListReady?: boolean;

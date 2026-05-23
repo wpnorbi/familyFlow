@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
+import RecipeImageSourceBadge from "@/components/recipes/RecipeImageSourceBadge";
 import {
   isKidFriendlyRecipe,
   isQuickRecipe,
@@ -106,6 +107,10 @@ export default function RecipePreviewSheet({
               </button>
             </div>
           </div>
+
+          <div className="absolute bottom-4 left-4">
+            <RecipeImageSourceBadge recipe={recipe} />
+          </div>
         </div>
 
         {/* ── Scrollable content ─────────────────────────────────── */}
@@ -142,6 +147,24 @@ export default function RecipePreviewSheet({
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {recipe.sourceUrl && recipe.sourceName && (
+              <div className="mb-5 rounded-[16px] border border-[#E5DDD4] bg-white px-4 py-4">
+                <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[#8E7D6B]">Eredeti forrás</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-[#5A4E44]">
+                  Ha az appon belüli leírásnál részletesebb útmutató kell, megnyithatod az eredeti receptoldalt.
+                </p>
+                <a
+                  href={recipe.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex items-center gap-2 rounded-full border border-[#E5DDD4] bg-[#FFF8F0] px-3.5 py-2 text-[12px] font-bold text-[#9C623A]"
+                >
+                  <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                  Eredeti {recipe.sourceName} recept
+                </a>
               </div>
             )}
 

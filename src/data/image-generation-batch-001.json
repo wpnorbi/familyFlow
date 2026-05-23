@@ -1,6 +1,6 @@
 {
   "batchId": "image-generation-batch-001",
-  "generatedAt": "2026-05-19T19:48:07.651Z",
+  "generatedAt": "2026-05-22T18:42:23.337Z",
   "startIndex": 0,
   "count": 20,
   "items": [
@@ -101,11 +101,11 @@
       "targetFilename": "a-tokeletes-grillezett-marhasteak.webp"
     },
     {
-      "recipeId": "lidl-tokeletes-turogomboc",
+      "recipeId": "lidl-a-tokeletes-turogomboc",
       "slug": "a-tokeletes-turogomboc",
       "title": "A tökéletes túrógombóc",
       "visualType": "sweet-dumpling",
-      "imagePrompt": "Recipe title: A tökéletes túrógombóc. Create soft sweet dumplings with visible turo, buzadara, citromhej, zsemlemorzsa, tejfol. The dish must read visually as soft sweet cottage cheese dumplings served as a plated dessert. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo, buzadara, citromhej, zsemlemorzsa, tejfol. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "imagePrompt": "Recipe title: A tökéletes túrógombóc. Create soft sweet dumplings with visible turo. The dish must read visually as soft sweet cottage cheese dumplings served as a plated dessert. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: turo. No text, no watermark, no logo, no brand packaging, no people, no hands.",
       "targetFilename": "a-tokeletes-turogomboc.webp"
     },
     {

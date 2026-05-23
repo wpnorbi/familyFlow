@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import RecipeImage from "@/components/etkezes/RecipeImage";
+import RecipeImageSourceBadge from "@/components/recipes/RecipeImageSourceBadge";
 import { getRecipeMealTypeLabel, isKidFriendlyRecipe, isQuickRecipe } from "@/lib/recipes/recipe-taxonomy";
 import type { Recipe } from "@/types/etkezes";
 
@@ -69,6 +70,9 @@ export default function RecipeDetailModal({
             </button>
 
             <div className="absolute bottom-5 left-5 right-5">
+              <div className="mb-3">
+                <RecipeImageSourceBadge recipe={recipe} />
+              </div>
               <div className="flex flex-wrap gap-2">
                 <MetaChip icon="schedule" label={`${recipe.duration} perc`} />
                 <MetaChip icon="restaurant" label={getRecipeMealTypeLabel(recipe)} />
@@ -89,6 +93,28 @@ export default function RecipeDetailModal({
             <p className="mt-3 text-sm leading-relaxed text-(--ff-text-muted)">
               {recipe.description}
             </p>
+
+            {recipe.sourceUrl && recipe.sourceName && (
+              <div className="mt-4 rounded-[22px] border border-white/70 bg-[rgba(255,249,237,0.74)] px-4 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-(--ff-text-soft)">
+                  Eredeti forrás
+                </p>
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-[13px] font-semibold text-(--ff-text-muted)">
+                    Ha az appon belüli verziónál részletesebb leírás kell, megnyithatod az eredeti receptet is.
+                  </p>
+                  <a
+                    href={recipe.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[rgba(185,130,71,0.18)] bg-[rgba(255,240,227,0.74)] px-4 py-2 text-[12px] font-bold text-(--ff-caramel-strong)"
+                  >
+                    <Icon name="open_in_new" className="text-[16px]" />
+                    Eredeti {recipe.sourceName} recept
+                  </a>
+                </div>
+              </div>
+            )}
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               <div className="rounded-[22px] bg-[rgba(255,249,237,0.78)] px-4 py-3">

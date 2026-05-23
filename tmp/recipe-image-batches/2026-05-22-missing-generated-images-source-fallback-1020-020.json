@@ -1,0 +1,65 @@
+{
+  "batchId": "missing-generated-images-source-fallback-1020",
+  "generatedAt": "2026-05-22T19:07:48.085Z",
+  "strategy": "source-fallback",
+  "startIndex": 1020,
+  "count": 4,
+  "requestedCount": 4,
+  "totalCandidates": 1024,
+  "missingPromptCount": 0,
+  "missingPromptRecipeIds": [],
+  "items": [
+    {
+      "recipeId": "lidl-viragos-feher-csokis-citromos-madeleine",
+      "slug": "viragos-feher-csokis-citromos-madeleine",
+      "title": "Virágos-fehér csokis-citromos madeleine",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/viragos-feher-csokis-citromos-madeleine",
+      "imageStrategy": "source-fallback",
+      "sourceImageUrl": "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/e76bd039-f4db-45ac-bfef-02f0eb352819/16x9_fallback_viragos-feher-csokis-citromos-madeleine-1774373224.jpeg",
+      "priorityScore": 214,
+      "visualType": "cake-slice",
+      "imagePrompt": "Recipe title: Virágos-fehér csokis-citromos madeleine. Create a plated homemade dessert slice with visible citrom, etcsokolade. The dish must read visually as a plated slice or piece of homemade dessert with visible layers or texture. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: citrom, etcsokolade. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "viragos-feher-csokis-citromos-madeleine.webp"
+    },
+    {
+      "recipeId": "nosalty-whoopie-pie",
+      "slug": "whoopie-pie",
+      "title": "Whoopie pie",
+      "sourceName": "Nosalty",
+      "sourceUrl": "https://www.nosalty.hu/recept/whoopie-pie",
+      "imageStrategy": "source-fallback",
+      "sourceImageUrl": "https://image-api.nosalty.hu/nosalty/images/recipes/H4/7C/whoopie-pie.jpeg?w=1200&h=1200&s=12e20daeaa7574dc8111e2534df8f38e",
+      "priorityScore": 214,
+      "visualType": "pasta",
+      "imagePrompt": "Recipe title: Whoopie pie. Create a pasta plate with visible iro, nadcukor, kave, vaj olvasztott, finomliszt. The dish must read visually as a plated pasta dish with sauce clearly coating the pasta. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: iro, nadcukor, kave, vaj olvasztott, finomliszt. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "whoopie-pie.webp"
+    },
+    {
+      "recipeId": "nosalty-zuppa-inglese-alla-romana",
+      "slug": "zuppa-inglese-alla-romana",
+      "title": "Zuppa inglese alla romana",
+      "sourceName": "Nosalty",
+      "sourceUrl": "https://www.nosalty.hu/recept/zuppa-inglese-alla-romana",
+      "imageStrategy": "source-fallback",
+      "sourceImageUrl": "https://image-api.nosalty.hu/nosalty/images/recipes/PI/Cz/zuppa-inglese-alla-romana.jpeg?w=1200&h=1200&s=a7a4c185b4ae36b7af3166fe232a9a98",
+      "priorityScore": 214,
+      "visualType": "plated-main",
+      "imagePrompt": "Recipe title: Zuppa inglese alla romana. Create a plated homemade family meal with visible tojasfeherje, tojassargaja, porcukor, finomliszt, sutopor. The dish must read visually as a plated homemade family meal on a ceramic plate. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. Key ingredients: tojasfeherje, tojassargaja, porcukor, finomliszt, sutopor. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "zuppa-inglese-alla-romana.webp"
+    },
+    {
+      "recipeId": "lidl-zserbo-es-almas-pite-golyok",
+      "slug": "zserbo-es-almas-pite-golyok",
+      "title": "Zserbó- és almás pite golyók",
+      "sourceName": "Lidl Konyha",
+      "sourceUrl": "https://konyha.lidl.hu/recept/zserbo-es-almas-pite-golyok",
+      "imageStrategy": "source-fallback",
+      "sourceImageUrl": "https://cdn.recipes.lidl/images-v2/recipes/hu-HU/79573638-8c3f-451d-beca-9545f4566474/16x9_fallback_zserbo-es-almas-pite-golyok-1774373233.jpeg",
+      "priorityScore": 214,
+      "visualType": "pie-dessert",
+      "imagePrompt": "Recipe title: Zserbó- és almás pite golyók. Create a slice of pie with golden crust and visible filling. The dish must read visually as a slice of homemade pie with visible filling and golden crust. Style: realistic editorial food photography, warm natural daylight, cozy modern family kitchen, cream linen table, ceramic tableware, soft shadows, premium Family Flow look, clean composition. Camera: appetizing close-up or 3/4 tabletop framing with the food as the clear hero. No text, no watermark, no logo, no brand packaging, no people, no hands.",
+      "targetFilename": "zserbo-es-almas-pite-golyok.webp"
+    }
+  ]
+}

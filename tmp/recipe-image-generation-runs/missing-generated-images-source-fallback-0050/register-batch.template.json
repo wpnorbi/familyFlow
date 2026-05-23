@@ -1,0 +1,407 @@
+{
+  "generatedAt": "2026-05-22T18:41:58.798Z",
+  "sourceBatchId": "missing-generated-images-source-fallback-0050",
+  "notes": "Register generated PNG files for this image generation run.",
+  "items": [
+    {
+      "recipeId": "lidl-szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "slug": "szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/szaftos-fuszeres-pulykamellfalatok-sult-almas-langyos-kevert-salataval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-tavaszudvozlo-spargas-teszta",
+      "slug": "tavaszudvozlo-spargas-teszta",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tavaszudvozlo-spargas-teszta.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tejfolos-oszibarackkrem",
+      "slug": "tejfolos-oszibarackkrem",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tejfolos-oszibarackkrem.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tejfolos-barackos-csirke",
+      "slug": "tejfolos-barackos-csirke",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tejfolos-barackos-csirke.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tejszines-oszibarackos-csirkemell",
+      "slug": "tejszines-oszibarackos-csirkemell",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tejszines-oszibarackos-csirkemell.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tejszin-sparga-csirke",
+      "slug": "tejszines-spargas-csirke",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tejszines-spargas-csirke.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-torok-ricottas-parfe",
+      "slug": "torok-ricottas-parfe",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/torok-ricottas-parfe.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-turos-barackos-szelet",
+      "slug": "turos-barackos-szelet",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/turos-barackos-szelet.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-wok-os-piritott-uvegteszta-spenottal-es-serteshussal",
+      "slug": "wok-os-piritott-uvegteszta-spenottal-es-serteshussal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/wok-os-piritott-uvegteszta-spenottal-es-serteshussal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal",
+      "slug": "zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/zabpelyhes-csirkemell-sult-piritott-cikoriaval-pacolt-feher-sajttal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-zabpelyhes-nasi",
+      "slug": "zabpelyhes-nasi",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/zabpelyhes-nasi.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-zseles-bonbon",
+      "slug": "zseles-bonbon",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/zseles-bonbon.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-carbonara-szosz-spagettihez-kriszti-konyhajabol",
+      "slug": "carbonara-szosz-spagettihez-kriszti-konyhajabol",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/carbonara-szosz-spagettihez-kriszti-konyhajabol.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-nokedli-tokeletes",
+      "slug": "nokedli-egyszeruen",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/nokedli-egyszeruen.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal",
+      "slug": "azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/azsiai-zoldseges-piritott-teszta-szojaszosszal-sult-tojassal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-full-extras-bundas-kenyer-reggeli-ebedre",
+      "slug": "full-extras-bundas-kenyer-reggeli-ebedre",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/full-extras-bundas-kenyer-reggeli-ebedre.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-husveti-tormas-sonkas-tojaslepeny",
+      "slug": "husveti-tormas-sonkas-tojaslepeny",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/husveti-tormas-sonkas-tojaslepeny.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-jackpot-reggeli-rantottaval-and-tojassalataval",
+      "slug": "jackpot-reggeli-rantottaval-es-tojassalataval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/jackpot-reggeli-rantottaval-es-tojassalataval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-katalan-reggeli-spanyol-omlett-paradicsomos-piritossal",
+      "slug": "katalan-reggeli-spanyol-omlett-paradicsomos-piritossal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/katalan-reggeli-spanyol-omlett-paradicsomos-piritossal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-serpenyos-hagymas-burgonya-tejfollel-tukortojassal",
+      "slug": "serpenyos-hagymas-burgonya-tejfollel-tukortojassal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/serpenyos-hagymas-burgonya-tejfollel-tukortojassal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-sonkas-tejfolos-teszta-lagyan-sult-tojassal",
+      "slug": "sonkas-tejfolos-teszta-lagyan-sult-tojassal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/sonkas-tejfolos-teszta-lagyan-sult-tojassal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-spargas-lagytojasos-medvehagyma-martasos-reggeli",
+      "slug": "spargas-lagytojasos-medvehagyma-martasos-reggeli",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/spargas-lagytojasos-medvehagyma-martasos-reggeli.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tojas-alaku-lekvaros-linzer",
+      "slug": "tojas-alaku-lekvaros-linzer",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tojas-alaku-lekvaros-linzer.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal",
+      "slug": "villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/villamgyors-csicseriborso-paprikas-chorizoval-es-buggyantott-tojassal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-villamreggeli-turoval-szalamival-abonettel",
+      "slug": "villamreggeli-turoval-szalamival-abonettel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/villamreggeli-turoval-szalamival-abonettel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "slug": "fitness-salata-roppanos-csirkefalatkakkal-es-tofuval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/fitness-salata-roppanos-csirkefalatkakkal-es-tofuval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-legegyszerubb-gyumolcssalata",
+      "slug": "a-legegyszerubb-gyumolcssalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/a-legegyszerubb-gyumolcssalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-ambrozia-salata",
+      "slug": "ambrozia-salata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/ambrozia-salata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-bazsalikomos-sajtsalata",
+      "slug": "bazsalikomos-sajtsalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/bazsalikomos-sajtsalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-citromos-petrezselymes-tonhalsalata-avokadon",
+      "slug": "citromos-petrezselymes-tonhalsalata-avokadon",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/citromos-petrezselymes-tonhalsalata-avokadon.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-edes-savanyu-csicseriborso",
+      "slug": "edes-savanyu-csicseriborso",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/edes-savanyu-csicseriborso.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-egyszeru-paradicsomleves-betutesztaval",
+      "slug": "egyszeru-paradicsomleves-betutesztaval",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/egyszeru-paradicsomleves-betutesztaval.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-franciasalata-es-kaszinotojas-nosztalgia-kiflivel",
+      "slug": "franciasalata-es-kaszinotojas-nosztalgia-kiflivel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/franciasalata-es-kaszinotojas-nosztalgia-kiflivel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-mennyei-zoldborsokremleves",
+      "slug": "mennyei-zoldborsokremleves",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/mennyei-zoldborsokremleves.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-oszi-almakremleves",
+      "slug": "oszi-almakremleves",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/oszi-almakremleves.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-oszibarack-kremleves-evi-nenitol",
+      "slug": "oszibarack-kremleves-evi-nenitol",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/oszibarack-kremleves-evi-nenitol.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-oszibarackkremleves-ahogy-geo-kesziti",
+      "slug": "oszibarackkremleves-ahogy-geo-kesziti",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/oszibarackkremleves-ahogy-geo-kesziti.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-petrezselymes-bulgursalata",
+      "slug": "petrezselymes-bulgursalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/petrezselymes-bulgursalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-rizskoch-maradek-felhasznalas-jegyeben",
+      "slug": "rizskoch-a-maradek-felhasznalas-jegyeben",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/rizskoch-a-maradek-felhasznalas-jegyeben.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-spargas-prosciuttos-tesztasalata",
+      "slug": "spargas-prosciuttos-tesztasalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/spargas-prosciuttos-tesztasalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal",
+      "slug": "sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/sult-paprikas-csirkesalata-mezes-grillezett-fetasajttal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-sult-paprikasalata-grillezett-halloumi-sajttal",
+      "slug": "sult-paprikasalata-grillezett-halloumi-sajttal",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/sult-paprikasalata-grillezett-halloumi-sajttal.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-szines-tarhonyasalata-grillezett-csirkemellel",
+      "slug": "szines-tarhonyasalata-grillezett-csirkemellel",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/szines-tarhonyasalata-grillezett-csirkemellel.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tejszines-citromos-barackkremleves",
+      "slug": "tejszines-citromos-barackkremleves",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tejszines-citromos-barackkremleves.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-telvegi-gyumolcssalata",
+      "slug": "telvegi-gyumolcssalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/telvegi-gyumolcssalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-tizperces-eper-sparga-salata",
+      "slug": "tizperces-eper-sparga-salata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tizperces-eper-sparga-salata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-tonhalas-tesztasalata",
+      "slug": "tonhalas-tesztasalata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/tonhalas-tesztasalata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-villamgyors-gyumolcsleves",
+      "slug": "villamgyors-gyumolcsleves",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/villamgyors-gyumolcsleves.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "nosalty-klasszikus-waldorf-salata",
+      "slug": "waldorf-salata",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/waldorf-salata.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    },
+    {
+      "recipeId": "lidl-a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "slug": "a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve",
+      "generatedPngPath": "/private/tmp/family-flow-generated-recipe-images/a-legfinomabb-palacsinta-turokremmel-tejfollel-sutve.png",
+      "reviewStatus": "approved",
+      "mode": "register",
+      "notes": "Generated from missing-generated-images-source-fallback-0050"
+    }
+  ]
+}

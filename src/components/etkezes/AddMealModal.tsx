@@ -1666,7 +1666,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                   <div className="space-y-2 text-sm text-on-surface-variant">
                     <p>{previewRecipe.duration} perc alatt elkészíthető.</p>
                     <p>{previewRecipe.ingredients.length} alapanyag kell hozzá.</p>
-                    <p>{previewRecipe.instructions.length} lépésből álló Family Flow-os verzió.</p>
+                    <p>{previewRecipe.instructions.length} lépésből álló, appon belül követhető receptverzió.</p>
                   </div>
                 </div>
 

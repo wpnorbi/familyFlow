@@ -10,6 +10,7 @@ import { getBatchesForDate } from "@/lib/etkezes-data";
 import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
 import {
   getRecipeMealType,
+  getRecipeTimeBucket,
   isKidFriendlyRecipe,
   isQuickRecipe,
 } from "@/lib/recipes/recipe-taxonomy";
@@ -44,11 +45,13 @@ type MobileScreen = "landing" | "chooser" | "ideas";
 
 type FilterId =
   | "gyerekbarat"
-  | "30perc"
-  | "teszta"
-  | "leves"
-  | "fozelek"
-  | "egyszeru"
+  | "gyors"
+  | "kozepes"
+  | "lassu"
+  | "csirke"
+  | "sertes"
+  | "marha"
+  | "hal"
   | "2napra"
   | "kedvencek"
   | "kamrabol";
@@ -72,44 +75,60 @@ const FILTERS: FilterDef[] = [
     textColor: "#6A5040",
   },
   {
-    id: "30perc",
-    label: "30 perc alatt",
+    id: "gyors",
+    label: "Gyors",
+    icon: "bolt",
+    bg: "#E8EEE0",
+    activeBg: "#3B5C33",
+    textColor: "#3A4E34",
+  },
+  {
+    id: "kozepes",
+    label: "Közepes",
     icon: "timer",
-    bg: "#E8EEE0",
-    activeBg: "#3B5C33",
-    textColor: "#3A4E34",
-  },
-  {
-    id: "teszta",
-    label: "Tészta",
-    icon: "ramen_dining",
     bg: "#F0EAE0",
     activeBg: "#B87040",
     textColor: "#6A5040",
   },
   {
-    id: "leves",
-    label: "Leves",
-    icon: "soup_kitchen",
+    id: "lassu",
+    label: "Lassú",
+    icon: "hourglass_bottom",
     bg: "#F0EAE0",
     activeBg: "#B87040",
     textColor: "#6A5040",
   },
   {
-    id: "fozelek",
-    label: "Főzelék",
-    icon: "eco",
+    id: "csirke",
+    label: "Csirke",
+    icon: "egg_alt",
     bg: "#E8EEE0",
     activeBg: "#3B5C33",
     textColor: "#3A4E34",
   },
   {
-    id: "egyszeru",
-    label: "Egyszerű",
-    icon: "home",
+    id: "sertes",
+    label: "Sertés",
+    icon: "nutrition",
+    bg: "#F0EAE0",
+    activeBg: "#B87040",
+    textColor: "#6A5040",
+  },
+  {
+    id: "marha",
+    label: "Marha",
+    icon: "lunch_dining",
     bg: "#E8EEE0",
     activeBg: "#3B5C33",
     textColor: "#3A4E34",
+  },
+  {
+    id: "hal",
+    label: "Hal",
+    icon: "set_meal",
+    bg: "#F0EAE0",
+    activeBg: "#B87040",
+    textColor: "#6A5040",
   },
   {
     id: "2napra",
@@ -129,8 +148,8 @@ const FILTERS: FilterDef[] = [
   },
 ];
 
-// OR logic between category filters; everything else is AND
-const CATEGORY_IDS = new Set<FilterId>(["teszta", "leves", "fozelek"]);
+const PROTEIN_IDS = new Set<FilterId>(["csirke", "sertes", "marha", "hal"]);
+const TIME_IDS = new Set<FilterId>(["gyors", "kozepes", "lassu"]);
 
 function filterRecipes(
   recipes: Recipe[],
@@ -138,14 +157,29 @@ function filterRecipes(
   bookmarkedIds: string[],
   pantryItems: string[],
 ): Recipe[] {
-  const activeCats = FILTERS.filter(
-    (f) => CATEGORY_IDS.has(f.id) && activeFilters.has(f.id),
-  );
+  const activeProteins = FILTERS.filter((f) => PROTEIN_IDS.has(f.id) && activeFilters.has(f.id));
+  const activeTimes = FILTERS.filter((f) => TIME_IDS.has(f.id) && activeFilters.has(f.id));
 
   const filtered = recipes.filter((recipe) => {
     if (activeFilters.has("gyerekbarat") && !isKidFriendlyRecipe(recipe)) return false;
-    if (activeFilters.has("30perc") && recipe.duration > 30) return false;
-    if (activeFilters.has("egyszeru") && !isQuickRecipe(recipe)) return false;
+    if (activeTimes.length > 0) {
+      const bucket = getRecipeTimeBucket(recipe);
+      const matchesTime = activeTimes.some((filter) => {
+        if (filter.id === "gyors") return bucket === "short";
+        if (filter.id === "kozepes") return bucket === "medium";
+        return bucket === "long";
+      });
+      if (!matchesTime) return false;
+    }
+    if (activeProteins.length > 0) {
+      const matchesProtein = activeProteins.some((filter) => {
+        if (filter.id === "csirke") return recipe.protein === "csirke";
+        if (filter.id === "sertes") return recipe.protein === "sertés";
+        if (filter.id === "marha") return recipe.protein === "marha";
+        return recipe.protein === "hal";
+      });
+      if (!matchesProtein) return false;
+    }
     if (activeFilters.has("kedvencek") && !bookmarkedIds.includes(recipe.id)) return false;
     if (activeFilters.has("2napra")) {
       const tags = recipe.tags ?? [];
@@ -155,11 +189,6 @@ function filterRecipes(
     if (activeFilters.has("kamrabol") && pantryItems.length > 0) {
       const result = rankRecipesForPantry([recipe], pantryItems)[0];
       if (!result || result.matchRatio < 0.5) return false;
-    }
-    if (activeCats.length > 0) {
-      const type = getRecipeMealType(recipe);
-      if (!activeCats.some((c) => c.id === "teszta" ? type === "teszta" : c.id === "leves" ? type === "leves" : type === "fozelek"))
-        return false;
     }
     return true;
   });
@@ -462,9 +491,9 @@ export default function EtkezesMobileView({
 
                 {/* Quick preset chips */}
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {[
-                    { label: "2 napra", presets: ["2napra"],      icon: "calendar_month" },
-                    { label: "30 perc", presets: ["30perc"],      icon: "timer" },
+                    {[
+                      { label: "2 napra", presets: ["2napra"],      icon: "calendar_month" },
+                    { label: "Gyors", presets: ["gyors"],      icon: "bolt" },
                     { label: "Gyerekbarát", presets: ["gyerekbarat"], icon: "sentiment_satisfied" },
                     { label: "Kamrából",  presets: ["kamrabol"],  icon: "inventory_2" },
                   ].map((p) => (
