@@ -76,6 +76,7 @@ export default function EtkezesClient() {
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
   const [selectedPlannerDay, setSelectedPlannerDay] = useState<WeekDay | null>(null);
   const [displayName, setDisplayName] = useState("Felhasználó");
+  const [mobileResetToken, setMobileResetToken] = useState(0);
 
   // Catalog & view
   const [catalog, setCatalog] = useState<Recipe[]>([]);
@@ -174,7 +175,8 @@ export default function EtkezesClient() {
 
   function closeSuccess() {
     setSuccessData(null);
-    router.push("/etkezes");
+    setMobileResetToken((current) => current + 1);
+    router.replace("/etkezes");
   }
 
   // ── Keyboard shortcut ──────────────────────────────────────────────────────
@@ -274,6 +276,7 @@ export default function EtkezesClient() {
             onQuickAdd={handleQuickAdd}
             onGenerateIdeas={() => setIsModalOpen(true)}
             onConfirmQuickSchedule={handleConfirmSchedule}
+            resetToken={mobileResetToken}
           />
 
           {/* ── Desktop view ─────────────────────────────────────── */}

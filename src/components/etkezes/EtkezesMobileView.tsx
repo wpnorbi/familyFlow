@@ -40,6 +40,7 @@ interface Props {
   onQuickAdd: (recipe: Recipe) => void;
   onGenerateIdeas: () => void;
   onConfirmQuickSchedule: (recipe: Recipe, startDate: string, days: number) => void;
+  resetToken?: number;
 }
 
 type MobileScreen = "landing" | "chooser" | "schedule" | "ideas";
@@ -594,6 +595,7 @@ export default function EtkezesMobileView({
   onViewRecipe,
   onQuickAdd,
   onConfirmQuickSchedule,
+  resetToken = 0,
 }: Props) {
   const router = useRouter();
   const [screen, setScreen] = useState<MobileScreen>("landing");
@@ -653,15 +655,23 @@ export default function EtkezesMobileView({
   const resultCount = filteredRecipes.length;
   const hasFilters = activeFilters.size > 0;
   const weekProgress = `${Math.max((plannedDaysCount / 7) * 100, plannedDaysCount > 0 ? 14 : 0)}%`;
-  const quickPlanDays = weekDays.slice(0, 5);
   const missingLunches = Math.max(7 - plannedDaysCount, 0);
   const planningTip = getMealPlanTip(plannedDaysCount);
+  const showBottomNav = screen === "landing";
 
   useEffect(() => {
     if (selectedRecipe && !chooserRecipes.some((recipe) => recipe.id === selectedRecipe.id)) {
       setSelectedRecipe(null);
     }
   }, [chooserRecipes, selectedRecipe]);
+
+  useEffect(() => {
+    setScreen("landing");
+    setSelectedRecipe(null);
+    setActiveFilters(new Set());
+    setSelectedCookDays(1);
+    setSelectedDayKey(weekDays[0]?.dateKey ?? "");
+  }, [resetToken, weekDays]);
 
   function showToast(msg: string) {
     setToast(msg);
@@ -716,7 +726,12 @@ export default function EtkezesMobileView({
     <div className="relative min-h-screen overflow-hidden bg-[#F7F3EE] md:hidden">
       <main
         className="relative flex min-h-screen flex-col px-4 pt-2"
-        style={{ paddingBottom: "calc(108px + env(safe-area-inset-bottom, 0px))" }}
+        style={{
+          paddingBottom:
+            screen === "landing"
+              ? "calc(108px + env(safe-area-inset-bottom, 0px))"
+              : "calc(156px + env(safe-area-inset-bottom, 0px))",
+        }}
       >
 
         {/* ═══════════════════════════════════════════ LANDING ═══ */}
@@ -1014,7 +1029,8 @@ export default function EtkezesMobileView({
                 <span className="material-symbols-outlined text-[22px] text-[#3A3230]">arrow_back</span>
               </button>
               <div className="flex-1">
-                <div className="mx-auto flex max-w-[260px] items-center justify-between text-center">
+                <div className="overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+                  <div className="mx-auto flex min-w-[320px] items-center justify-between text-center">
                   {[
                     { label: "Recept\nkiválasztása", done: true, active: false },
                     { label: "Részletek", done: true, active: false },
@@ -1044,6 +1060,7 @@ export default function EtkezesMobileView({
                       {index < 2 && <div className="mx-3 h-[2px] w-10 bg-[#D9E0D1]" />}
                     </div>
                   ))}
+                  </div>
                 </div>
               </div>
             </header>
@@ -1077,13 +1094,13 @@ export default function EtkezesMobileView({
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#6D8750] text-[18px] font-semibold text-white">1</span>
                 <h3 className="text-[18px] font-semibold text-[#1C1916]">Melyik napra?</h3>
               </div>
-              <div className="grid grid-cols-5 gap-3">
-                {quickPlanDays.map((day) => (
+              <div className="flex gap-3 overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch]">
+                {weekDays.map((day) => (
                   <button
                     key={day.dateKey}
                     type="button"
                     onClick={() => setSelectedDayKey(day.dateKey)}
-                    className={`rounded-[20px] border p-3 text-center ${
+                    className={`w-[104px] shrink-0 rounded-[20px] border p-3 text-center ${
                       selectedDayKey === day.dateKey
                         ? "border-[rgba(111,154,99,0.72)] bg-[linear-gradient(180deg,rgba(245,249,237,0.98),rgba(255,252,246,0.96))]"
                         : "border-[rgba(170,135,84,0.12)] bg-white"
@@ -1302,7 +1319,7 @@ export default function EtkezesMobileView({
       {(screen === "chooser" && hasFilters) || (screen === "schedule" && selectedRecipe) ? (
         <div
           className="fixed inset-x-4 z-70 md:hidden"
-          style={{ bottom: "calc(92px + env(safe-area-inset-bottom, 0px))" }}
+          style={{ bottom: `calc(${showBottomNav ? 92 : 16}px + env(safe-area-inset-bottom, 0px))` }}
         >
           <button
             type="button"
@@ -1333,7 +1350,7 @@ export default function EtkezesMobileView({
         </div>
       ) : null}
 
-      <MobileBottomNav />
+      {showBottomNav ? <MobileBottomNav /> : null}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/iranyitopult", icon: "home",         label: "Irányítópult" },
@@ -17,6 +16,7 @@ function getActiveHref(pathname: string | null) {
 }
 
 export default function MobileBottomNav() {
+  const router = useRouter();
   const pathname = usePathname();
   const activeHref = getActiveHref(pathname);
 
@@ -30,9 +30,13 @@ export default function MobileBottomNav() {
           const active = item.href === activeHref;
 
           return (
-            <Link
+            <button
+              type="button"
               key={item.href}
-              href={item.href}
+              onClick={() => {
+                if (item.href !== activeHref) router.push(item.href);
+              }}
+              aria-current={active ? "page" : undefined}
               className={`flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[22px] px-1.5 py-2.5 text-center transition-all duration-150 ${
                 active
                   ? "bg-[linear-gradient(135deg,rgba(88,110,78,0.96),rgba(55,80,45,0.90))] text-(--ff-text-inverse) shadow-[0_10px_24px_-10px_rgba(55,67,50,0.38)]"
@@ -48,7 +52,7 @@ export default function MobileBottomNav() {
               <span className={`text-[9px] leading-none ${active ? "font-extrabold tracking-wide" : "font-semibold"}`}>
                 {item.label}
               </span>
-            </Link>
+            </button>
           );
         })}
       </div>
