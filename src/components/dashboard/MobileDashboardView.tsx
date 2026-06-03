@@ -1,21 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
-import RecipeImage from "@/components/etkezes/RecipeImage";
 import { useMealData } from "@/hooks/useMealData";
 import { useSchedule } from "@/hooks/useSchedule";
+import { isDefaultSchedule } from "@/lib/family-state";
 import { getBatchRecipe, getBatchesForDate, getUpcomingBatches, getWeekDays, toDateKey } from "@/lib/etkezes-data";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
-import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
 import { getTodayDayIndex } from "@/lib/schedule-store";
 import type { MealBatch, Recipe } from "@/types/etkezes";
 import type { ScheduleEvent } from "@/types/schedule";
 
-const DASHBOARD_HERO_IMAGE = "/images/dashboard/hero-bread.jpg";
-const LIDL_RECIPES = getUserImportedRecipes();
+const DASHBOARD_HERO_IMAGE = "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=1200&q=80";
+const WEEKEND_IMAGE = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80";
+const ROUTINE_LABELS = new Set(["Ébredés", "Iskola", "Vacsora", "Lefekvés", "Ebéd", "Szabadidő"]);
 
 function getDashboardData(batches: MealBatch[]) {
   const today = new Date();
@@ -35,62 +35,52 @@ function getDashboardData(batches: MealBatch[]) {
 }
 
 function getReminderData(events: ScheduleEvent[]) {
-  const reminders = events.slice(0, 3);
+  const reminders = events.slice(0, 4);
   return {
     count: reminders.length,
     nextLabel: reminders[0]?.label ?? "Nincs mai teendő",
+    reminders,
   };
 }
 
-// ─── Quick tile — navigates to /etkezes with filter param ─────────────────────
-
-function QuickTile({
-  icon,
-  label,
-  href,
-  bg,
-  iconColor,
-}: {
-  icon: string;
-  label: string;
-  href: string;
-  bg: string;
-  iconColor: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-label={label}
-      className={`flex min-h-[82px] flex-col items-center justify-center gap-2 rounded-[24px] border border-[rgba(0,0,0,0.05)] px-2 py-3 text-center shadow-[0_6px_16px_-10px_rgba(61,49,34,0.22)] transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ff-primary) focus-visible:ring-offset-2 ${bg}`}
-    >
-      <span className={`material-symbols-outlined text-[26px] ${iconColor}`}>{icon}</span>
-      <span className="text-[12px] font-extrabold leading-tight tracking-tight text-[var(--ff-text)]">{label}</span>
-    </Link>
-  );
+function timeToMinutes(time: string) {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
 }
 
-// ─── Navigable summary card wrapper ──────────────────────────────────────────
+function getEventStartTime(event: ScheduleEvent) {
+  return event.startTime ?? event.time;
+}
 
-function NavCard({
-  href,
-  className,
-  children,
-  ariaLabel,
-}: {
-  href: string;
-  className: string;
-  children: React.ReactNode;
-  ariaLabel: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-label={ariaLabel}
-      className={`relative block overflow-hidden rounded-[28px] border border-[rgba(170,140,90,0.14)] p-4 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.24)] transition-transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ff-primary) focus-visible:ring-offset-2 ${className}`}
-    >
-      {children}
-    </Link>
-  );
+function formatEventTime(event: ScheduleEvent) {
+  const startTime = getEventStartTime(event);
+  return event.endTime ? `${startTime} – ${event.endTime}` : startTime;
+}
+
+function getEventState(event: ScheduleEvent) {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const startMinutes = timeToMinutes(getEventStartTime(event));
+  const endMinutes = event.endTime ? timeToMinutes(event.endTime) : startMinutes + 45;
+
+  if (currentMinutes >= endMinutes) return "done";
+  if (currentMinutes >= startMinutes) return "current";
+  return "upcoming";
+}
+
+function isWeekendHighlight(event: ScheduleEvent) {
+  if (event.category === "Program") return true;
+  if (["event", "cake", "flight", "directions_run", "sports_soccer", "piano", "favorite"].includes(event.icon)) return true;
+  return !ROUTINE_LABELS.has(event.label);
+}
+
+function getShoppingEmoji(item: string) {
+  const value = item.toLowerCase();
+  if (value.includes("paprika")) return "🫑";
+  if (value.includes("paradicsom")) return "🍅";
+  if (value.includes("csirke")) return "🍗";
+  if (value.includes("tej")) return "🥛";
+  return "🛒";
 }
 
 // ─── Notification bottom sheet ────────────────────────────────────────────────
@@ -189,17 +179,34 @@ export default function MobileDashboardView() {
     [hydrated, mealBatches],
   );
 
-  const todayEvents = scheduleHydrated ? (schedule[getTodayDayIndex()] ?? []) : [];
+  const hasCustomSchedule = scheduleHydrated && !isDefaultSchedule(schedule);
+  const todayEvents = hasCustomSchedule ? (schedule[getTodayDayIndex()] ?? []) : [];
   const reminderData = getReminderData(todayEvents);
 
   const todayPrimaryMeal = dashboardData.todayMeals[0] ? getBatchRecipe(dashboardData.todayMeals[0]) ?? null : null;
-  const heroCtaHref = todayPrimaryMeal ? `/etkezes?recipe=${todayPrimaryMeal.id}` : "/etkezes";
-  const heroCtaLabel = todayPrimaryMeal ? "Mai ebéd megnyitása" : "Kaja kiválasztása";
-  const openDaysCount = 7 - dashboardData.plannedDaysCount;
-  const pantryIdeaCount = rankRecipesForPantry(LIDL_RECIPES, pantryItems).slice(0, 3).length;
-  const pantryStatus = pantryItems.length > 0 ? `${pantryIdeaCount} receptötlet` : "Feltöltésre vár";
-  const pantryDescription = pantryItems.length > 0 ? "Otthoni alapanyagokból" : "Adj hozzá alapanyagokat";
-  const todayMealStatus = todayPrimaryMeal ? "Betervezve" : "Nincs kiválasztva";
+  const weekendEvents = hasCustomSchedule ? [...(schedule[5] ?? []), ...(schedule[6] ?? [])] : [];
+  const nextWeekendEvent = weekendEvents.find(isWeekendHighlight) ?? null;
+  const shoppingPreview = shoppingItems.slice(0, 3);
+  const extraShoppingCount = Math.max(0, shoppingItems.length - shoppingPreview.length);
+  const pantryCards = pantryItems.slice(0, 2).map((item, index) => ({
+    title: item,
+    note: index === 0 ? "Nyilvántartva a kamrában" : "Elérhető alapanyag",
+    icon: index === 0 ? "🥫" : "🥣",
+  }));
+  const todoRows = todayEvents
+    .slice()
+    .sort((a, b) => timeToMinutes(getEventStartTime(a)) - timeToMinutes(getEventStartTime(b)))
+    .slice(0, 4)
+    .map((event) => ({
+      label: event.label,
+      time: formatEventTime(event),
+      state: getEventState(event),
+    }));
+  const completedTodoCount = todoRows.filter((item) => item.state === "done").length;
+  const totalTodoCount = todoRows.length;
+  const heroMealMissing = Math.max(0, 1 - dashboardData.todayMeals.length);
+  const heroShoppingMissing = shoppingItems.length;
+  const weekendDateLabel = nextWeekendEvent ? "Hétvége" : null;
 
   // Build notification items from live state
   const notifItems = useMemo<NotifItem[]>(() => {
@@ -219,177 +226,249 @@ export default function MobileDashboardView() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.98),transparent_24%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.82),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(246,228,203,0.56),transparent_24%),linear-gradient(180deg,#fffdf8_0%,#f8f2e8_100%)]" />
 
       {/* Scrollable content */}
-      <div
-        className="relative mx-auto max-w-[430px] px-4 pt-5"
-        style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}
-      >
+      <div className="relative mx-auto max-w-[430px] px-4 pt-5" style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}>
         <MobileGreetingHeader
           onNotificationClick={() => setShowNotifSheet(true)}
           notifCount={notifItems.length}
         />
 
-        {/* ── HERO ──────────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-[36px] shadow-[0_28px_58px_-28px_rgba(36,20,6,0.52)]">
-          <div className="absolute inset-0">
-            <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${DASHBOARD_HERO_IMAGE})` }} />
-          </div>
-          <div className="absolute inset-0 bg-[linear-gradient(170deg,rgba(24,12,4,0.30)_0%,rgba(32,18,6,0.56)_55%,rgba(28,14,4,0.80)_100%)]" />
-
+        <section className="relative overflow-hidden rounded-[32px] border border-[rgba(170,135,84,0.14)] bg-[rgba(255,252,245,0.94)] shadow-[0_28px_60px_-28px_rgba(36,20,6,0.42)]">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${todayPrimaryMeal?.image ?? DASHBOARD_HERO_IMAGE})` }} />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,14,8,0.18),rgba(22,14,8,0.48)_45%,rgba(22,14,8,0.76)_100%)]" />
           <div className="relative px-5 pb-5 pt-5">
-            <p className="mb-3 flex items-center gap-1.5 text-[12.5px] font-bold text-[rgba(255,240,205,0.88)]">
-              <span className="material-symbols-outlined text-[16px] text-[#f0ae1c]">wb_twilight</span>
-              Mai ritmus
+            <p className="flex items-center gap-2 text-[13px] font-bold text-[rgba(255,211,118,0.96)]">
+              <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+              Heted áttekintése
             </p>
-            <h2 className="text-[34px] font-extrabold leading-[1.00] tracking-[-0.044em] text-[rgba(255,252,244,1)] [text-shadow:0_2px_18px_rgba(20,10,2,0.50)]">
-              {todayPrimaryMeal ? "Mai ebéd" : "Mit főzzünk\nma?"}
+            <h2 className="mt-6 max-w-[240px] text-[28px] font-semibold leading-tight tracking-[-0.05em] text-white">
+              Heted áttekintése
             </h2>
-            <p className="mt-2.5 max-w-[220px] text-[15px] font-medium leading-snug text-[rgba(255,242,222,0.90)] [text-shadow:0_1px_10px_rgba(20,10,2,0.38)]">
-              {todayPrimaryMeal ? "Megvan a mai fő étkezés." : "Válassz egy ételt, és indulhat a napi terv."}
+            <p className="mt-3 max-w-[255px] text-[16px] leading-relaxed text-[rgba(255,244,231,0.92)]">
+              Minden, amire a családnak szüksége van, egy helyen.
             </p>
 
-            {/* Hero CTA */}
-            <Link
-              href={heroCtaHref}
-              aria-label={heroCtaLabel}
-              className="mt-5 flex items-center justify-between rounded-[26px] bg-[linear-gradient(135deg,#e09a3e,#c98030)] px-5 py-4 text-white shadow-[0_18px_36px_-16px_rgba(180,115,30,0.58)] transition-transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(28,14,4,0.7)]"
-            >
-              <span className="text-[18px] font-extrabold tracking-[-0.025em]">{heroCtaLabel}</span>
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#c07826] shadow-[0_8px_18px_-10px_rgba(61,49,34,0.24)]">
-                <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
-              </span>
-            </Link>
-          </div>
-        </section>
-
-        {/* ── GYORS VÁLASZTÁS ───────────────────────────────────────────────── */}
-        <section className="mt-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[20px] font-extrabold tracking-[-0.03em] text-[var(--ff-text)]">Gyors választás</h2>
-            <Link
-              href="/etkezes"
-              className="flex items-center gap-0.5 text-[13px] font-bold text-[var(--ff-text-muted)] transition-opacity active:opacity-60"
-            >
-              Összes
-              <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            <QuickTile icon="bolt"               label="30 perc alatt" href="/etkezes?filter=gyors"       bg="bg-[rgba(212,230,194,0.97)]" iconColor="text-[var(--ff-primary)]"        />
-            <QuickTile icon="sentiment_satisfied" label="Gyerekbarát"  href="/etkezes?filter=gyerekbarat" bg="bg-[rgba(255,216,192,0.97)]" iconColor="text-[var(--ff-caramel-strong)]" />
-            <QuickTile icon="inventory_2"         label="Kamrából"     href="/etkezes?filter=kamra"        bg="bg-[rgba(255,238,210,0.97)]" iconColor="text-[var(--ff-primary)]"        />
-            <QuickTile icon="calendar_month"      label="2 napra"      href="/etkezes?filter=tobbnap"      bg="bg-[rgba(244,214,168,0.97)]" iconColor="text-[var(--ff-caramel-strong)]" />
-          </div>
-        </section>
-
-        {/* ── SUMMARY CARDS 2×2 ─────────────────────────────────────────────── */}
-        <section className="mt-4 grid grid-cols-2 gap-3">
-
-          {/* Card 1: Mai ebéd → /etkezes */}
-          <NavCard
-            href={heroCtaHref}
-            ariaLabel={todayPrimaryMeal ? `Mai ebéd: ${todayPrimaryMeal.name}` : "Étkezés kiválasztása"}
-            className="bg-[linear-gradient(150deg,rgba(230,244,214,0.98),rgba(206,226,186,0.92))]"
-          >
-            <div className="flex min-h-[132px] flex-col justify-between">
-              <div className="flex items-start justify-between gap-2">
-                <div className="overflow-hidden rounded-[16px] shadow-[0_6px_14px_-8px_rgba(61,49,34,0.24)]">
-                  {todayPrimaryMeal ? (
-                    <RecipeImage recipe={todayPrimaryMeal} className="h-[56px] w-[56px] object-cover" />
-                  ) : (
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-[16px] bg-[rgba(195,220,172,0.70)]">
-                      <span className="material-symbols-outlined text-[28px] text-[var(--ff-primary)] opacity-60">restaurant</span>
-                    </div>
-                  )}
+            <div className="mt-6 rounded-[28px] bg-[rgba(255,251,244,0.96)] p-4 shadow-[0_18px_36px_-24px_rgba(36,20,6,0.32)]">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="text-center">
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,239,212,0.9)] text-[var(--ff-caramel-strong)]">
+                    <span className="material-symbols-outlined text-[20px]">restaurant</span>
+                  </span>
+                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroMealMissing}</p>
+                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">ebéd hiányzik</p>
                 </div>
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(180,210,154,0.98)] text-[var(--ff-primary)]">
-                  <span className="material-symbols-outlined text-[17px]">check</span>
-                </span>
-              </div>
-              <div>
-                <h3 className="text-[15px] font-extrabold tracking-[-0.025em] text-[var(--ff-text)]">Mai ebéd</h3>
-                <p className="mt-0.5 line-clamp-1 text-[14px] font-bold text-[var(--ff-primary)]">
-                  {todayPrimaryMeal?.name ?? todayMealStatus}
-                </p>
-                <p className="mt-1 text-[11px] font-semibold text-[var(--ff-text-muted)]">
-                  {todayPrimaryMeal ? `${todayPrimaryMeal.duration} perc` : "Válassz egy ételt"}
-                </p>
-              </div>
-            </div>
-          </NavCard>
-
-          {/* Card 2: Heti terv → /etkezes */}
-          <NavCard
-            href="/etkezes"
-            ariaLabel="Heti étkezésterv megnyitása"
-            className="bg-[linear-gradient(150deg,rgba(255,238,218,0.98),rgba(246,216,186,0.92))]"
-          >
-            <div className="flex min-h-[132px] flex-col justify-between">
-              <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[rgba(255,216,178,0.97)] text-[var(--ff-caramel-strong)] shadow-[0_4px_10px_-6px_rgba(61,49,34,0.18)]">
-                <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-              </span>
-              <div>
-                <h3 className="text-[15px] font-extrabold tracking-[-0.025em] text-[var(--ff-text)]">Heti terv</h3>
-                <p className="mt-0.5 text-[18px] font-extrabold text-[var(--ff-caramel-strong)]">
-                  {dashboardData.plannedDaysCount}/7 nap
-                </p>
-                <p className="mt-0.5 text-[11px] font-semibold text-[var(--ff-text-muted)]">
-                  {openDaysCount > 0 ? `${openDaysCount} nap még üres` : "Teljes hét megvan"}
-                </p>
-                <div className="mt-2.5 h-2 rounded-full bg-[rgba(61,49,34,0.10)]">
-                  <div
-                    className="h-full rounded-full bg-[linear-gradient(135deg,#e7a34e,#c98535)]"
-                    style={{ width: `${Math.max(dashboardData.planningPercent, 6)}%` }}
-                  />
+                <div className="border-x border-[rgba(74,67,54,0.08)] text-center">
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(230,241,218,0.9)] text-[var(--ff-primary)]">
+                    <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                  </span>
+                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{dashboardData.plannedDaysCount}/7</p>
+                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">nap megtervezve</p>
+                </div>
+                <div className="text-center">
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,236,230,0.9)] text-[#d56f4b]">
+                    <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+                  </span>
+                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroShoppingMissing}</p>
+                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">hozzávaló hiányzik</p>
                 </div>
               </div>
-            </div>
-          </NavCard>
 
-          {/* Card 3: Kamra → /kamra */}
-          <NavCard
-            href="/kamra"
-            ariaLabel="Kamra ötletek megnyitása"
-            className="bg-[linear-gradient(150deg,rgba(240,248,230,0.98),rgba(218,234,204,0.90))]"
-          >
-            <div className="flex min-h-[132px] flex-col justify-between">
-              <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[rgba(200,224,178,0.97)] text-[var(--ff-primary)] shadow-[0_4px_10px_-6px_rgba(61,49,34,0.18)]">
-                <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-              </span>
-              <div>
-                <h3 className="text-[15px] font-extrabold tracking-[-0.025em] text-[var(--ff-text)]">Kamra ötletek</h3>
-                <p className="mt-0.5 text-[14px] font-bold text-[var(--ff-primary)]">{pantryStatus}</p>
-                <p className="mt-1 text-[11px] font-semibold text-[var(--ff-text-muted)]">{pantryDescription}</p>
-              </div>
-            </div>
-          </NavCard>
-
-          {/* Card 4: Emlékeztetők → /programok */}
-          <NavCard
-            href="/programok"
-            ariaLabel="Emlékeztetők és programok megnyitása"
-            className="bg-[linear-gradient(150deg,rgba(255,240,224,0.98),rgba(246,220,196,0.90))]"
-          >
-            <div className="flex min-h-[132px] flex-col justify-between">
-              <div className="flex items-start justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[rgba(255,222,190,0.97)] text-[var(--ff-caramel-strong)] shadow-[0_4px_10px_-6px_rgba(61,49,34,0.18)]">
-                  <span className="material-symbols-outlined text-[20px]">sticky_note_2</span>
+              <Link
+                href="/etkezes"
+                className="mt-4 flex items-center justify-between rounded-full bg-[linear-gradient(135deg,#eea433,#d6841e)] px-5 py-4 text-white shadow-[0_18px_36px_-20px_rgba(210,130,33,0.56)]"
+              >
+                <span className="flex-1 text-center text-[18px] font-bold tracking-[-0.02em]">
+                  {dashboardData.todayMeals.length > 0 ? "Heti terv megnyitása" : "Ebéd választása"}
                 </span>
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(255,248,234,0.94)] text-[var(--ff-caramel-strong)]">
-                  <span className="material-symbols-outlined text-[17px]">arrow_forward_ios</span>
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#cf7f1e]">
+                  <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
                 </span>
-              </div>
-              <div>
-                <h3 className="text-[15px] font-extrabold tracking-[-0.025em] text-[var(--ff-text)]">Emlékeztetők</h3>
-                <p className="mt-0.5 text-[14px] font-bold text-[var(--ff-caramel-strong)]">
-                  {reminderData.count > 0 ? `${reminderData.count} teendő vár` : "Ma nyugodtabb nap"}
-                </p>
-                {reminderData.count > 0 && (
-                  <p className="mt-1 text-[11px] font-semibold text-[var(--ff-text-muted)]">Ma még rád vár</p>
-                )}
-              </div>
+              </Link>
             </div>
-          </NavCard>
+          </div>
         </section>
+
+        <Link
+          href="/programok"
+          className="mt-5 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(230,241,218,0.96)] text-[var(--ff-primary)]">
+                <span className="material-symbols-outlined text-[22px]">check_circle</span>
+              </span>
+              <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Mai teendők</h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[rgba(233,241,220,0.98)] px-3 py-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+                {hasCustomSchedule ? `${completedTodoCount}/${totalTodoCount} kész` : "Nincs rutin"}
+              </span>
+              <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
+            </div>
+          </div>
+
+          {!hasCustomSchedule || todoRows.length === 0 ? (
+            <div className="mt-4 rounded-[22px] bg-[rgba(255,248,236,0.82)] px-4 py-5 text-center">
+              <p className="text-[15px] font-semibold text-[var(--ff-text)]">Még nincs beállítva semmi.</p>
+              <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A napi rutin eseményeit a Beállítások oldalon tudod felvenni.</p>
+            </div>
+          ) : (
+            <div className="mt-4 divide-y divide-[rgba(74,67,54,0.08)]">
+              {todoRows.map((item) => (
+                <div key={`${item.label}-${item.time}`} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                  <span className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                    item.state === "done"
+                      ? "bg-[rgba(230,241,218,0.98)] text-[var(--ff-primary)]"
+                      : "border border-[rgba(170,135,84,0.22)] bg-white text-transparent"
+                  }`}>
+                    <span className="material-symbols-outlined text-[16px]">{item.state === "done" ? "check" : "radio_button_unchecked"}</span>
+                  </span>
+                  <span className={`flex-1 text-[16px] ${
+                    item.state === "done" ? "text-[var(--ff-text-soft)] line-through" : "text-[var(--ff-text)]"
+                  }`}>
+                    {item.label}
+                  </span>
+                  {item.state === "current" ? (
+                    <span className="rounded-full bg-[rgba(255,239,212,0.96)] px-2.5 py-1 text-[11px] font-bold text-[var(--ff-caramel-strong)]">
+                      MOST
+                    </span>
+                  ) : null}
+                  <span className="text-[15px] font-medium text-[var(--ff-text-soft)]">{item.time}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </Link>
+
+        <Link
+          href="/etkezes"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(233,241,220,0.96)] text-[var(--ff-primary)]">
+                <span className="material-symbols-outlined text-[22px]">shopping_basket</span>
+              </span>
+              <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Bevásárlólista</h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[rgba(233,241,220,0.98)] px-3 py-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+                {shoppingItems.length} hiányzik
+              </span>
+              <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
+            </div>
+          </div>
+
+          {shoppingPreview.length === 0 ? (
+            <div className="mt-4 rounded-[22px] bg-[rgba(255,248,236,0.82)] px-4 py-5 text-center">
+              <p className="text-[15px] font-semibold text-[var(--ff-text)]">Nincs hiányzó tétel.</p>
+              <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A bevásárlólista jelenleg üres.</p>
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {shoppingPreview.map((item) => (
+                <span key={item} className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-4 py-3 text-[15px] font-medium text-[var(--ff-text)]">
+                  <span>{getShoppingEmoji(item)}</span>
+                  {item}
+                </span>
+              ))}
+              {extraShoppingCount > 0 && (
+                <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-4 py-3 text-[15px] font-medium text-[var(--ff-text-soft)]">
+                  <span className="material-symbols-outlined text-[18px]">add</span>
+                  +{extraShoppingCount} további
+                </span>
+              )}
+            </div>
+          )}
+        </Link>
+
+        <Link
+          href="/programok"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(233,241,220,0.96)] text-[var(--ff-primary)]">
+                <span className="material-symbols-outlined text-[22px]">event</span>
+              </span>
+              <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Hétvégi program</h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[rgba(233,241,220,0.98)] px-3 py-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+                {nextWeekendEvent ? weekendDateLabel : "Nincs terv"}
+              </span>
+              <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
+            </div>
+          </div>
+
+          {!nextWeekendEvent ? (
+            <div className="mt-4 rounded-[22px] bg-[rgba(255,248,236,0.82)] px-4 py-5 text-center">
+              <p className="text-[15px] font-semibold text-[var(--ff-text)]">Még nincs hétvégi program.</p>
+              <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">Adj hozzá egy közös eseményt a Programok oldalon.</p>
+            </div>
+          ) : (
+            <div className="mt-4 flex gap-4">
+              <div className="h-[94px] w-[146px] shrink-0 overflow-hidden rounded-[20px]">
+                <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${WEEKEND_IMAGE})` }} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[22px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">
+                  {nextWeekendEvent.label}
+                </p>
+                <p className="mt-2 flex items-center gap-1.5 text-[15px] text-[var(--ff-text-soft)]">
+                  <span className="material-symbols-outlined text-[16px]">schedule</span>
+                  {formatEventTime(nextWeekendEvent)}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-[14px] text-[var(--ff-text-muted)]">
+                  {nextWeekendEvent.category ? (
+                    <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">event</span>{nextWeekendEvent.category}</span>
+                  ) : null}
+                  {nextWeekendEvent.person ? (
+                    <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">groups</span>{nextWeekendEvent.person}</span>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          )}
+        </Link>
+
+        <Link
+          href="/kamra"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(255,239,212,0.96)] text-[var(--ff-caramel-strong)]">
+                <span className="material-symbols-outlined text-[22px]">inventory_2</span>
+              </span>
+              <h3 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Kamra</h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[rgba(255,239,212,0.98)] px-3 py-1 text-[14px] font-semibold text-[var(--ff-caramel-strong)]">
+                {pantryItems.length} tétel
+              </span>
+              <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
+            </div>
+          </div>
+
+          {pantryCards.length === 0 ? (
+            <div className="mt-4 rounded-[22px] bg-[rgba(255,248,236,0.82)] px-4 py-5 text-center">
+              <p className="text-[15px] font-semibold text-[var(--ff-text)]">Még nincs beállítva semmi.</p>
+              <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A kamrában még nincs rögzített alapanyag.</p>
+            </div>
+          ) : (
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {pantryCards.map((item) => (
+                <div key={item.title} className="rounded-[22px] bg-[rgba(255,248,236,0.94)] p-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[28px] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.18)]">
+                    {item.icon}
+                  </div>
+                  <p className="mt-3 text-[16px] font-semibold leading-tight text-[var(--ff-text)]">{item.title}</p>
+                  <p className="mt-1 text-[14px] text-[var(--ff-text-soft)]">{item.note}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </Link>
       </div>
 
       <MobileBottomNav />

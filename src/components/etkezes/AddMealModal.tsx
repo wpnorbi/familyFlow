@@ -18,7 +18,7 @@ import {
   type RecipeTimeBucket,
 } from "@/lib/recipes/recipe-taxonomy";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
-import type { MealBatch, Recipe } from "@/types/etkezes";
+import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 
 const TIME_FILTERS = [
   { label: "Rövid", sublabel: "kb. 20 perc", max: 20, bucket: "short" as const, icon: "bolt" },
@@ -125,6 +125,17 @@ const FLOW_STEPS = [
   { id: 3, eyebrow: "Tervezés", title: "Ütemezés" },
 ] as const;
 
+const FIRST_STEP_TILES = [
+  { id: "kid", label: "Gyerekbarát", icon: "sentiment_satisfied" },
+  { id: "quick", label: "Gyors", icon: "bolt" },
+  { id: "medium", label: "Közepes", icon: "timer" },
+  { id: "slow", label: "Lassú", icon: "hourglass_bottom" },
+  { id: "chicken", label: "Csirke", icon: "egg_alt" },
+  { id: "pork", label: "Sertés", icon: "nutrition" },
+  { id: "two-days", label: "2 napra jó", icon: "calendar_month" },
+  { id: "favorites", label: "Kedvencek", icon: "bookmark" },
+] as const;
+
 const CLIENT_FALLBACK_RECIPES = Array.from(
   new Map(
     getUserImportedRecipes().map((recipe) => [recipe.id, recipe]),
@@ -135,6 +146,7 @@ interface Props {
   onAdd: (batch: Omit<MealBatch, "id">) => void | Promise<void>;
   onClose: () => void;
   initialRecipe?: Recipe | null;
+  initialDay?: WeekDay | null;
   pantryItems?: string[];
 }
 
@@ -432,7 +444,17 @@ function FlowSection({
   );
 }
 
-export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pantryItems = [] }: Props) {
+function formatPlannerDay(day: WeekDay) {
+  return `${day.name} • ${day.date.getDate()}.`;
+}
+
+export default function AddMealModal({
+  onAdd,
+  onClose,
+  initialRecipe = null,
+  initialDay = null,
+  pantryItems = [],
+}: Props) {
   const [step, setStep] = useState<1 | 2 | 3>(initialRecipe ? 3 : 1);
   const [timeFilter, setTimeFilter] = useState<number>(30);
   const [timeBucketFilter, setTimeBucketFilter] = useState<RecipeTimeBucket | "mind">("medium");
@@ -449,7 +471,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   const [tagFilter, setTagFilter] = useState<string>("mind");
   const [selected, setSelected] = useState<Recipe | null>(initialRecipe);
   const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
-  const [cookDateKey, setCookDateKey] = useState<string>(getCookDateOptions()[0].dateKey);
+  const [cookDateKey, setCookDateKey] = useState<string>(initialDay?.dateKey ?? getCookDateOptions()[0].dateKey);
   const [eatDays, setEatDays] = useState<number>(2);
   const [visibleRecipeCount, setVisibleRecipeCount] = useState(20);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -460,6 +482,8 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   const [recipesError, setRecipesError] = useState<string | null>(null);
   const [usedFallbackResults, setUsedFallbackResults] = useState(false);
   const [exactMatchCount, setExactMatchCount] = useState(0);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const fallbackRecipes = CLIENT_FALLBACK_RECIPES.filter((recipe) =>
     matchesRecipe(
@@ -487,6 +511,93 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   const selectedStartingPointLabel = STARTING_POINT_OPTIONS.find((option) => option.value === startingPoint)?.label ?? "Mindegy";
   const selectedChildLabel = CHILD_FRIENDLY_OPTIONS.find((option) => option.value === childPreference)?.label ?? "Jó lenne";
   const selectedDirectionLabel = DIRECTION_OPTIONS.find((option) => option.value === directionPreference)?.label ?? "Egyszerű házias";
+  const selectedPlannerDayLabel = initialDay ? formatPlannerDay(initialDay) : null;
+  const selectedSummaryFilters = [
+    proteinFilter !== "mind" ? getProteinLabel(proteinFilter) : null,
+    quickOnly || timeBucketFilter === "short" ? "Gyors" : timeBucketFilter === "medium" ? "Közepes" : timeBucketFilter === "long" ? "Lassú" : null,
+    mealTypeFilter !== "mind" ? MEAL_TYPE_OPTIONS.find((option) => option.value === mealTypeFilter)?.label ?? null : null,
+    childFriendlyOnly ? "Gyerekbarát" : null,
+    directionPreference !== "mind" ? selectedDirectionLabel : null,
+    eatDays === 2 ? "2 napra" : eatDays === 3 ? "3 napra" : eatDays === 1 ? "1 napra" : null,
+    favoritesOnly ? "Kedvencek" : null,
+  ].filter(Boolean) as string[];
+
+  const firstStepProteinOptions = [
+    { label: "Csirke", value: "csirke" as const, icon: "egg_alt" },
+    { label: "Sertés", value: "sertés" as const, icon: "nutrition" },
+    { label: "Hal", value: "hal" as const, icon: "set_meal" },
+    { label: "Marha", value: "marha" as const, icon: "lunch_dining" },
+  ];
+
+  const firstStepMealTypeOptions = [
+    { label: "Tészta", value: "teszta" as const, icon: "ramen_dining" },
+    { label: "Leves", value: "leves" as const, icon: "soup_kitchen" },
+    { label: "Főétel", value: "foetel" as const, icon: "dinner_dining" },
+    { label: "Főzelék", value: "fozelek" as const, icon: "skillet" },
+  ];
+
+  function handleFirstStepTileSelect(tileId: (typeof FIRST_STEP_TILES)[number]["id"]) {
+    switch (tileId) {
+      case "kid":
+        setChildFriendlyOnly((value) => !value);
+        setChildPreference((value) => (value === "off" ? "important" : "off"));
+        break;
+      case "quick":
+        setQuickOnly(true);
+        setTimeBucketFilter("short");
+        setTimeFilter(20);
+        break;
+      case "medium":
+        setQuickOnly(false);
+        setTimeBucketFilter("medium");
+        setTimeFilter(50);
+        break;
+      case "slow":
+        setQuickOnly(false);
+        setTimeBucketFilter("long");
+        setTimeFilter(Infinity);
+        break;
+      case "chicken":
+        setProteinFilter((value) => (value === "csirke" ? "mind" : "csirke"));
+        break;
+      case "pork":
+        setProteinFilter((value) => (value === "sertés" ? "mind" : "sertés"));
+        break;
+      case "two-days":
+        setEatDays(2);
+        break;
+      case "favorites":
+        setFavoritesOnly((value) => !value);
+        break;
+      default:
+        break;
+    }
+
+    setVisibleRecipeCount(20);
+  }
+
+  function isFirstStepTileSelected(tileId: (typeof FIRST_STEP_TILES)[number]["id"]) {
+    switch (tileId) {
+      case "kid":
+        return childFriendlyOnly;
+      case "quick":
+        return quickOnly || timeBucketFilter === "short";
+      case "medium":
+        return !quickOnly && timeBucketFilter === "medium";
+      case "slow":
+        return timeBucketFilter === "long";
+      case "chicken":
+        return proteinFilter === "csirke";
+      case "pork":
+        return proteinFilter === "sertés";
+      case "two-days":
+        return eatDays === 2;
+      case "favorites":
+        return favoritesOnly;
+      default:
+        return false;
+    }
+  }
 
   function applyStartingPoint(value: StartingPointValue) {
     setStartingPoint(value);
@@ -694,7 +805,10 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
         cookDate: cookDateKey,
         eatDates,
       });
-      onClose();
+      setShowSuccess(true);
+      window.setTimeout(() => {
+        onClose();
+      }, 1400);
     } finally {
       setIsSubmitting(false);
     }
@@ -775,14 +889,24 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_38%),rgba(14,18,15,0.42)] p-0 backdrop-blur-md sm:p-3 md:p-6">
       <div className="ff-modal-shell flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden rounded-none border-0 sm:h-[min(92vh,860px)] sm:rounded-[36px] sm:border">
-        <div className="shrink-0 border-b border-[var(--ff-card-border)] bg-[linear-gradient(180deg,rgba(255,252,244,0.82),rgba(255,247,238,0.42))] px-6 pb-5 pt-6 backdrop-blur-md">
+        <div className="shrink-0 border-b border-[var(--ff-card-border)] bg-[linear-gradient(180deg,rgba(255,252,244,0.88),rgba(255,247,238,0.52))] px-6 pb-5 pt-6 backdrop-blur-md">
           <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--ff-text-soft)]">
-                Étkezéstervező
-              </p>
-              <h2 className="text-2xl font-semibold text-[var(--ff-text)] sm:text-[30px]">Mit főzzünk?</h2>
-              <p className="mt-1 text-sm leading-relaxed text-[var(--ff-text-muted)]">Válassz pár dolgot, és mutatjuk az ötleteket.</p>
+            <div className="flex items-start gap-4">
+              <span className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,rgba(235,241,228,0.96),rgba(247,241,231,0.92))] text-[var(--ff-primary)] shadow-[0_18px_36px_-26px_rgba(55,80,45,0.25)]">
+                <span className="material-symbols-outlined text-[44px]">add_shopping_cart</span>
+              </span>
+              <div className="pt-1">
+                <h2 className="text-2xl font-semibold text-[var(--ff-text)] sm:text-[30px]">
+                  {step === 1 ? "Gyors étel hozzáadása" : "Új étkezés hozzáadása"}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--ff-text-muted)]">
+                  {step === 1
+                    ? "Találjuk meg a tökéletes ebéd ötletet pillanatok alatt."
+                    : step === 2
+                      ? "Válassz receptet a szűrőidhez illő ötletek közül."
+                      : "Ütemezd be a kiválasztott ételt a heti tervbe."}
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -791,39 +915,28 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
-          <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
-            {FLOW_STEPS.map((flowStep) => (
-              <div
-                key={flowStep.id}
-                className={`rounded-[24px] border px-3 py-3 transition-all ${
-                  flowStep.id === step
-                    ? "border-[rgba(55,67,50,0.16)] bg-[linear-gradient(145deg,rgba(221,230,211,0.96),rgba(255,249,237,0.92))] shadow-[var(--ff-shadow-soft)]"
-                    : flowStep.id < step
-                      ? flowStep.id === 1
-                        ? "border-[var(--ff-glass-border)] bg-[linear-gradient(145deg,rgba(238,243,231,0.86),rgba(255,252,244,0.78))]"
-                        : "border-[var(--ff-glass-border)] bg-[linear-gradient(145deg,rgba(255,240,227,0.84),rgba(255,252,244,0.78))]"
-                      : flowStep.id === 2
-                        ? "border-[var(--ff-glass-border)] bg-[linear-gradient(145deg,rgba(255,249,237,0.72),rgba(255,240,227,0.48))]"
-                        : "border-[var(--ff-glass-border)] bg-[linear-gradient(145deg,rgba(255,252,244,0.66),rgba(238,243,231,0.42))]"
-                }`}
-              >
+          <div className="mt-8 grid grid-cols-3 items-center gap-4">
+            {FLOW_STEPS.map((flowStep, index) => (
+              <div key={flowStep.id} className="flex items-center gap-4">
                 <div className="flex items-center gap-3">
                   <span
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold ${
                       flowStep.id === step
-                        ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)]"
+                        ? flowStep.id === 1
+                          ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)]"
+                          : "bg-[#f29a1d] text-white"
                         : flowStep.id < step
-                          ? "bg-[var(--ff-primary-muted)] text-[var(--ff-primary)]"
-                          : "bg-[rgba(255,252,244,0.82)] text-[var(--ff-text-soft)]"
+                          ? "bg-[rgba(111,154,99,0.14)] text-[var(--ff-primary)]"
+                          : "bg-[rgba(255,252,244,0.82)] text-[var(--ff-text-soft)] border border-[rgba(74,67,54,0.08)]"
                     }`}
                   >
                     {flowStep.id < step ? "✓" : flowStep.id}
                   </span>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ff-text-soft)]">{flowStep.eyebrow}</p>
-                    <p className="text-sm font-semibold text-[var(--ff-text)]">{flowStep.title}</p>
-                  </div>
+                  <p className="text-[16px] font-semibold text-[var(--ff-text)]">{flowStep.title}</p>
                 </div>
+                {index < FLOW_STEPS.length - 1 && (
+                  <span className="h-px flex-1 bg-[rgba(74,67,54,0.10)]" />
+                )}
               </div>
             ))}
           </div>
@@ -831,197 +944,203 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
 
         {step === 1 && (
           <div className="flex flex-1 overflow-y-auto px-6 py-6">
-            <div className="grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-              <div className="flex min-w-0 flex-col gap-5">
-                <section className="ff-glass-card-strong relative overflow-hidden rounded-[34px] bg-[linear-gradient(145deg,rgba(255,250,240,0.96),rgba(255,240,227,0.78))] px-5 py-5 sm:px-6">
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.45),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(230,168,121,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(124,145,111,0.12),transparent_30%)]" />
-                  <div className="relative">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="max-w-2xl">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Gyors választás</p>
-                        <h3 className="mt-2 text-[28px] font-semibold leading-tight text-[var(--ff-text)]">Mit főzzünk?</h3>
-                        <p className="mt-2 text-sm text-[var(--ff-text-muted)]">Válassz pár dolgot, és mutatjuk az ötleteket.</p>
-                      </div>
-                      <div className="hidden rounded-[24px] border border-white/70 bg-[linear-gradient(145deg,rgba(255,252,244,0.78),rgba(238,243,231,0.62))] p-3 shadow-[var(--ff-shadow-soft)] lg:block">
-                        <span className="material-symbols-outlined text-[32px] text-[var(--ff-primary)]">room_service</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                      {FAST_STYLE_OPTIONS.map((option) => (
+            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5">
+              <div className="grid gap-4 xl:grid-cols-3">
+                <section className="rounded-[30px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-5 shadow-[0_18px_36px_-28px_rgba(61,49,34,0.24)]">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[24px] text-[var(--ff-text-muted)]">egg_alt</span>
+                    <p className="text-[18px] font-semibold text-[var(--ff-text)]">Hús típusa <span className="text-[14px] text-[var(--ff-text-soft)]">(választhatsz többet)</span></p>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3">
+                    {firstStepProteinOptions.map((option) => {
+                      const active = proteinFilter === option.value;
+                      return (
                         <button
-                          key={option.label}
-                          onClick={() => applyFastStyle(option.label)}
-                          className={`group flex min-h-[108px] cursor-pointer flex-col justify-between rounded-[26px] border px-4 py-4 text-left shadow-[0_14px_28px_-24px_rgba(61,49,34,0.26)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_32px_-22px_rgba(61,49,34,0.28)] ${getFastStyleTone(option.tone, fastStyle === option.label)}`}
+                          key={option.value}
+                          onClick={() => setProteinFilter(active ? "mind" : option.value)}
+                          className={`relative rounded-[24px] border px-4 py-6 text-center transition-all ${
+                            active
+                              ? "border-[rgba(111,154,99,0.35)] bg-[linear-gradient(145deg,rgba(246,250,241,0.98),rgba(236,243,230,0.94))] shadow-[0_18px_34px_-26px_rgba(55,80,45,0.28)]"
+                              : "border-[rgba(74,67,54,0.08)] bg-white hover:bg-[rgba(251,252,248,0.98)]"
+                          }`}
                         >
-                          <div className="flex items-start justify-between gap-2">
-                            <span className="material-symbols-outlined text-[20px]">{option.icon}</span>
-                            {fastStyle === option.label && (
-                              <span className="rounded-full bg-[rgba(255,255,255,0.72)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em]">
-                                Aktív
-                              </span>
-                            )}
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold leading-tight">{option.label}</p>
-                            <p className="mt-1 text-[11px] leading-snug opacity-80">{option.note}</p>
-                          </div>
+                          {active && <span className="absolute right-3 top-3 material-symbols-outlined text-[24px] text-[var(--ff-primary)]">check_circle</span>}
+                          <span className="material-symbols-outlined text-[42px] text-[var(--ff-primary)]">{option.icon}</span>
+                          <p className="mt-4 text-[16px] font-semibold text-[var(--ff-text)]">{option.label}</p>
                         </button>
-                      ))}
-                    </div>
+                      );
+                    })}
                   </div>
                 </section>
 
-                <FlowSection
-                  label="1. lépés"
-                  title="Hány napra?"
-                >
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    {DAY_PLAN_OPTIONS.slice(0, 4).map((option) => (
-                      <DecisionCard
-                        key={option.label}
-                        label={option.label}
-                        note={option.note}
-                        icon={option.icon}
-                        selected={eatDays === option.value}
-                        onClick={() => setEatDays(option.value)}
-                      />
-                    ))}
+                <section className="rounded-[30px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-5 shadow-[0_18px_36px_-28px_rgba(61,49,34,0.24)]">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[24px] text-[var(--ff-text-muted)]">schedule</span>
+                    <p className="text-[18px] font-semibold text-[var(--ff-text)]">Elkészítési idő</p>
                   </div>
-                </FlowSection>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { label: "Gyors", note: "0-30 perc", bucket: "short" as const, value: 30 },
+                      { label: "Közepes", note: "30-60 perc", bucket: "medium" as const, value: 60 },
+                      { label: "Lassú", note: "60+ perc", bucket: "long" as const, value: Infinity },
+                    ].map((option) => {
+                      const active = timeBucketFilter === option.bucket || (option.bucket === "short" && quickOnly);
+                      return (
+                        <button
+                          key={option.label}
+                          onClick={() => {
+                            setQuickOnly(option.bucket === "short");
+                            setTimeBucketFilter(option.bucket);
+                            setTimeFilter(option.value);
+                          }}
+                          className={`relative rounded-[24px] border px-4 py-8 text-center transition-all ${
+                            active
+                              ? "border-[rgba(111,154,99,0.35)] bg-[linear-gradient(145deg,rgba(246,250,241,0.98),rgba(236,243,230,0.94))] shadow-[0_18px_34px_-26px_rgba(55,80,45,0.28)]"
+                              : "border-[rgba(74,67,54,0.08)] bg-white hover:bg-[rgba(251,252,248,0.98)]"
+                          }`}
+                        >
+                          {active && <span className="absolute right-3 top-3 material-symbols-outlined text-[24px] text-[var(--ff-primary)]">check_circle</span>}
+                          <p className="text-[16px] font-semibold text-[var(--ff-text)]">{option.label}</p>
+                          <p className="mt-4 text-[14px] text-[var(--ff-text-soft)]">{option.note}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
 
-                <FlowSection
-                  label="2. lépés"
-                  title="Mennyi idő van?"
-                >
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    {COOKING_TIME_OPTIONS.map((option) => (
-                      <DecisionCard
-                        key={option.label}
-                        label={option.label}
-                        note={option.note}
-                        icon={option.icon}
-                        selected={timeFilter === option.value}
-                        onClick={() => {
-                          setTimeFilter(option.value);
-                          setTimeBucketFilter(option.bucket);
-                          setQuickOnly(option.bucket === "short");
-                          resetRecipeFilters();
-                        }}
-                      />
-                    ))}
+                <section className="rounded-[30px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-5 shadow-[0_18px_36px_-28px_rgba(61,49,34,0.24)]">
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[24px] text-[var(--ff-text-muted)]">restaurant</span>
+                    <p className="text-[18px] font-semibold text-[var(--ff-text)]">Étel típusa <span className="text-[14px] text-[var(--ff-text-soft)]">(választhatsz többet)</span></p>
                   </div>
-                </FlowSection>
-
-                <FlowSection
-                  label="3. lépés"
-                  title="Milyen legyen?"
-                >
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    {FAST_STYLE_OPTIONS.map((option) => (
-                      <button
-                        key={option.label}
-                        onClick={() => applyFastStyle(option.label)}
-                        className={`group flex min-h-[104px] cursor-pointer flex-col justify-between rounded-[24px] border px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_30px_-24px_rgba(61,49,34,0.24)] ${getFastStyleTone(option.tone, fastStyle === option.label)}`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="material-symbols-outlined text-[20px]">{option.icon}</span>
-                          {fastStyle === option.label && (
-                            <span className="rounded-full bg-[rgba(255,255,255,0.72)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em]">
-                              Kész
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm font-semibold leading-tight">{option.label}</p>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-4 gap-3">
+                    {firstStepMealTypeOptions.map((option) => {
+                      const active = mealTypeFilter === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          onClick={() => setMealTypeFilter(active ? "mind" : option.value)}
+                          className={`relative rounded-[24px] border px-4 py-6 text-center transition-all ${
+                            active
+                              ? "border-[rgba(111,154,99,0.35)] bg-[linear-gradient(145deg,rgba(246,250,241,0.98),rgba(236,243,230,0.94))] shadow-[0_18px_34px_-26px_rgba(55,80,45,0.28)]"
+                              : "border-[rgba(74,67,54,0.08)] bg-white hover:bg-[rgba(251,252,248,0.98)]"
+                          }`}
+                        >
+                          {active && <span className="absolute right-3 top-3 material-symbols-outlined text-[24px] text-[var(--ff-primary)]">check_circle</span>}
+                          <span className="material-symbols-outlined text-[42px] text-[var(--ff-primary)]">{option.icon}</span>
+                          <p className="mt-4 text-[16px] font-semibold text-[var(--ff-text)]">{option.label}</p>
+                        </button>
+                      );
+                    })}
                   </div>
-                </FlowSection>
+                </section>
               </div>
 
-              <aside className="xl:sticky xl:top-0 xl:self-start">
-                <div className="ff-glass-card rounded-[32px] bg-[linear-gradient(145deg,rgba(255,251,244,0.92),rgba(246,228,203,0.58),rgba(238,243,231,0.52))] p-5">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Eddigi beállításaid</p>
-                  <h3 className="mt-2 text-lg font-semibold text-[var(--ff-text)]">Már majdnem kész</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-[var(--ff-text-muted)]">
-                    Már ennyi alapján is tudok jó ötleteket mutatni.
-                  </p>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <SummaryChip>{selectedDayLabel}</SummaryChip>
-                    <SummaryChip>{selectedTimeLabel}</SummaryChip>
-                    <SummaryChip>{fastStyle}</SummaryChip>
-                  </div>
-
-                  <div className="mt-5 rounded-[24px] border border-[rgba(55,67,50,0.12)] bg-[linear-gradient(145deg,rgba(221,230,211,0.74),rgba(255,249,237,0.82))] px-4 py-4 shadow-[0_18px_30px_-24px_rgba(55,67,50,0.28)]">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--ff-primary-soft)]">Várható találatok</p>
-                    <p className="mt-2 text-[34px] font-semibold leading-none text-[var(--ff-primary-strong)]">{estimatedResultCount || filtered.length || "több"}</p>
-                    <p className="mt-1 text-[12px] leading-snug text-[var(--ff-text-muted)]">ötlet várható</p>
-                  </div>
-
-                  <div className="mt-5 flex flex-col gap-2.5">
+              <div className="grid gap-4 xl:grid-cols-4">
+                {[
+                  { id: "kid", label: "Gyerekbarát", note: "A kicsik kedvence", icon: "sentiment_satisfied" },
+                  { id: "quick", label: "Egyszerű", note: "Könnyű elkészítés", icon: "back_hand" },
+                  { id: "one", label: "1 napra", note: "Ma ebédre", icon: "today" },
+                  { id: "two-days", label: "2 napra", note: "Holnapra is jusson", icon: "calendar_month" },
+                ].map((item) => {
+                  const active =
+                    item.id === "kid" ? childFriendlyOnly :
+                    item.id === "quick" ? quickOnly :
+                    item.id === "one" ? eatDays === 1 :
+                    eatDays === 2;
+                  return (
                     <button
-                      onClick={() => setStep(2)}
-                      className="ff-button-primary group flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-20px_rgba(38,51,38,0.3)] cursor-pointer"
-                    >
-                      Mutasd az ötleteket
-                      <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5">arrow_forward</span>
-                    </button>
-                    <button
+                      key={item.id}
                       onClick={() => {
-                        setEatDays(2);
-                        setTimeFilter(50);
-                        setTimeBucketFilter("medium");
-                        setQuickOnly(false);
-                        setFastStyle("Mindegy");
-                        applyChildPreference("nice");
-                        applyStartingPoint("mind");
-                        applyDirection("hazias");
-                        setMealTypeFilter("mind");
-                        setCategoryFilter("mind");
-                        setSearchTerm("");
-                        setSelected(null);
-                        setPreviewRecipe(null);
+                        if (item.id === "kid") handleFirstStepTileSelect("kid");
+                        if (item.id === "quick") handleFirstStepTileSelect("quick");
+                        if (item.id === "one") setEatDays(1);
+                        if (item.id === "two-days") handleFirstStepTileSelect("two-days");
                       }}
-                      className="ff-button-secondary bg-[rgba(255,249,240,0.82)] px-5 py-3 text-sm font-semibold cursor-pointer"
+                      className={`relative rounded-[26px] border px-5 py-6 text-left transition-all ${
+                        active
+                          ? "border-[rgba(111,154,99,0.35)] bg-[linear-gradient(145deg,rgba(246,250,241,0.98),rgba(236,243,230,0.94))] shadow-[0_18px_34px_-26px_rgba(55,80,45,0.28)]"
+                          : "border-[rgba(74,67,54,0.08)] bg-white hover:bg-[rgba(251,252,248,0.98)]"
+                      }`}
                     >
-                      Újrakezdem
+                      {active && <span className="absolute right-4 top-4 material-symbols-outlined text-[24px] text-[var(--ff-primary)]">check_circle</span>}
+                      <div className="flex items-center gap-4">
+                        <span className="material-symbols-outlined text-[34px] text-[var(--ff-primary)]">{item.icon}</span>
+                        <div>
+                          <p className="text-[18px] font-semibold text-[var(--ff-text)]">{item.label}</p>
+                          <p className="mt-1 text-[15px] text-[var(--ff-text-soft)]">{item.note}</p>
+                        </div>
+                      </div>
                     </button>
+                  );
+                })}
+              </div>
+
+              <div className="rounded-[30px] border border-[rgba(111,154,99,0.16)] bg-[linear-gradient(145deg,rgba(248,251,243,0.96),rgba(244,248,238,0.92))] px-8 py-6 shadow-[0_18px_34px_-26px_rgba(55,80,45,0.14)]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(230,241,218,0.94)] text-[var(--ff-primary)]">
+                      <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
+                    </span>
+                    <div>
+                      <p className="text-[18px] font-semibold text-[var(--ff-text)]">{estimatedResultCount || filtered.length || 48} ötlet található</p>
+                      <p className="mt-1 text-[15px] text-[var(--ff-text-soft)]">A szűrőidhez legjobban illő ebéd ötletek</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      setProteinFilter("mind");
+                      setMealTypeFilter("mind");
+                      setTimeBucketFilter("mind");
+                      setTimeFilter(30);
+                      setQuickOnly(false);
+                      setChildFriendlyOnly(false);
+                      setDirectionPreference("mind");
+                      setFavoritesOnly(false);
+                      setEatDays(2);
+                    }}
+                    className="flex items-center gap-2 text-[16px] font-semibold text-[var(--ff-primary)]"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">refresh</span>
+                    Szűrők törlése
+                  </button>
                 </div>
-              </aside>
+              </div>
             </div>
           </div>
         )}
 
         {step === 2 && (
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-6">
-            <div className="ff-glass-card-strong rounded-[32px] bg-[linear-gradient(145deg,rgba(255,250,240,0.96),rgba(255,240,227,0.74))] px-5 py-5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <div className="max-w-2xl">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">
-                    {filtered.length} receptötlet
-                  </p>
-                  <h3 className="mt-2 text-xl font-semibold text-[var(--ff-text)]">Mutatok pár jó ötletet.</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-[var(--ff-text-muted)]">
+            <div className="rounded-[34px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] px-5 py-5 shadow-[0_24px_55px_-34px_rgba(61,49,34,0.28)]">
+              <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-[var(--ff-text-muted)]">
+                    {selectedPlannerDayLabel && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(255,249,237,0.86)] px-3 py-1">
+                        <span className="material-symbols-outlined text-[14px]">calendar_month</span>
+                        {selectedPlannerDayLabel}
+                      </span>
+                    )}
+                    <span>{filtered.length} receptötlet</span>
+                  </div>
+                  <h3 className="mt-2 text-[30px] font-semibold leading-none text-[var(--ff-text)]">
+                    Mit szeretnél enni?
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--ff-text-muted)]">
                     {selectedDayLabel}, {selectedTimeLabel.toLowerCase()}, {selectedChildLabel.toLowerCase()} vonalra válogatva.
                   </p>
-                  {usedFallbackResults && (
-                    <p className="mt-2 text-[11px] leading-snug text-[var(--ff-text-muted)]">
-                      Kevés pontos találat volt, ezért közeli receptekkel is kibővítettem a listát.
-                    </p>
-                  )}
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap gap-2">
                     <SummaryChip>{selectedStartingPointLabel}</SummaryChip>
                     <SummaryChip>{selectedDirectionLabel}</SummaryChip>
                     {proteinFilter !== "mind" && <SummaryChip>{getProteinLabel(proteinFilter)}</SummaryChip>}
                   </div>
                 </div>
 
-                <div className="w-full lg:w-[360px]">
+                <div className="flex w-full max-w-[640px] items-center gap-3">
                   <label className="sr-only" htmlFor="recipe-search">Recept keresése</label>
-                  <div className="ff-input flex items-center gap-2 rounded-[24px] px-4 py-3">
-                    <span className="material-symbols-outlined text-[var(--ff-text-soft)] text-[18px]">search</span>
+                  <div className="flex min-h-[56px] flex-1 items-center gap-3 rounded-[22px] border border-[rgba(74,67,54,0.08)] bg-white px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                    <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">search</span>
                     <input
                       id="recipe-search"
                       value={searchTerm}
@@ -1029,163 +1148,101 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                         setSearchTerm(e.target.value);
                         setVisibleRecipeCount(20);
                       }}
-                      placeholder="Keresés név, hozzávaló vagy hangulat alapján"
+                      placeholder="Keresés étel, hozzávaló vagy kategória alapján..."
                       className="w-full bg-transparent text-sm text-[var(--ff-text)] placeholder:text-[var(--ff-text-soft)] focus:outline-none"
                     />
                   </div>
+                  <button
+                    onClick={() => {
+                      setCategoryFilter("mind");
+                      setTagFilter("mind");
+                      setMealTypeFilter("mind");
+                      setProteinFilter("mind");
+                      setTimeBucketFilter("mind");
+                      setTimeFilter(Infinity);
+                      setQuickOnly(false);
+                      setSearchTerm("");
+                      setVisibleRecipeCount(20);
+                    }}
+                    className="flex h-[56px] w-[56px] items-center justify-center rounded-[20px] border border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text-muted)] transition-colors hover:text-[var(--ff-primary)]"
+                    aria-label="Szűrők alaphelyzetbe"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">tune</span>
+                  </button>
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 <button
                   onClick={() => {
-                    setStep(1);
-                    setSelected(null);
-                  }}
-                  className="ff-button-secondary px-4 py-2 text-[11px] font-semibold cursor-pointer"
-                >
-                  Másik irányt választok
-                </button>
-                <button
-                  onClick={() => {
-                    setCategoryFilter("mind");
-                    setTagFilter("mind");
                     setMealTypeFilter("mind");
                     setProteinFilter("mind");
                     setTimeBucketFilter("mind");
-                    setTimeFilter(Infinity);
                     setQuickOnly(false);
-                    setSearchTerm("");
+                    setChildFriendlyOnly(false);
+                    setChildPreference("off");
                     setVisibleRecipeCount(20);
                   }}
-                  className="ff-button-secondary px-4 py-2 text-[11px] font-semibold cursor-pointer"
+                  className={`rounded-full px-5 py-3 text-sm font-semibold transition-all ${
+                    mealTypeFilter === "mind" && proteinFilter === "mind" && timeBucketFilter === "mind" && !quickOnly && !childFriendlyOnly
+                      ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] shadow-[0_16px_28px_-22px_rgba(38,51,38,0.52)]"
+                      : "border border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)]"
+                  }`}
                 >
-                  Finomhangolás törlése
+                  Minden
+                </button>
+                <button
+                  onClick={() => {
+                    setQuickOnly(true);
+                    setTimeBucketFilter("short");
+                    setTimeFilter(20);
+                    setVisibleRecipeCount(20);
+                  }}
+                  className={`rounded-full border px-5 py-3 text-sm font-semibold transition-all ${
+                    quickOnly
+                      ? "border-[rgba(55,67,50,0.16)] bg-[rgba(55,67,50,0.94)] text-white"
+                      : "border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)]"
+                  }`}
+                >
+                  Gyors
+                </button>
+                {MEAL_TYPE_OPTIONS.slice(0, 4).map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setMealTypeFilter(option.value);
+                      setVisibleRecipeCount(20);
+                    }}
+                    className={`rounded-full border px-5 py-3 text-sm font-semibold transition-all ${
+                      mealTypeFilter === option.value
+                        ? "border-[rgba(55,67,50,0.16)] bg-[rgba(255,249,237,0.96)] text-[var(--ff-primary)]"
+                        : "border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)]"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => {
+                    setChildFriendlyOnly((value) => !value);
+                    setChildPreference((value) => (value === "off" ? "important" : "off"));
+                    setVisibleRecipeCount(20);
+                  }}
+                  className={`rounded-full border px-5 py-3 text-sm font-semibold transition-all ${
+                    childFriendlyOnly
+                      ? "border-[rgba(55,67,50,0.16)] bg-[rgba(255,249,237,0.96)] text-[var(--ff-primary)]"
+                      : "border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)]"
+                  }`}
+                >
+                  Gyerekbarát
                 </button>
               </div>
-            </div>
 
-            <div className="ff-glass-card rounded-[28px] bg-[linear-gradient(145deg,rgba(255,252,244,0.9),rgba(238,243,231,0.58))] px-5 py-4">
-              <div className="flex flex-col gap-4">
-                <div>
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--ff-text-soft)]">Gyors finomítás</p>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => {
-                        setProteinFilter("mind");
-                        setVisibleRecipeCount(20);
-                      }}
-                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                        proteinFilter === "mind"
-                          ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
-                          : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
-                      }`}
-                    >
-                      Minden hús
-                    </button>
-                    {PROTEIN_OPTIONS.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setProteinFilter(option.value);
-                          setVisibleRecipeCount(20);
-                        }}
-                        className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                          proteinFilter === option.value
-                            ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
-                            : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => {
-                      setMealTypeFilter("mind");
-                      setVisibleRecipeCount(20);
-                    }}
-                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                      mealTypeFilter === "mind"
-                        ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
-                        : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
-                    }`}
-                  >
-                    Minden ételtípus
-                  </button>
-                  {MEAL_TYPE_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setMealTypeFilter(option.value);
-                        setVisibleRecipeCount(20);
-                      }}
-                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                        mealTypeFilter === option.value
-                          ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
-                          : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {TIME_BUCKET_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setTimeBucketFilter(option.value);
-                        setTimeFilter(option.max);
-                        setQuickOnly(option.value === "short");
-                        setVisibleRecipeCount(20);
-                      }}
-                      className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                        timeBucketFilter === option.value
-                          ? "bg-[var(--ff-primary)] text-[var(--ff-text-inverse)] border-[var(--ff-primary)]"
-                          : "bg-[rgba(255,252,244,0.78)] border-[rgba(74,67,54,0.1)] text-[var(--ff-text-muted)]"
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => {
-                      setQuickOnly((value) => !value);
-                      setVisibleRecipeCount(20);
-                    }}
-                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                      quickOnly
-                        ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
-                        : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
-                    }`}
-                  >
-                    Gyors kaják
-                  </button>
-                  <button
-                    onClick={() => {
-                      setChildFriendlyOnly((value) => !value);
-                      setChildPreference((value) => (value === "off" ? "important" : "off"));
-                      setVisibleRecipeCount(20);
-                    }}
-                    className={`rounded-full px-3.5 py-2 text-xs font-semibold border transition-colors ${
-                      childFriendlyOnly
-                        ? "bg-[var(--ff-caramel-strong)] text-[var(--ff-text-inverse)] border-[var(--ff-caramel-strong)]"
-                        : "bg-[rgba(255,249,240,0.8)] border-[rgba(185,130,71,0.14)] text-[var(--ff-text-muted)]"
-                    }`}
-                  >
-                    Gyerekbarát
-                  </button>
-                </div>
-
-                <p className="text-xs leading-relaxed text-[var(--ff-text-muted)]">
-                  Gyerekbarát étel: kisgyerekeknek is könnyen ehető, biztonságosan tálalható, enyhébb ízvilágú étel, amely jól beilleszthető a családi étkezésbe.
+              {usedFallbackResults && (
+                <p className="mt-4 text-[11px] leading-snug text-[var(--ff-text-muted)]">
+                  Kevés pontos találat volt, ezért közeli receptekkel is kibővítettem a listát.
                 </p>
-              </div>
+              )}
             </div>
 
             {recipesError && (
@@ -1222,82 +1279,40 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {visibleRecipes.map((recipe) => {
                   const isSelected = selected?.id === recipe.id;
                   const pantryMatch = rankRecipesForPantry([recipe], pantryItems)[0];
                   const missingCount = pantryMatch?.missingIngredients.length ?? recipe.ingredients.length;
-                  const primaryReason = getPrimaryReason(recipe, pantryItems);
-                  const secondaryReason = getSecondaryReason(recipe, pantryItems);
                   const displayTags = getDisplayTags(recipe);
                   return (
                     <article
                       key={recipe.id}
                       className={`group overflow-hidden rounded-[30px] border transition-all duration-300 ${
                         isSelected
-                          ? "border-primary/35 bg-[linear-gradient(180deg,rgba(255,248,238,0.98),rgba(250,244,238,0.98))] shadow-[0_24px_50px_-28px_rgba(120,72,18,0.45)]"
-                          : "border-surface-variant/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(249,246,242,0.96))] shadow-[0_18px_40px_-30px_rgba(34,27,19,0.38)] hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_28px_50px_-28px_rgba(120,72,18,0.35)]"
+                          ? "border-[rgba(111,154,99,0.45)] bg-[linear-gradient(180deg,rgba(255,251,244,0.98),rgba(249,246,242,0.98))] shadow-[0_24px_50px_-28px_rgba(77,110,52,0.34)]"
+                          : "border-surface-variant/35 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(249,246,242,0.96))] shadow-[0_18px_40px_-30px_rgba(34,27,19,0.28)] hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_28px_50px_-28px_rgba(120,72,18,0.35)]"
                       }`}
                     >
-                      <button
-                        onClick={() => setPreviewRecipe(recipe)}
-                        className="relative block h-[228px] w-full overflow-hidden"
-                        aria-label={`${recipe.name} részletei`}
-                      >
+                      <button onClick={() => setPreviewRecipe(recipe)} className="relative block h-[166px] w-full overflow-hidden" aria-label={`${recipe.name} részletei`}>
                         <RecipeImage
                           recipe={recipe}
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                         />
-                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,12,9,0.04),rgba(16,12,9,0.1)_40%,rgba(16,12,9,0.62)_100%)]" />
-                        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+                        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
                           <span className="rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-bold text-on-surface shadow-sm">
                             {recipe.duration} perc
                           </span>
-                          <span className="rounded-full bg-white/82 px-3 py-1.5 text-[11px] font-semibold text-on-surface shadow-sm">
-                            {missingCount === 0 ? "Minden megvan" : `${missingCount} hiányzik`}
-                          </span>
-                          {recipe.sourceName && (
-                            <span className="rounded-full bg-[rgba(255,249,237,0.9)] px-3 py-1.5 text-[11px] font-semibold text-[var(--ff-caramel-strong)] shadow-sm">
-                              {recipe.sourceName}
-                            </span>
-                          )}
-                        </div>
-                        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                          <div className="max-w-[90%] rounded-[24px] bg-white/18 p-4 text-left backdrop-blur-md">
-                            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/72">
-                              Miért jó most
-                            </p>
-                            <p className="mt-2 text-lg font-semibold leading-tight text-white">
-                              {primaryReason}
-                            </p>
-                          </div>
                         </div>
                       </button>
 
-                      <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
-                        <div className="space-y-2">
-                          <button
-                            onClick={() => setPreviewRecipe(recipe)}
-                            className={`text-left text-xl font-semibold leading-tight transition-colors hover:text-primary ${isSelected ? "text-primary" : "text-on-surface"}`}
-                          >
-                            {recipe.name}
-                          </button>
-                          <p className="text-sm leading-relaxed text-on-surface-variant line-clamp-2">
-                            {recipe.description}
-                          </p>
-                        </div>
-
-                        <div className="rounded-[24px] border border-primary/10 bg-primary/[0.04] px-4 py-3">
-                          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary/80">
-                            Miért ajánlott
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-on-surface">
-                            {primaryReason}
-                          </p>
-                          <p className="mt-1 text-sm text-on-surface-variant">
-                            {secondaryReason}
-                          </p>
-                        </div>
+                      <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
+                        <button
+                          onClick={() => setPreviewRecipe(recipe)}
+                          className={`text-left text-[18px] font-semibold leading-snug transition-colors hover:text-primary ${isSelected ? "text-primary" : "text-on-surface"}`}
+                        >
+                          {recipe.name}
+                        </button>
 
                         <div className="flex flex-wrap items-center gap-2">
                           {displayTags.map((tag) => (
@@ -1308,34 +1323,18 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                               {tag}
                             </span>
                           ))}
-                          <span className="rounded-full bg-surface-container-high px-3 py-1.5 text-[11px] font-medium text-on-surface-variant">
-                            {missingCount === 0 ? "Nem hiányzik semmi" : `${missingCount} hiányzó hozzávaló`}
+                        </div>
+                        <p className={`text-[15px] font-semibold ${missingCount === 0 ? "text-[var(--ff-primary)]" : "text-[#e1841a]"}`}>
+                          {missingCount === 0 ? "Minden megvan" : `${missingCount} hiányzó hozzávaló`}
+                        </p>
+                        <button
+                          onClick={() => setSelected(recipe)}
+                          className="ml-auto mt-auto flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(74,67,54,0.12)] bg-white text-[var(--ff-text-soft)]"
+                        >
+                          <span className={`material-symbols-outlined text-[22px] ${isSelected ? "text-[var(--ff-primary)]" : ""}`}>
+                            {isSelected ? "check_circle" : "radio_button_unchecked"}
                           </span>
-                          {recipe.difficulty && (
-                            <span className="rounded-full bg-surface-container-high px-3 py-1.5 text-[11px] font-medium text-on-surface-variant">
-                              {recipe.difficulty}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="mt-auto flex flex-wrap gap-2">
-                          <button
-                            onClick={() => setPreviewRecipe(recipe)}
-                            className="rounded-full border border-surface-variant px-4 py-2.5 text-sm font-semibold text-on-surface hover:bg-surface-container cursor-pointer"
-                          >
-                            Megnézem
-                          </button>
-                          <button
-                            onClick={() => setSelected(recipe)}
-                            className={`rounded-full px-4 py-2.5 text-sm font-bold transition-colors ${
-                              isSelected
-                                ? "bg-primary text-white"
-                                : "bg-primary/10 text-primary hover:bg-primary/15"
-                            }`}
-                          >
-                            {isSelected ? "Kiválasztva" : "Ezt főzném"}
-                          </button>
-                        </div>
+                        </button>
                       </div>
                     </article>
                   );
@@ -1344,7 +1343,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
                 {visibleRecipes.length < filtered.length && (
                   <button
                     onClick={() => setVisibleRecipeCount((count) => count + 20)}
-                    className="xl:col-span-2 rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3 text-sm font-bold text-primary hover:bg-primary/10 transition-colors"
+                    className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3 text-sm font-bold text-primary transition-colors hover:bg-primary/10 md:col-span-2 xl:col-span-4"
                   >
                     További receptek mutatása ({filtered.length - visibleRecipes.length} maradt)
                   </button>
@@ -1356,98 +1355,112 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
 
         {step === 3 && selected && (
           <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-6">
-            <div className={`flex items-center gap-4 rounded-[30px] border border-white/70 bg-gradient-to-br ${PROTEIN_GRADIENTS[selected.protein]} p-4 shadow-[0_22px_42px_-30px_rgba(34,27,19,0.38)]`}>
-              <div className="flex h-14 w-14 items-center justify-center rounded-[22px] bg-white/76">
-                <span className={`material-symbols-outlined text-[22px] ${PROTEIN_ICON_COLORS[selected.protein]}`}>
-                  {PROTEIN_ICONS[selected.protein]}
-                </span>
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-on-surface/65">Kiválasztott recept</p>
-                <p className="mt-1 font-semibold text-on-surface text-base">{selected.name}</p>
-                <p className="text-[11px] text-outline mt-1">
-                  {selected.duration} perc · {(plannedRecipe?.ingredients.length ?? selected.ingredients.length)} hozzávaló · {selected.instructions.length} lépés
-                </p>
+            <div className="rounded-[34px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-6 shadow-[0_24px_55px_-34px_rgba(61,49,34,0.28)]">
+              <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+                <div>
+                  <div className={`mt-5 flex items-center gap-4 rounded-[30px] border border-white/70 bg-gradient-to-br ${PROTEIN_GRADIENTS[selected.protein]} p-5 shadow-[0_18px_38px_-30px_rgba(34,27,19,0.35)]`}>
+                    <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-white/82">
+                      <span className={`material-symbols-outlined text-[24px] ${PROTEIN_ICON_COLORS[selected.protein]}`}>
+                        {PROTEIN_ICONS[selected.protein]}
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-on-surface/65">Kiválasztott recept</p>
+                      <p className="mt-1 text-[28px] font-semibold leading-none text-on-surface">{selected.name}</p>
+                      <p className="mt-2 text-[13px] text-outline">
+                        {selected.duration} perc · {(plannedRecipe?.ingredients.length ?? selected.ingredients.length)} hozzávaló · {selected.instructions.length} lépés
+                      </p>
+                      {selectedPlannerDayLabel && (
+                        <p className="mt-1 text-[12px] font-medium text-on-surface/70">{selectedPlannerDayLabel}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative overflow-hidden rounded-[28px] border border-[rgba(74,67,54,0.08)] bg-[linear-gradient(145deg,rgba(255,252,244,0.96),rgba(238,243,231,0.8))] p-2">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.55),transparent_38%)]" />
+                  <div className="relative h-full min-h-[220px] overflow-hidden rounded-[22px]">
+                    <RecipeImage recipe={selected} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.15),rgba(255,255,255,0)_45%,rgba(255,255,255,0.45))]" />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <FlowSection
-              label="Időzítés"
-              title="Mikor főzöd?"
-              description="Válaszd ki a főzés napját, és a terv rögtön ehhez igazodik."
-            >
-              <div className="flex flex-wrap gap-2">
-                {cookDateOptions.slice(0, 5).map((opt) => (
+            <div className="rounded-[34px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-6 shadow-[0_24px_55px_-34px_rgba(61,49,34,0.22)]">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined rounded-[18px] bg-[rgba(255,249,237,0.9)] p-3 text-[22px] text-[var(--ff-caramel-strong)]">
+                  calendar_month
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Mikor főzöd?</p>
+                  <h3 className="mt-1 text-[28px] font-semibold leading-none text-[var(--ff-text)]">Válassz napot</h3>
+                  <p className="mt-2 text-sm text-[var(--ff-text-muted)]">A terv rögtön ehhez a naphoz igazodik.</p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                {cookDateOptions.slice(0, 6).map((opt) => (
                   <button
                     key={opt.dateKey}
                     onClick={() => setCookDateKey(opt.dateKey)}
-                    className={`cursor-pointer rounded-full border px-4 py-2.5 text-sm font-semibold transition-all ${
+                    className={`min-w-[128px] rounded-[22px] border px-6 py-4 text-base font-semibold transition-all ${
                       cookDateKey === opt.dateKey
-                        ? "border-primary bg-primary text-white shadow-[0_16px_28px_-22px_rgba(51,69,55,0.8)]"
-                        : "border-surface-variant/40 bg-white/78 text-on-surface-variant hover:bg-white"
+                        ? "border-[rgba(242,154,29,0.45)] bg-[rgba(255,249,240,0.98)] text-[var(--ff-text)] shadow-[0_20px_36px_-26px_rgba(242,154,29,0.22)]"
+                        : "border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)] hover:bg-[rgba(255,249,237,0.8)]"
                     }`}
                   >
-                    {opt.label}
+                    <span className="block">{opt.label}</span>
+                    <span className="mt-1 block text-[14px] font-medium text-[var(--ff-text-soft)]">{opt.dateKey}</span>
                   </button>
                 ))}
               </div>
-            </FlowSection>
+            </div>
 
-            <FlowSection
-              label="Adagolás"
-              title="Hány napra szóljon?"
-              description="Egyszerű döntés: válaszd ki, hány napra tervezzük be ezt az ételt."
-            >
-              <div className="grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-                {[1, 2, 3, 4, 7].map((days) => (
+            <div className="rounded-[34px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,255,255,0.92)] p-6 shadow-[0_24px_55px_-34px_rgba(61,49,34,0.22)]">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined rounded-[18px] bg-[rgba(255,249,237,0.9)] p-3 text-[22px] text-[var(--ff-caramel-strong)]">
+                  inventory_2
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--ff-text-soft)]">Hány napra szóljon?</p>
+                  <h3 className="mt-1 text-[28px] font-semibold leading-none text-[var(--ff-text)]">Egyszerű döntés</h3>
+                  <p className="mt-2 text-sm text-[var(--ff-text-muted)]">Válaszd ki, hány napra tervezzük be ezt az ételt.</p>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {[1, 2, 3, 4].map((days) => (
                   <button
                     key={days}
                     onClick={() => setEatDays(days)}
-                    className={`cursor-pointer rounded-[26px] border px-3 py-4 text-center transition-all ${
+                    className={`rounded-[28px] border px-4 py-6 text-center transition-all ${
                       eatDays === days
-                        ? "border-primary/15 bg-[linear-gradient(180deg,rgba(74,93,78,0.96),rgba(57,75,61,0.98))] text-white shadow-[0_22px_36px_-24px_rgba(51,69,55,0.75)]"
-                        : "border-surface-variant/40 bg-white/78 text-on-surface-variant hover:bg-white"
+                        ? "border-[rgba(242,154,29,0.45)] bg-[rgba(255,249,240,0.98)] text-[var(--ff-text)] shadow-[0_22px_38px_-24px_rgba(242,154,29,0.24)]"
+                        : "border-[rgba(74,67,54,0.08)] bg-white text-[var(--ff-text)] hover:bg-[rgba(255,249,237,0.78)]"
                     }`}
                   >
-                      <span className="block text-2xl font-bold">{days}</span>
-                    <span className={`mt-1 block text-[11px] ${eatDays === days ? "text-white/78" : ""}`}>napra</span>
+                    <span className="block text-[48px] font-semibold leading-none">{days}</span>
+                    <span className={`mt-3 block text-[16px] ${eatDays === days ? "text-[var(--ff-text-soft)]" : "text-[var(--ff-text-muted)]"}`}>
+                      napra
+                    </span>
                   </button>
                 ))}
               </div>
-            </FlowSection>
 
-            <div className="rounded-[30px] border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(249,246,242,0.94))] p-5 shadow-[0_18px_40px_-34px_rgba(34,27,19,0.35)]">
-              <div className="mb-4">
-                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-outline">Heti terv összefoglaló</p>
-                <h3 className="mt-2 text-lg font-semibold text-on-surface">Így kerül be a heti ritmusba</h3>
-              </div>
-              <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[220px_1fr]">
-              <div className="rounded-[24px] border border-primary/10 bg-primary/[0.05] p-4">
-                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">Főzés napja</p>
-                <p className="text-sm font-semibold text-on-surface">{cookDateKey}</p>
-              </div>
-              <div className="rounded-[24px] border border-secondary/10 bg-secondary/[0.04] p-4">
-                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-1">Ekkor eszitek</p>
-                <p className="text-sm text-on-surface-variant">
-                  {eatDates.join(", ")}
-                </p>
-              </div>
-              </div>
-              <div className="mt-4">
-                <p className="text-[11px] uppercase tracking-widest text-outline font-bold mb-2">Bevásárlólistára kerül</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {(plannedRecipe?.ingredients ?? selected.ingredients).map((ingredient) => (
-                    <span
-                      key={ingredient}
-                      className="rounded-full border border-secondary-fixed-dim/35 bg-secondary-fixed/25 px-3 py-1 text-xs font-medium text-on-surface"
-                    >
-                      {ingredient}
-                    </span>
-                  ))}
+              <div className="mt-6 rounded-[24px] border border-[rgba(74,67,54,0.06)] bg-[rgba(248,251,243,0.72)] p-5">
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(111,154,99,0.16)] text-[var(--ff-primary)]">
+                    <span className="material-symbols-outlined text-[22px]">show_chart</span>
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-[18px] font-semibold text-[var(--ff-text)]">Ezen a héten 4/7 nap már megtervezve</p>
+                    <div className="mt-3 h-3 overflow-hidden rounded-full bg-[rgba(111,154,99,0.16)]">
+                      <div className="h-full w-[57%] rounded-full bg-[var(--ff-primary)]" />
+                    </div>
+                  </div>
+                  <p className="text-[18px] font-semibold text-[var(--ff-primary)]">Szuper! Így tovább!</p>
                 </div>
-                <p className="mt-3 text-sm text-on-surface-variant">
-                  {eatDays} napra tervezve, kb. {plannedRecipe?.servings ?? selected.servings ?? 4} adaggal.
-                </p>
               </div>
             </div>
           </div>
@@ -1457,19 +1470,24 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
         <div className="flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
           {step === 1 && (
             <>
-              <button
-                onClick={onClose}
-                className="ff-button-secondary cursor-pointer px-5 py-2.5 text-sm font-semibold"
-              >
-                Mégse
-              </button>
-              <button
-                onClick={() => setStep(2)}
-                className="ff-button-primary group flex cursor-pointer items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-20px_rgba(38,51,38,0.3)]"
-              >
-                Mutasd az ötleteket
-                <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5">arrow_forward</span>
-              </button>
+              <button onClick={onClose} className="ff-button-secondary cursor-pointer px-5 py-2.5 text-sm font-semibold">Mégse</button>
+              <div className="flex items-center gap-4">
+                <div className="hidden flex-wrap gap-2 lg:flex">
+                  {selectedSummaryFilters.map((chip) => (
+                    <span key={chip} className="rounded-full bg-[rgba(235,241,228,0.96)] px-3 py-1.5 text-[13px] font-semibold text-[var(--ff-primary)]">
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-[18px] font-semibold text-[var(--ff-text)]">{estimatedResultCount || filtered.length || 48} ötlet</p>
+                <button
+                  onClick={() => setStep(2)}
+                  className="group flex items-center gap-3 rounded-full bg-[linear-gradient(135deg,#f29a1d,#eb8415)] px-7 py-3 text-[18px] font-bold text-white shadow-[0_24px_42px_-24px_rgba(235,132,21,0.55)] transition-all hover:-translate-y-0.5"
+                >
+                  Mutasd az ötleteket
+                  <span className="material-symbols-outlined text-[22px] transition-transform duration-200 group-hover:translate-x-0.5">arrow_forward</span>
+                </button>
+              </div>
             </>
           )}
 
@@ -1484,9 +1502,15 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
               </button>
               <div className="flex items-center gap-3">
                 {selected && (
-                  <p className="hidden text-sm text-on-surface-variant sm:block">
-                    Kiválasztva: <span className="font-semibold text-on-surface">{selected.name}</span>
-                  </p>
+                  <div className="hidden items-center gap-3 rounded-[20px] border border-[rgba(74,67,54,0.08)] bg-[rgba(255,252,244,0.94)] px-3 py-2 sm:flex">
+                    <div className="h-14 w-14 overflow-hidden rounded-[16px]">
+                      <RecipeImage recipe={selected} className="h-full w-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-[var(--ff-text-soft)]">Kiválasztott recept:</p>
+                      <p className="text-[18px] font-semibold text-[var(--ff-text)]">{selected.name}</p>
+                    </div>
+                  </div>
                 )}
                 <button
                   onClick={() => selected && setStep(3)}
@@ -1515,7 +1539,7 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
               </button>
               <button
                 onClick={() => void handleConfirm()}
-                disabled={isSubmitting}
+                disabled={isSubmitting || showSuccess}
                 className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold transition-all ${
                   isSubmitting
                     ? "cursor-progress bg-[rgba(94,113,87,0.55)] text-[rgba(255,249,237,0.92)]"
@@ -1530,6 +1554,18 @@ export default function AddMealModal({ onAdd, onClose, initialRecipe = null, pan
         </div>
         </div>
       </div>
+
+      {showSuccess && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-[rgba(14,18,15,0.18)] backdrop-blur-sm">
+          <div className="rounded-[32px] border border-[rgba(111,154,99,0.18)] bg-[linear-gradient(145deg,rgba(244,250,239,0.98),rgba(234,244,228,0.94))] px-10 py-9 text-center shadow-[0_30px_70px_-32px_rgba(55,80,45,0.36)]">
+            <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[var(--ff-primary)] text-white shadow-[0_20px_36px_-24px_rgba(55,80,45,0.5)]">
+              <span className="material-symbols-outlined text-[40px]">check</span>
+            </span>
+            <h3 className="mt-5 text-[28px] font-semibold tracking-[-0.05em] text-[var(--ff-text)]">Sikeres hozzáadás</h3>
+            <p className="mt-2 text-[16px] text-[var(--ff-text-muted)]">Az étel bekerült a heti tervbe. Visszalépünk az Étkezés oldalra.</p>
+          </div>
+        </div>
+      )}
 
       {previewRecipe && (
         <div

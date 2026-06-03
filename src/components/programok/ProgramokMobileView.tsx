@@ -1,24 +1,81 @@
 "use client";
 
+import Link from "next/link";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 
-const DAYS = [
-  { short: "H", day: "20", active: false },
-  { short: "K", day: "21", active: true },
-  { short: "Sz", day: "22", active: false },
-  { short: "Cs", day: "23", active: false },
-  { short: "P", day: "24", active: false },
-  { short: "Sz", day: "25", active: false },
-  { short: "V", day: "26", active: false },
+const WEATHER_DAYS = [
+  { label: "Ma", icon: "partly_cloudy_day", high: 22, low: 10, active: true },
+  { label: "Sz", icon: "cloud", high: 20, low: 9 },
+  { label: "V", icon: "wb_sunny", high: 21, low: 11 },
+  { label: "H", icon: "cloud", high: 19, low: 9 },
+  { label: "K", icon: "rainy", high: 18, low: 8 },
+  { label: "Sze", icon: "partly_cloudy_day", high: 17, low: 7 },
+  { label: "Cs", icon: "wb_sunny", high: 20, low: 9 },
 ];
 
-const TODAY_PROGRAMS = [
-  { time: "08:30", icon: "self_improvement", title: "Jóga óra", meta: "Sport • 60 perc", people: ["A", "N", "B"] },
-  { time: "14:00", icon: "sports_soccer", title: "Bence fociedzése", meta: "Sport • 90 perc", people: ["B", "N"] },
-  { time: "17:30", icon: "shopping_cart", title: "Bevásárlás", meta: "Feladat • 45 perc", people: ["N"] },
-  { time: "19:00", icon: "restaurant", title: "Családi vacsora", meta: "Család • 60 perc", people: ["A", "N", "B"] },
+const UPCOMING_PROGRAMS = [
+  {
+    dateTop: "MÁJ.",
+    dateNumber: "31.",
+    dateBottom: "Szo",
+    title: "Családi piknik",
+    time: "10:00 – 14:00",
+    tags: ["Kültéri", "Gyerekbarát"],
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    dateTop: "JÚN.",
+    dateNumber: "1.",
+    dateBottom: "V",
+    title: "Jump Aréna",
+    time: "15:00 – 17:00",
+    tags: ["Beltéri", "Gyerekbarát"],
+    image: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    dateTop: "JÚN.",
+    dateNumber: "2.",
+    dateBottom: "H",
+    title: "Helytörténeti múzeum",
+    time: "11:00 – 12:30",
+    tags: ["Beltéri", "Kulturális"],
+    image: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=900&q=80",
+  },
 ];
+
+const WEEKEND_IDEAS = [
+  {
+    title: "Kirándulás a hegyekben",
+    distance: "30 km tőletek",
+    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    title: "Kajakozás a tónál",
+    distance: "45 km tőletek",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    title: "Termelői piac látogatás",
+    distance: "10 km tőletek",
+    image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    title: "Állatkerti kirándulás",
+    distance: "25 km tőletek",
+    image: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=900&q=80",
+  },
+];
+
+const REMINDERS = [
+  { label: "Sátor és hálózsák előkészítése", date: "Máj. 30.", done: false },
+  { label: "Fürdőruha és törölköző bekészítése", date: "Máj. 31.", done: false },
+  { label: "Töltő és powerbank ellenőrzése", date: "Ma", done: true },
+];
+
+function Icon({ name, className = "text-[20px]" }: { name: string; className?: string }) {
+  return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
+}
 
 export default function ProgramokMobileView() {
   return (
@@ -28,91 +85,178 @@ export default function ProgramokMobileView() {
       <main className="relative mx-auto flex min-h-screen max-w-[430px] flex-col px-4 pb-32 pt-4">
         <MobileGreetingHeader />
 
-        <section className="mb-4">
-          <div className="mb-2 flex items-end justify-between">
-            <h2 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Május</h2>
-            <span className="material-symbols-outlined text-[22px] text-[var(--ff-text-muted)]">calendar_month</span>
-          </div>
+        <h1 className="mt-2 text-[26px] font-semibold tracking-[-0.05em] text-[var(--ff-text)]">Programok</h1>
 
-          <div className="grid grid-cols-7 gap-1.5">
-            {DAYS.map((item) => (
+        <section className="relative mt-4 overflow-hidden rounded-[30px] border border-[rgba(170,135,84,0.14)] shadow-[0_28px_60px_-28px_rgba(36,20,6,0.42)]">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url(https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=80)" }}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,22,10,0.78)_0%,rgba(34,22,10,0.48)_44%,rgba(34,22,10,0.18)_100%)]" />
+
+          <div className="relative px-5 pb-5 pt-6">
+            <h2 className="max-w-[220px] text-[26px] font-semibold leading-[1.05] tracking-[-0.05em] text-white">
+              Készen álltok a hétvégére?
+            </h2>
+            <p className="mt-3 max-w-[220px] text-[15px] leading-relaxed text-[rgba(255,244,231,0.92)]">
+              Tervezzetek közösen, töltsétek meg a hétvégét élményekkel.
+            </p>
+
+            <div className="mt-5 inline-flex items-center gap-3 rounded-[22px] bg-[rgba(255,251,244,0.94)] px-4 py-3 shadow-[0_18px_36px_-24px_rgba(36,20,6,0.28)]">
+              <Icon name="partly_cloudy_day" className="text-[28px] text-[#f0a51f]" />
+              <div>
+                <p className="text-[18px] font-semibold text-[var(--ff-text)]">22°C</p>
+                <p className="text-[14px] text-[var(--ff-text-soft)]">Enyhén felhős</p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <Link
+                href="/programok?view=planner"
+                className="flex items-center justify-center gap-3 rounded-full bg-[linear-gradient(135deg,#eea433,#d6841e)] px-4 py-4 text-[18px] font-bold text-white shadow-[0_18px_36px_-20px_rgba(210,130,33,0.56)]"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#cf7f1e]">
+                  <Icon name="add" className="text-[20px]" />
+                </span>
+                Program hozzáadása
+              </Link>
+              <Link
+                href="/programok?view=ideas"
+                className="flex items-center justify-center gap-3 rounded-full bg-[rgba(255,251,244,0.96)] px-4 py-4 text-[18px] font-semibold text-[var(--ff-text)]"
+              >
+                <Icon name="explore" className="text-[22px] text-[var(--ff-primary)]" />
+                Ötletek felfedezése
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-4 rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] px-3 py-4 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]">
+          <div className="grid grid-cols-7 gap-1">
+            {WEATHER_DAYS.map((day) => (
               <button
-                key={`${item.short}-${item.day}`}
-                className={`flex flex-col items-center rounded-[24px] px-1 py-2 text-center ${
-                  item.active
-                    ? "bg-[linear-gradient(145deg,rgba(126,145,79,0.98),rgba(111,130,68,0.98))] text-[var(--ff-text-inverse)] shadow-[0_18px_28px_-18px_rgba(61,49,34,0.24)]"
-                    : "text-[var(--ff-text)]"
+                key={`${day.label}-${day.high}`}
+                className={`rounded-[20px] px-1 py-3 text-center ${
+                  day.active ? "bg-[rgba(233,241,220,0.94)]" : ""
                 }`}
               >
-                <span className="text-[12px] font-medium">{item.short}</span>
-                <span className="mt-1 text-[17px] font-semibold">{item.day}</span>
-                <span className={`mt-2 h-2 w-2 rounded-full ${item.active ? "bg-[rgba(255,249,237,0.92)] shadow-[0_0_0_4px_rgba(255,249,237,0.18)]" : "bg-[rgba(124,145,111,0.92)]"}`} />
+                <p className="text-[14px] font-semibold text-[var(--ff-text)]">{day.label}</p>
+                <Icon name={day.icon} className={`mt-2 text-[24px] ${day.icon === "wb_sunny" ? "text-[#f0a51f]" : "text-[var(--ff-text-soft)]"}`} />
+                <p className="mt-1 text-[18px] font-semibold text-[var(--ff-text)]">{day.high}°</p>
+                <p className="mt-1 text-[14px] text-[var(--ff-text-soft)]">{day.low}°</p>
               </button>
             ))}
           </div>
         </section>
 
-        <section className="relative mb-6 overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(145deg,rgba(255,250,240,0.98),rgba(246,228,203,0.74))] px-5 py-4 text-[var(--ff-text-inverse)] shadow-[0_28px_60px_-28px_rgba(61,49,34,0.32)]">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url(https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80)" }}
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(70,82,44,0.74),rgba(70,82,44,0.16))]" />
-
-          <div className="relative min-h-[235px]">
-            <span className="inline-flex rounded-full bg-[rgba(116,136,78,0.76)] px-3 py-1.5 text-[12px] font-semibold text-[rgba(255,249,237,0.96)]">
-              Következő esemény
-            </span>
-            <h3 className="mt-4 max-w-[12rem] text-[27px] font-semibold leading-[1.08] tracking-[-0.04em]">Hétvégi piknik a Normafán</h3>
-            <div className="mt-5 space-y-2 text-[13px] text-[rgba(255,249,237,0.96)]">
-              <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">calendar_today</span>Május 24. (szombat)</p>
-              <p className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">schedule</span>10:00 – 15:00</p>
-            </div>
-            <button className="absolute bottom-1 right-1 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[var(--ff-primary)] shadow-[0_18px_28px_-18px_rgba(61,49,34,0.28)]">
-              <span className="material-symbols-outlined text-[24px]">arrow_forward</span>
-            </button>
+        <section className="mt-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Következő programjaink</h2>
+            <Link href="/programok?view=list" className="flex items-center gap-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+              Összes megtekintése
+              <Icon name="chevron_right" className="text-[18px]" />
+            </Link>
           </div>
-        </section>
 
-        <section>
-          <h2 className="mb-4 text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Mai programok</h2>
-          <div className="relative pl-5">
-            <div className="absolute left-[9px] top-5 bottom-5 w-px border-l border-dashed border-[rgba(124,145,111,0.28)]" />
-
-            <div className="flex flex-col gap-4">
-              {TODAY_PROGRAMS.map((item, index) => (
-                <div key={item.time} className="relative flex items-center gap-3">
-                  <div className={`absolute left-[-20px] top-1/2 h-[18px] w-[18px] -translate-y-1/2 rounded-full border-2 ${index === 0 ? "border-[var(--ff-primary)] bg-[rgba(124,145,111,0.18)]" : "border-[rgba(124,145,111,0.9)] bg-[var(--ff-bg-cream)]"}`} />
-                  <div className="w-[58px] shrink-0 text-[16px] font-semibold text-[var(--ff-text)]">{item.time}</div>
-                  <div className="flex flex-1 items-center gap-3 rounded-[28px] border border-white/86 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-4 py-4 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">
-                    <div className="flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(145deg,rgba(240,245,230,0.98),rgba(255,249,237,0.9))] text-[var(--ff-primary)]">
-                      <span className="material-symbols-outlined text-[28px]">{item.icon}</span>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-[16px] font-semibold text-[var(--ff-text)]">{item.title}</h3>
-                      <p className="mt-1 text-[13px] font-medium text-[var(--ff-primary-soft)]">{item.meta}</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="flex -space-x-2">
-                        {item.people.map((person) => (
-                          <div key={`${item.time}-${person}`} className="flex h-8 w-8 items-center justify-center rounded-full border border-white/80 bg-[linear-gradient(145deg,rgba(255,249,237,0.98),rgba(238,243,231,0.92))] text-[10px] font-bold text-[var(--ff-primary)]">
-                            {person}
-                          </div>
-                        ))}
-                      </div>
-                      <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
-                    </div>
+          <div className="space-y-3">
+            {UPCOMING_PROGRAMS.map((item) => (
+              <Link
+                key={item.title}
+                href="/programok?view=list"
+                className="grid grid-cols-[64px_92px_minmax(0,1fr)_20px] items-center gap-3 rounded-[24px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-3 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+              >
+                <div className="text-center text-[var(--ff-text)]">
+                  <p className="text-[13px] font-bold text-[var(--ff-text-soft)]">{item.dateTop}</p>
+                  <p className="mt-1 text-[34px] font-semibold leading-none tracking-[-0.05em]">{item.dateNumber}</p>
+                  <p className="mt-1 text-[14px] text-[var(--ff-text-soft)]">{item.dateBottom}</p>
+                </div>
+                <div className="h-[78px] overflow-hidden rounded-[18px]">
+                  <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }} />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-[16px] font-semibold leading-tight text-[var(--ff-text)]">{item.title}</h3>
+                  <p className="mt-1 flex items-center gap-1.5 text-[14px] text-[var(--ff-text-soft)]">
+                    <Icon name="schedule" className="text-[16px]" />
+                    {item.time}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`rounded-full px-2.5 py-1 text-[12px] font-semibold ${
+                          tag === "Kültéri" || tag === "Gyerekbarát"
+                            ? "bg-[rgba(233,241,220,0.98)] text-[var(--ff-primary)]"
+                            : "bg-[rgba(255,239,212,0.96)] text-[var(--ff-caramel-strong)]"
+                        }`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+                <Icon name="chevron_right" className="text-[20px] text-[var(--ff-text-soft)]" />
+              </Link>
+            ))}
           </div>
         </section>
 
-        <button className="mt-7 rounded-[999px] bg-[linear-gradient(145deg,rgba(255,243,226,0.96),rgba(255,236,205,0.92))] px-5 py-[18px] text-[18px] font-semibold text-[var(--ff-caramel-strong)] shadow-[0_22px_36px_-24px_rgba(185,130,71,0.24)]">
-          <span className="mr-2 text-[24px] align-middle">+</span>
-          Program hozzáadása
-        </button>
+        <section className="mt-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Hétvégi ötletek a családnak</h2>
+            <Link href="/programok?view=ideas" className="flex items-center gap-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+              További ötletek
+              <Icon name="chevron_right" className="text-[18px]" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {WEEKEND_IDEAS.map((item) => (
+              <Link
+                key={item.title}
+                href="/programok?view=ideas"
+                className="overflow-hidden rounded-[24px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+              >
+                <div className="h-[108px] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }} />
+                <div className="px-3 py-3">
+                  <h3 className="text-[16px] font-semibold leading-tight text-[var(--ff-text)]">{item.title}</h3>
+                  <p className="mt-2 flex items-center gap-1.5 text-[14px] text-[var(--ff-text-soft)]">
+                    <Icon name="location_on" className="text-[16px]" />
+                    {item.distance}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] px-4 py-4 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Gyors emlékeztetők</h2>
+            <Link href="/programok?view=reminders" className="flex items-center gap-1 text-[14px] font-semibold text-[var(--ff-primary)]">
+              Összes
+              <Icon name="chevron_right" className="text-[18px]" />
+            </Link>
+          </div>
+
+          <div className="divide-y divide-[rgba(74,67,54,0.08)]">
+            {REMINDERS.map((item) => (
+              <Link key={item.label} href="/programok?view=reminders" className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <span className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                  item.done ? "bg-[rgba(230,241,218,0.98)] text-[var(--ff-primary)]" : "border border-[rgba(170,135,84,0.22)] bg-white text-transparent"
+                }`}>
+                  <Icon name={item.done ? "check" : "radio_button_unchecked"} className="text-[16px]" />
+                </span>
+                <span className={`flex-1 text-[16px] ${item.done ? "text-[var(--ff-text-soft)] line-through" : "text-[var(--ff-text)]"}`}>
+                  {item.label}
+                </span>
+                <span className="flex items-center gap-1.5 text-[14px] text-[var(--ff-text-soft)]">
+                  <Icon name="calendar_month" className="text-[16px]" />
+                  {item.date}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
 
       <MobileBottomNav />

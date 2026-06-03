@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+
 export interface MealSuccessData {
   recipeName: string;
   startDate: string;
@@ -13,6 +15,9 @@ interface Props {
   data: MealSuccessData;
   onViewPlan: () => void;
 }
+
+const AUTO_CLOSE_MS = 5000;
+const TICK_MS = 100;
 
 function formatDate(dk: string) {
   return new Date(`${dk}T12:00:00`).toLocaleDateString("hu-HU", {
@@ -35,6 +40,34 @@ const CONFETTI = [
 ];
 
 export default function MealSuccessSheet({ data, onViewPlan }: Props) {
+  const [elapsedMs, setElapsedMs] = useState(0);
+
+  useEffect(() => {
+    const startedAt = Date.now();
+    const interval = window.setInterval(() => {
+      const nextElapsed = Date.now() - startedAt;
+      if (nextElapsed >= AUTO_CLOSE_MS) {
+        window.clearInterval(interval);
+        setElapsedMs(AUTO_CLOSE_MS);
+        onViewPlan();
+        return;
+      }
+
+      setElapsedMs(nextElapsed);
+    }, TICK_MS);
+
+    return () => window.clearInterval(interval);
+  }, [onViewPlan]);
+
+  const progressPercent = useMemo(
+    () => Math.min(100, (elapsedMs / AUTO_CLOSE_MS) * 100),
+    [elapsedMs],
+  );
+  const secondsLeft = useMemo(
+    () => Math.max(1, Math.ceil((AUTO_CLOSE_MS - elapsedMs) / 1000)),
+    [elapsedMs],
+  );
+
   const dateLabel =
     data.startDate === data.endDate
       ? formatDate(data.startDate)
@@ -43,7 +76,7 @@ export default function MealSuccessSheet({ data, onViewPlan }: Props) {
   return (
     <div className="fixed inset-0 z-[90] flex items-end bg-black/44 backdrop-blur-sm md:hidden">
       <div
-        className="relative w-full rounded-t-[28px] bg-[#F7F3EE] px-6 pt-8"
+        className="success-sheet relative w-full rounded-t-[28px] bg-[#F7F3EE] px-6 pt-8"
         style={{ paddingBottom: "calc(36px + env(safe-area-inset-bottom, 0px))" }}
       >
         {/* Celebration decoration */}
@@ -51,18 +84,19 @@ export default function MealSuccessSheet({ data, onViewPlan }: Props) {
           {CONFETTI.map((c, i) => (
             <div
               key={i}
-              className="absolute h-2.5 w-2.5"
+              className="success-confetti absolute h-2.5 w-2.5"
               style={{
                 backgroundColor: c.color,
                 left: c.x,
                 top: c.y,
                 transform: `rotate(${c.r})`,
                 borderRadius: "3px",
+                animationDelay: `${i * 70}ms`,
               }}
             />
           ))}
           {/* Main checkmark circle */}
-          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[#3B5C33] shadow-[0_8px_24px_rgba(59,92,51,0.36)]">
+          <div className="success-check relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[#3B5C33] shadow-[0_8px_24px_rgba(59,92,51,0.36)]">
             <span
               className="material-symbols-outlined text-[32px] text-white"
               style={{ fontVariationSettings: "'FILL' 1" }}
@@ -120,6 +154,72 @@ export default function MealSuccessSheet({ data, onViewPlan }: Props) {
         >
           Szuper! Vissza a tervhez
         </button>
+
+        <div className="mt-4">
+          <div className="h-2 overflow-hidden rounded-full bg-[rgba(184,112,64,0.16)]">
+            <div
+              className="h-full rounded-full bg-[linear-gradient(90deg,#d49058_0%,#b87040_100%)] transition-[width] duration-100 ease-linear"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          <p className="mt-2 text-center text-[12px] font-medium text-[#7A6E64]">
+            Automatikus visszalépés {secondsLeft} mp múlva
+          </p>
+        </div>
+
+        <style jsx>{`
+          .success-sheet {
+            animation: sheet-rise 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+          }
+
+          .success-check {
+            animation: check-pop 560ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+          }
+
+          .success-confetti {
+            animation: confetti-burst 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+          }
+
+          @keyframes sheet-rise {
+            from {
+              opacity: 0;
+              transform: translateY(32px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes check-pop {
+            0% {
+              opacity: 0;
+              transform: scale(0.7);
+            }
+            60% {
+              opacity: 1;
+              transform: scale(1.08);
+            }
+            100% {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          @keyframes confetti-burst {
+            0% {
+              opacity: 0;
+              transform: translateY(18px) scale(0.6) rotate(0deg);
+            }
+            50% {
+              opacity: 1;
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0) scale(1) rotate(16deg);
+            }
+          }
+        `}</style>
       </div>
     </div>
   );

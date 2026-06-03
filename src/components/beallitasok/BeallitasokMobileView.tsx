@@ -3,6 +3,7 @@
 import LogoutButton from "@/components/auth/LogoutButton";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
+import ScheduleEditor from "@/components/beallitasok/ScheduleEditor";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
 
 const IMPORTED_RECIPES = getUserImportedRecipes();
@@ -51,6 +52,16 @@ export default function BeallitasokMobileView() {
               </div>
             </div>
           ))}
+        </section>
+
+        <section className="mt-6 rounded-[34px] border border-white/84 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-5 py-5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">
+          <div className="mb-5">
+            <h2 className="text-[18px] font-semibold tracking-[-0.03em] text-[var(--ff-text)]">Napi rutin</h2>
+            <p className="mt-1 text-[14px] text-[var(--ff-text-muted)]">
+              Itt tudod felvenni az olyan állandó elemeket, mint az ébredés, iskola vagy lefekvés. Ezek jelennek meg a dashboard Mai teendők kártyáján is.
+            </p>
+          </div>
+          <ScheduleEditor />
         </section>
 
         <section className="mt-6 rounded-[34px] border border-white/84 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-5 py-5 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">

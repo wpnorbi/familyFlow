@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchRecipe, getBatchesForDate } from "@/lib/etkezes-data";
 import { getRecipeImageSrc } from "@/lib/recipes/recipe-image";
@@ -31,28 +32,73 @@ interface Props {
   catalog: Recipe[];
   plannedDaysCount: number;
   openDaysCount: number;
-  onAddMeal: () => void;
+  onAddMeal: (day?: WeekDay) => void;
   onOpenRecipeLibrary: () => void;
   onRemoveBatch: (batchId: string) => void;
   onStartCooking: (recipe: Recipe) => void;
   onViewRecipe: (recipe: Recipe) => void;
 }
 
-const USER_NAME = "Anna";
 const ALL_RECIPES = getUserImportedRecipes();
-const LIDL_RECIPES = ALL_RECIPES.filter((r) => r.sourceName === "Lidl Konyha");
-const HERO_IMAGE = LIDL_RECIPES[0]
-  ? getRecipeImageSrc(LIDL_RECIPES[0])
-  : "/images/recipes/categories/pasta.png";
-const FALLBACK_SHOPPING = ["Csirkemell", "Tejszín", "Brokkoli", "Sajt", "Tojás"];
-const FALLBACK_UNITS = ["1 kg", "2 dl", "1 fej", "20 dkg", "6 db"];
+const UNIQUE_RECIPES = Array.from(new Map(ALL_RECIPES.map((recipe) => [recipe.id, recipe])).values());
+const LIDL_RECIPES = UNIQUE_RECIPES.filter((recipe) => recipe.sourceName === "Lidl Konyha");
+const HERO_IMAGE = LIDL_RECIPES[0] ? getRecipeImageSrc(LIDL_RECIPES[0]) : "/images/recipes/categories/pasta.png";
 const HU_WEEKEND = ["Szombat", "Vasárnap"];
 
-function getGreeting(name: string) {
-  const h = new Date().getHours();
-  if (h < 12) return `Jó reggelt, ${name}!`;
-  if (h < 18) return `Jó napot, ${name}!`;
-  return `Jó estét, ${name}!`;
+const FILTER_GROUPS = [
+  {
+    title: "Hús / Fehérje",
+    items: [
+      { key: "csirke", icon: "egg_alt", label: "Csirke" },
+      { key: "sertes", icon: "nutrition", label: "Sertés" },
+      { key: "hal", icon: "set_meal", label: "Hal" },
+      { key: "marha", icon: "lunch_dining", label: "Marha" },
+    ],
+  },
+  {
+    title: "Elkészítési idő",
+    items: [
+      { key: "gyors", icon: "bolt", label: "Gyors" },
+      { key: "kozepes", icon: "timer", label: "Közepes" },
+      { key: "lassu", icon: "hourglass_bottom", label: "Lassú" },
+    ],
+  },
+  {
+    title: "Ételtípus",
+    items: [
+      { key: "teszta", icon: "ramen_dining", label: "Tészta" },
+      { key: "leves", icon: "soup_kitchen", label: "Leves" },
+      { key: "foetel", icon: "dinner_dining", label: "Főétel" },
+      { key: "fozelek", icon: "skillet", label: "Főzelék" },
+    ],
+  },
+] as const;
+
+const EXTRA_FILTERS = [
+  { key: "gyerekbarat", icon: "sentiment_satisfied", label: "Gyerekbarát" },
+  { key: "tobbnapos", icon: "calendar_month", label: "1-3 napra jó" },
+] as const;
+
+type FilterKey =
+  | "gyors"
+  | "kozepes"
+  | "lassu"
+  | "gyerekbarat"
+  | "csirke"
+  | "sertes"
+  | "marha"
+  | "hal"
+  | "teszta"
+  | "leves"
+  | "foetel"
+  | "fozelek"
+  | "tobbnapos";
+
+interface NotifItem {
+  icon: string;
+  text: string;
+  sub: string;
+  href: string;
 }
 
 function Icon({ name, className = "text-[20px]" }: { name: string; className?: string }) {
@@ -64,62 +110,10 @@ function getMealForDay(day: WeekDay, batches: MealBatch[]) {
   return batch ? getBatchRecipe(batch) : undefined;
 }
 
-// ─── Filter chip (toggleable) ─────────────────────────────────────────────────
-
-function FilterChip({
-  icon,
-  label,
-  selected,
-  onToggle,
-}: {
-  icon: string;
-  label: string;
-  selected: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      aria-pressed={selected}
-      className={`flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-extrabold transition-all hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2 ${
-        selected
-          ? "border-[rgba(90,112,80,0.40)] bg-[rgba(150,192,114,0.96)] text-[var(--ff-primary-strong)] shadow-[0_6px_16px_-8px_rgba(55,80,45,0.30)]"
-          : "border-[rgba(170,135,84,0.18)] bg-[rgba(255,248,232,0.96)] text-[var(--ff-text)] shadow-[0_4px_10px_-6px_rgba(61,49,34,0.18)] hover:bg-[rgba(255,242,218,0.99)]"
-      }`}
-    >
-      <Icon name={icon} className={`text-[15px] ${selected ? "text-[var(--ff-primary-strong)]" : "text-[var(--ff-primary)]"}`} />
-      {label}
-      {selected && <Icon name="check" className="text-[13px]" />}
-    </button>
-  );
+function formatMonthDay(day: WeekDay) {
+  const monthDay = day.date.toLocaleDateString("hu-HU", { month: "long", day: "numeric" });
+  return monthDay.charAt(0).toUpperCase() + monthDay.slice(1);
 }
-
-const FILTERS = [
-  { key: "gyors", icon: "bolt", label: "Gyors" },
-  { key: "kozepes", icon: "timer", label: "Közepes" },
-  { key: "lassu", icon: "hourglass_bottom", label: "Lassú" },
-  { key: "gyerekbarat", icon: "sentiment_satisfied", label: "Gyerekbarát" },
-  { key: "csirke", icon: "egg_alt", label: "Csirke" },
-  { key: "sertes", icon: "nutrition", label: "Sertés" },
-  { key: "marha", icon: "lunch_dining", label: "Marha" },
-  { key: "hal", icon: "set_meal", label: "Hal" },
-  { key: "kamra", icon: "inventory_2", label: "Kamrából" },
-] as const;
-
-type FilterKey = typeof FILTERS[number]["key"];
-
-const MODES = [
-  { key: "heti",    label: "Heti terv"   },
-  { key: "ma",      label: "Ma főzök"    },
-  { key: "kamra",   label: "Kamrából"    },
-  { key: "receptek", label: "Recepttár"  },
-] as const;
-
-type ModeKey = typeof MODES[number]["key"];
-
-// ─── Notification popover (same pattern as dashboard) ────────────────────────
-
-interface NotifItem { icon: string; text: string; sub: string; href: string }
 
 function NotificationPopover({ items, onClose }: { items: NotifItem[]; onClose: () => void }) {
   return (
@@ -171,48 +165,72 @@ function NotificationPopover({ items, onClose }: { items: NotifItem[]; onClose: 
   );
 }
 
-// ─── Week day card ─────────────────────────────────────────────────────────────
+function FilterPill({
+  icon,
+  label,
+  selected,
+  onClick,
+}: {
+  icon: string;
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={selected}
+      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all ${
+        selected
+          ? "border-[rgba(124,145,111,0.26)] bg-[rgba(225,235,210,0.92)] text-[var(--ff-primary)] shadow-[0_10px_22px_-16px_rgba(55,80,45,0.28)]"
+          : "border-[rgba(170,135,84,0.14)] bg-[rgba(255,252,245,0.92)] text-[var(--ff-text)] hover:bg-[rgba(255,245,224,0.92)]"
+      }`}
+    >
+      <Icon name={icon} className="text-[16px]" />
+      {label}
+    </button>
+  );
+}
 
-function WeekDayCard({
+function WeeklyDayCard({
   day,
   recipe,
-  isWeekend,
   onAddMeal,
   onViewRecipe,
 }: {
   day: WeekDay;
   recipe?: Recipe;
-  isWeekend: boolean;
-  onAddMeal: () => void;
+  onAddMeal: (day?: WeekDay) => void;
   onViewRecipe: (recipe: Recipe) => void;
 }) {
+  const isWeekend = HU_WEEKEND.includes(day.name);
   const dayLabel = day.isToday ? "Ma" : day.name;
-  const hasRealImage = Boolean(recipe?.image);
+  const mealLabel = isWeekend ? "Vacsora hozzáadása" : "Ebéd hozzáadása";
 
   if (!recipe) {
     return (
       <button
-        onClick={onAddMeal}
-        aria-label={`Étkezés hozzáadása: ${dayLabel}`}
-        className={`group flex min-h-[168px] flex-col overflow-hidden rounded-[20px] border-dashed text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2 ${
-          day.isToday
-            ? "border border-[rgba(90,112,80,0.28)] bg-[rgba(225,240,210,0.64)] hover:border-[rgba(90,112,80,0.42)] hover:bg-[rgba(215,234,196,0.82)]"
-            : isWeekend
-            ? "border border-[rgba(185,130,71,0.16)] bg-[rgba(255,247,234,0.54)] hover:border-[rgba(185,130,71,0.26)] hover:bg-[rgba(255,242,220,0.74)]"
-            : "border border-[rgba(185,130,71,0.16)] bg-[rgba(255,249,237,0.46)] hover:border-[rgba(185,130,71,0.24)] hover:bg-[rgba(255,245,222,0.70)]"
-        }`}
-        style={{ borderStyle: "dashed", borderWidth: "1px" }}
+        onClick={() => onAddMeal(day)}
+        className="flex min-h-[228px] flex-col rounded-[24px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.92)] px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-24px_rgba(61,49,34,0.2)]"
       >
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 px-3 py-4">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(185,130,71,0.32)] bg-[rgba(255,248,232,0.92)] text-[var(--ff-caramel-strong)] transition-transform group-hover:scale-105">
-            <Icon name="add" className="text-[22px]" />
-          </span>
+        <div className="flex items-start justify-between">
           <div>
-            <p className={`text-[11px] font-extrabold ${day.isToday ? "text-[var(--ff-primary)]" : "text-[var(--ff-caramel-strong)]"}`}>
-              {dayLabel}
-            </p>
-            <p className="mt-0.5 text-[10px] font-bold text-[var(--ff-text-muted)]">Hozzáadás</p>
+            <p className="text-[20px] font-bold text-[var(--ff-text)]">{dayLabel}</p>
+            <p className="text-[12px] font-medium text-[var(--ff-text-muted)]">{formatMonthDay(day)}</p>
           </div>
+          <span
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,248,232,0.96)] text-[var(--ff-text-muted)]"
+            aria-label={`${dayLabel} menü`}
+          >
+            <Icon name="more_horiz" className="text-[18px]" />
+          </span>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(185,130,71,0.24)] bg-[rgba(255,248,232,0.9)] text-[var(--ff-caramel-strong)]">
+            <Icon name="add" className="text-[28px]" />
+          </span>
+          <p className="text-[16px] font-semibold text-[var(--ff-text-muted)]">{mealLabel}</p>
         </div>
       </button>
     );
@@ -221,355 +239,125 @@ function WeekDayCard({
   return (
     <button
       onClick={() => onViewRecipe(recipe)}
-      aria-label={`${dayLabel}: ${recipe.name}`}
-      className={`group flex min-h-[168px] flex-col overflow-hidden rounded-[20px] text-left shadow-[0_10px_28px_-20px_rgba(61,49,34,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-18px_rgba(61,49,34,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2 ${
+      className={`flex min-h-[228px] flex-col rounded-[24px] border px-4 py-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-24px_rgba(61,49,34,0.24)] ${
         day.isToday
-          ? "border-2 border-[rgba(90,112,80,0.40)] bg-[rgba(255,249,235,0.97)]"
-          : isWeekend
-          ? "border border-[rgba(185,130,71,0.20)] bg-[rgba(255,249,235,0.97)]"
-          : "border border-[rgba(170,135,84,0.15)] bg-[rgba(255,249,235,0.97)]"
+          ? "border-[rgba(124,145,111,0.3)] bg-[linear-gradient(180deg,rgba(248,251,243,0.98),rgba(255,252,245,0.96))]"
+          : "border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.92)]"
       }`}
     >
-      <div className="relative h-[96px] w-full overflow-hidden">
-        {hasRealImage ? (
-          <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,rgba(255,247,232,0.98),rgba(233,243,224,0.92))]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(255,252,244,0.94)] text-[var(--ff-caramel-strong)] shadow-[0_12px_24px_-18px_rgba(61,49,34,0.26)]">
-              <Icon name="restaurant" className="text-[24px]" />
-            </div>
-          </div>
-        )}
-        <div className={`absolute inset-0 ${hasRealImage ? "bg-[linear-gradient(180deg,rgba(28,18,10,0.08),rgba(28,18,10,0.22))]" : "bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02))]"}`} />
-        {day.isToday && (
-          <span className="absolute left-2 top-2 rounded-full bg-[rgba(55,67,50,0.90)] px-2 py-0.5 text-[9px] font-extrabold text-white">
-            Ma
-          </span>
-        )}
-        {isWeekend && !day.isToday && (
-          <span className="absolute left-2 top-2 rounded-full bg-[rgba(185,130,71,0.85)] px-2 py-0.5 text-[9px] font-extrabold text-white">
-            {day.name}
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col justify-between px-3 pb-2.5 pt-2">
+      <div className="flex items-start justify-between">
         <div>
-          {!isWeekend && <p className="text-[10px] font-bold text-[var(--ff-text-muted)]">{dayLabel}</p>}
-          <h3 className="mt-0.5 line-clamp-2 text-[11px] font-extrabold leading-tight text-[var(--ff-text)]">
-            {recipe.name}
-          </h3>
+          <p className="text-[20px] font-bold text-[var(--ff-text)]">{dayLabel}</p>
+          <p className="text-[12px] font-medium text-[var(--ff-text-muted)]">{formatMonthDay(day)}</p>
         </div>
-        <div className="mt-1.5 flex items-center gap-1.5 text-[9.5px] font-bold text-[var(--ff-text-muted)]">
-          <Icon name="schedule" className="text-[12px]" />
-          {recipe.duration} perc
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/92 text-[var(--ff-text-muted)] shadow-[0_10px_16px_-14px_rgba(61,49,34,0.22)]">
+            <Icon name="more_horiz" className="text-[18px]" />
+          </span>
+        </div>
+      </div>
+
+      <div className="relative mt-3 h-[86px] overflow-hidden rounded-[18px]">
+        <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+        <div className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.95)] text-[var(--ff-text-muted)]">
+          <Icon name="more_horiz" className="text-[18px]" />
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-1 flex-col">
+        <h3 className="line-clamp-2 text-[14px] font-bold leading-snug text-[var(--ff-text)]">{recipe.name}</h3>
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
+          <span className="rounded-full bg-[rgba(225,235,210,0.9)] px-2.5 py-1 text-[11px] font-semibold text-[var(--ff-primary)]">
+            {getRecipeTimeBucket(recipe) === "short" ? "Gyors" : getRecipeTimeBucket(recipe) === "medium" ? "Közepes" : "Lassú"}
+          </span>
+          <span className="text-[12px] font-medium text-[var(--ff-text-muted)]">{recipe.duration} perc</span>
         </div>
       </div>
     </button>
   );
 }
 
-// ─── Recipe card (3-up, with bookmarking) ────────────────────────────────────
-
-function RecipeCard({
+function RecommendationCard({
   recipe,
-  bookmarked,
   onViewRecipe,
+  bookmarked,
   onToggleBookmark,
 }: {
   recipe: Recipe;
-  bookmarked: boolean;
   onViewRecipe: (recipe: Recipe) => void;
+  bookmarked: boolean;
   onToggleBookmark: (recipe: Recipe) => void;
 }) {
-  const isKidFriendly = isKidFriendlyRecipe(recipe);
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => onViewRecipe(recipe)}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onViewRecipe(recipe); }}
-      aria-label={`${recipe.name} recept megnyitása`}
-      className="cursor-pointer overflow-hidden rounded-[20px] border border-[rgba(170,135,84,0.13)] bg-[rgba(255,249,235,0.97)] shadow-[0_16px_36px_-26px_rgba(61,49,34,0.26)] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_22px_46px_-26px_rgba(61,49,34,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
+    <article
+      className="overflow-hidden rounded-[24px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.94)] shadow-[0_18px_36px_-28px_rgba(61,49,34,0.2)]"
     >
-      <div className="h-[148px] w-full overflow-hidden bg-[linear-gradient(145deg,rgba(255,247,232,0.92),rgba(233,243,224,0.86))]">
-        <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
-      </div>
-      <div className="px-4 pb-4 pt-3.5">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="line-clamp-2 min-h-[2.6em] text-[14px] font-extrabold leading-[1.28] tracking-[-0.022em] text-[var(--ff-text)]">
-            {recipe.name}
-          </h3>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onViewRecipe(recipe)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onViewRecipe(recipe); }}
+        className="block w-full cursor-pointer text-left"
+      >
+        <div className="relative h-[156px] overflow-hidden">
+          <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
+          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+            {isQuickRecipe(recipe) && (
+              <span className="rounded-full bg-[rgba(55,67,50,0.9)] px-2.5 py-1 text-[11px] font-semibold text-white">
+                Gyors
+              </span>
+            )}
+          </div>
           <button
-            onClick={(e) => { e.stopPropagation(); onToggleBookmark(recipe); }}
-            aria-label={bookmarked ? `${recipe.name} mentés eltávolítása` : `${recipe.name} mentése`}
-            title={bookmarked ? "Mentés eltávolítása" : "Mentés"}
-            className="mt-0.5 shrink-0 text-[var(--ff-text-muted)] transition-all hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-1"
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleBookmark(recipe);
+            }}
+            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.94)] text-[var(--ff-text-muted)]"
+            aria-label={bookmarked ? "Mentés eltávolítása" : "Mentés"}
           >
             <Icon
               name={bookmarked ? "bookmark" : "bookmark_border"}
-              className={`text-[18px] ${bookmarked ? "text-[var(--ff-caramel-strong)]" : "opacity-50"}`}
+              className={`text-[18px] ${bookmarked ? "text-[var(--ff-caramel-strong)]" : ""}`}
             />
           </button>
         </div>
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10.5px] font-semibold text-[var(--ff-text-muted)]">
-          <span className="inline-flex items-center gap-1">
-            <Icon name="schedule" className="text-[14px]" />
-            {recipe.duration} perc
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <Icon name="sentiment_satisfied" className="text-[14px]" />
-            {isKidFriendly ? "Gyerekbarát" : getRecipeMealTypeLabel(recipe)}
-          </span>
-          {recipe.servings && recipe.servings >= 4 && (
-            <span className="inline-flex items-center gap-1">
-              <Icon name="calendar_month" className="text-[14px]" />
-              2 napra
-            </span>
-          )}
+        <div className="px-4 pb-4 pt-3">
+          <h3 className="line-clamp-2 text-[14px] font-bold leading-snug text-[var(--ff-text)]">{recipe.name}</h3>
+          <div className="mt-2 flex items-center gap-2 text-[12px] font-medium text-[var(--ff-text-muted)]">
+            <span>{recipe.duration} perc</span>
+            <span>•</span>
+            <span>{getRecipeMealTypeLabel(recipe)}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
-
-// ─── Shopping list panel ──────────────────────────────────────────────────────
-
-function ShoppingListPanel({
-  shoppingItems,
-  onAddMeal,
-}: {
-  shoppingItems: string[];
-  onAddMeal: () => void;
-}) {
-  const [activeTab, setActiveTab] = useState<"osszes" | "szukseges" | "kesz">("osszes");
-  const [doneItems, setDoneItems] = useState<Set<string>>(new Set());
-
-  const rawItems = shoppingItems.length > 0 ? shoppingItems : FALLBACK_SHOPPING;
-  const units = shoppingItems.length > 0 ? rawItems.map(() => "1 db") : FALLBACK_UNITS;
-  const isEmpty = shoppingItems.length === 0 && doneItems.size === 0;
-
-  const visibleItems = rawItems
-    .map((item, i) => ({ item, unit: units[i] ?? "1 db", done: doneItems.has(item) }))
-    .filter(({ done }) =>
-      activeTab === "osszes" ? true : activeTab === "kesz" ? done : !done
-    )
-    .slice(0, 6);
-
-  const toggleDone = (item: string) => {
-    setDoneItems((prev) => {
-      const next = new Set(prev);
-      if (next.has(item)) next.delete(item); else next.add(item);
-      return next;
-    });
-  };
-
-  const TABS = [
-    { key: "osszes",    label: `Összes (${rawItems.length})` },
-    { key: "szukseges", label: `Szükséges (${rawItems.length - doneItems.size})` },
-    { key: "kesz",      label: `Kész (${doneItems.size})` },
-  ] as const;
-
-  return (
-    <section className="rounded-[26px] border border-[rgba(170,135,84,0.16)] bg-[rgba(255,249,237,0.96)] p-5 shadow-[0_22px_52px_-36px_rgba(61,49,34,0.26)]">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-[14px] font-extrabold text-[var(--ff-text)]">
-          <Icon name="shopping_basket" className="text-[18px] text-[var(--ff-primary)]" />
-          Bevásárlólista
-        </h2>
-        <Link href="/bevasarlas" aria-label="Teljes bevásárlólista megnyitása" className="flex items-center gap-1 text-[10px] font-bold text-[var(--ff-text-muted)] hover:opacity-70">
-          Megnyitás
-          <Icon name="open_in_new" className="text-[14px]" />
-        </Link>
-      </div>
-
-      {/* Tabs */}
-      <div className="mb-3 flex gap-1">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActiveTab(key)}
-            className={`rounded-full px-2.5 py-1.5 text-[10px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-1 ${
-              activeTab === key
-                ? "bg-[rgba(210,228,192,0.96)] text-[var(--ff-primary)]"
-                : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,245,222,0.80)]"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Empty state */}
-      {isEmpty ? (
-        <div className="py-3 text-center">
-          <p className="text-[11.5px] font-bold text-[var(--ff-text-muted)]">
-            A lista a heti terv alapján fog frissülni.
-          </p>
-          <button
-            onClick={onAddMeal}
-            className="mt-2 text-[11px] font-extrabold text-[var(--ff-primary)] underline-offset-2 hover:underline"
-          >
-            Étkezés hozzáadása →
-          </button>
-        </div>
-      ) : (
-        <div className="divide-y divide-[rgba(170,135,84,0.08)]">
-          {visibleItems.map(({ item, unit, done }) => (
-            <div key={item} className="flex items-center gap-3 py-2.5">
-              <button
-                onClick={() => toggleDone(item)}
-                aria-label={done ? `${item} visszajelölése` : `${item} kipipálása`}
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] ${
-                  done
-                    ? "border-[var(--ff-primary)] bg-[var(--ff-primary)] text-white"
-                    : "border-[rgba(170,135,84,0.35)] hover:border-[var(--ff-primary)]"
-                }`}
-              >
-                {done && <Icon name="check" className="text-[12px]" />}
-              </button>
-              <span className={`flex-1 text-[12px] font-bold ${done ? "text-[var(--ff-text-muted)] line-through" : "text-[var(--ff-text)]"}`}>
-                {item}
-              </span>
-              <span className="text-[11px] font-bold text-[var(--ff-text-muted)]">{unit}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-3 flex items-center justify-between border-t border-[rgba(170,135,84,0.10)] pt-3">
-        <button
-          className="flex items-center gap-1.5 text-[11px] font-extrabold text-[var(--ff-text-muted)] hover:text-[var(--ff-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)]"
-          aria-label="Tétel hozzáadása a bevásárlólistához"
-        >
-          <Icon name="add" className="text-[16px]" />
-          Hozzáadás
-        </button>
-        <span className="text-[10px] font-bold text-[var(--ff-text-muted)]">
-          {doneItems.size}/{rawItems.length} kész
-        </span>
-      </div>
-    </section>
-  );
-}
-
-// ─── Pantry ideas panel ───────────────────────────────────────────────────────
-
-function PantryIdeasPanel({
-  pantryItems,
-  onViewRecipe,
-}: {
-  pantryItems: string[];
-  onViewRecipe: (recipe: Recipe) => void;
-}) {
-  const ranked = useMemo(
-    () => rankRecipesForPantry(LIDL_RECIPES, pantryItems).slice(0, 3),
-    [pantryItems]
-  );
-
-  return (
-    <section className="rounded-[24px] border border-[rgba(170,135,84,0.16)] bg-[rgba(255,249,237,0.96)] p-4 shadow-[0_18px_44px_-34px_rgba(61,49,34,0.24)]">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-[14px] font-extrabold text-[var(--ff-text)]">
-          <Icon name="eco" className="text-[18px] text-[var(--ff-primary)]" />
-          Kamra ötletek
-        </h2>
-        <Link href="/kamra" className="flex items-center gap-1 text-[10px] font-bold text-[var(--ff-text-muted)] hover:opacity-70">
-          Összes
-          <Icon name="chevron_right" className="text-[14px]" />
-        </Link>
-      </div>
-
-      {pantryItems.length === 0 ? (
-        <div className="py-3 text-center">
-          <p className="text-[11.5px] font-bold text-[var(--ff-text-muted)]">A kamra még nincs feltöltve.</p>
-          <Link href="/kamra" className="mt-2 block text-[11px] font-extrabold text-[var(--ff-primary)] hover:underline">
-            Kamra feltöltése →
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {ranked.map(({ recipe, missingIngredients }) => (
-            <button
-              key={recipe.id}
-              onClick={() => onViewRecipe(recipe)}
-              aria-label={`${recipe.name}: ${missingIngredients.length === 0 ? "minden megvan" : `${missingIngredients.length} hozzávaló hiányzik`}`}
-              className="grid w-full grid-cols-[52px_1fr] gap-3 rounded-[16px] border border-[rgba(170,135,84,0.12)] bg-[rgba(248,242,228,0.88)] p-2.5 text-left transition-all hover:bg-[rgba(244,236,218,0.96)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)]"
-            >
-              {/* Image with fallback */}
-              <RecipeImage recipe={recipe} className="h-[52px] w-[52px] rounded-[12px] object-cover" />
-              <div className="min-w-0">
-                <h3 className="line-clamp-1 text-[12px] font-extrabold text-[var(--ff-text)]">{recipe.name}</h3>
-                <p className={`mt-0.5 text-[10px] font-semibold ${missingIngredients.length === 0 ? "text-[var(--ff-primary)]" : "text-[var(--ff-caramel-strong)]"}`}>
-                  {missingIngredients.length === 0 ? "Minden megvan otthon" : `${missingIngredients.length} hozzávaló hiányzik`}
-                </p>
-                <p className="mt-0.5 line-clamp-1 text-[9.5px] font-semibold text-[var(--ff-text-muted)]">
-                  {missingIngredients.length === 0 ? "Azonnal elkészíthető" : missingIngredients.slice(0, 2).join(", ")}
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-// ─── Seasonal panel ───────────────────────────────────────────────────────────
-
-function SeasonalPanel({ recipe, onStartCooking }: { recipe: Recipe; onStartCooking: (r: Recipe) => void }) {
-  return (
-    <section className="relative overflow-hidden rounded-[24px] border border-[rgba(195,148,70,0.22)] bg-[linear-gradient(140deg,rgba(255,228,178,0.99),rgba(246,208,150,0.94))] p-4 shadow-[0_16px_40px_-28px_rgba(140,88,20,0.36)]">
-      <div className="relative z-10 max-w-[60%]">
-        <p className="mb-1 text-[10px] font-extrabold uppercase tracking-widest text-[rgba(100,62,14,0.60)]">Szezonális</p>
-        <h3 className="text-[16px] font-extrabold leading-tight tracking-tight text-[rgba(72,44,10,0.92)]">Tavaszi kedvencek</h3>
-        <p className="mt-1 text-[10.5px] font-semibold leading-snug text-[rgba(100,62,14,0.68)]">Friss, könnyű ételek a szezonra.</p>
-        <button
-          onClick={() => onStartCooking(recipe)}
-          aria-label="Szezonális receptek megtekintése"
-          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[linear-gradient(135deg,#d98a28,#c07018)] px-4 py-2 text-[11px] font-extrabold text-white shadow-[0_8px_20px_-10px_rgba(180,100,16,0.52)] transition-all hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        >
-          Megnézem
-          <Icon name="arrow_forward" className="text-[15px]" />
-        </button>
-      </div>
-      <div className="absolute -bottom-8 right-[-20px] h-[148px] w-[148px] rounded-full bg-[linear-gradient(135deg,rgba(238,243,226,0.80),rgba(142,186,100,0.70))] blur-[2px]" />
-      <div className="absolute bottom-3 right-5 grid h-[80px] w-[110px] rotate-[-8deg] grid-cols-4 gap-1 opacity-80">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i} className="rounded-full bg-[linear-gradient(180deg,rgba(248,246,224,0.9),#6ca653)]" />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function DesktopEtkezesView({
-  nextMealData: _nextMealData,
+  nextMealData,
   weekDays,
   batches,
   shoppingItems,
   pantryItems,
   catalog,
   plannedDaysCount,
-  openDaysCount,
   onAddMeal,
   onOpenRecipeLibrary,
-  onRemoveBatch: _onRemoveBatch,
   onStartCooking,
   onViewRecipe,
 }: Props) {
-  // ── State ──────────────────────────────────────────────────────────────────
-  const [activeFilters, setActiveFilters] = useState<Set<FilterKey>>(new Set());
-  const [activeMode, setActiveMode] = useState<ModeKey>("heti");
+  const [activeFilters, setActiveFilters] = useState<Set<FilterKey>>(new Set(["csirke", "gyors", "gyerekbarat", "tobbnapos"]));
   const [showNotifPopover, setShowNotifPopover] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState<Set<string>>(new Set());
   const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!showNotifPopover) return;
-    const handler = (e: MouseEvent) => {
-      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+    const handler = (event: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
         setShowNotifPopover(false);
       }
     };
@@ -577,36 +365,32 @@ export default function DesktopEtkezesView({
     return () => document.removeEventListener("mousedown", handler);
   }, [showNotifPopover]);
 
-  const toggleFilter = useCallback((key: FilterKey) => {
-    setActiveFilters((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key); else next.add(key);
-      return next;
-    });
-  }, []);
+  const sourceRecipes = useMemo(() => {
+    if (catalog.length > 0) return catalog;
+    return UNIQUE_RECIPES;
+  }, [catalog]);
 
-  const toggleBookmark = useCallback((recipe: Recipe) => {
-    setSavedRecipes((prev) => {
-      const next = new Set(prev);
-      if (next.has(recipe.id)) next.delete(recipe.id); else next.add(recipe.id);
-      return next;
-    });
-  }, []);
+  const plannedRecipes = useMemo(
+    () => weekDays.map((day) => getMealForDay(day, batches) ?? undefined),
+    [weekDays, batches],
+  );
 
-  const handleModeChange = useCallback((mode: ModeKey) => {
-    setActiveMode(mode);
-    if (mode === "receptek") onOpenRecipeLibrary();
-  }, [onOpenRecipeLibrary]);
+  const progressRatio = `${Math.max(plannedDaysCount, 1) / 7 * 100}%`;
 
-  // ── Recipe filtering ───────────────────────────────────────────────────────
   const filteredRecipes = useMemo(() => {
-    let pool = LIDL_RECIPES;
-    const proteinFilters = [
+    let pool = sourceRecipes;
+
+    const proteins = [
       activeFilters.has("csirke") ? "csirke" : null,
       activeFilters.has("sertes") ? "sertés" : null,
       activeFilters.has("marha") ? "marha" : null,
       activeFilters.has("hal") ? "hal" : null,
     ].filter(Boolean) as Recipe["protein"][];
+
+    if (proteins.length > 0) {
+      pool = pool.filter((recipe) => proteins.includes(recipe.protein));
+    }
+
     const timeFilters = [
       activeFilters.has("gyors") ? "short" : null,
       activeFilters.has("kozepes") ? "medium" : null,
@@ -614,154 +398,150 @@ export default function DesktopEtkezesView({
     ].filter(Boolean) as Array<"short" | "medium" | "long">;
 
     if (timeFilters.length > 0) {
-      pool = pool.filter((r) => timeFilters.includes(getRecipeTimeBucket(r)));
+      pool = pool.filter((recipe) => timeFilters.includes(getRecipeTimeBucket(recipe)));
     }
+
     if (activeFilters.has("gyerekbarat")) {
-      pool = pool.filter((r) => isKidFriendlyRecipe(r));
+      pool = pool.filter((recipe) => isKidFriendlyRecipe(recipe));
     }
-    if (proteinFilters.length > 0) {
-      pool = pool.filter((r) => proteinFilters.includes(r.protein));
+
+    if (activeFilters.has("teszta")) {
+      pool = pool.filter((recipe) => getRecipeMealTypeLabel(recipe).toLowerCase().includes("tészta"));
     }
-    if (activeFilters.has("kamra") && pantryItems.length > 0) {
-      const ranked = rankRecipesForPantry(pool, pantryItems);
-      pool = ranked.map((r) => r.recipe);
+    if (activeFilters.has("leves")) {
+      pool = pool.filter((recipe) => getRecipeMealTypeLabel(recipe).toLowerCase().includes("leves"));
     }
-    if (pool.length === 0) return [];
+    if (activeFilters.has("foetel")) {
+      pool = pool.filter((recipe) => recipe.category.toLowerCase().includes("főétel"));
+    }
+    if (activeFilters.has("fozelek")) {
+      pool = pool.filter((recipe) => getRecipeMealTypeLabel(recipe).toLowerCase().includes("főzel"));
+    }
+
+    if (activeFilters.has("tobbnapos")) {
+      pool = pool.filter((recipe) => (recipe.servings ?? 0) >= 4 || (recipe.tags ?? []).includes("2 napra elég"));
+    }
+
     return pool
-      .sort((a, b) => {
-        const aK = Number(isKidFriendlyRecipe(a)), bK = Number(isKidFriendlyRecipe(b));
-        const aQ = Number(isQuickRecipe(a)), bQ = Number(isQuickRecipe(b));
-        return bK - aK || bQ - aQ || a.duration - b.duration || a.name.localeCompare(b.name, "hu");
-      })
-      .slice(0, 3);
-  }, [activeFilters, pantryItems]);
+      .sort((a, b) => Number(isQuickRecipe(b)) - Number(isQuickRecipe(a)) || a.duration - b.duration)
+      .slice(0, 6);
+  }, [activeFilters, sourceRecipes]);
 
-  // ── Data ───────────────────────────────────────────────────────────────────
-  const recipes = catalog.length > 0 ? catalog : [];
-
-  const plannedRecipes = weekDays.map((day, i) =>
-    i === 6 && !getMealForDay(day, batches) ? undefined : getMealForDay(day, batches) ?? undefined
+  const pantryRanked = useMemo(
+    () => rankRecipesForPantry(sourceRecipes.slice(0, 30), pantryItems).slice(0, 3),
+    [sourceRecipes, pantryItems],
   );
 
-  const seasonalRecipe = LIDL_RECIPES.find((r) => r.category === "Főétel") ?? LIDL_RECIPES[0];
+  const quickLunchRecipe = useMemo(
+    () => nextMealData?.recipe ?? filteredRecipes[0] ?? sourceRecipes[0],
+    [nextMealData, filteredRecipes, sourceRecipes],
+  );
 
   const notifItems = useMemo<NotifItem[]>(() => {
     const items: NotifItem[] = [];
-    if (plannedDaysCount < 7)
-      items.push({ icon: "restaurant", text: `${7 - plannedDaysCount} nap nincs tervezve`, sub: "Egészítsd ki a heti tervet", href: "#planner" });
-    if (shoppingItems.length > 0)
-      items.push({ icon: "shopping_basket", text: `${shoppingItems.length} tétel a listán`, sub: "Tekintsd át a bevásárlólistát", href: "/bevasarlas" });
-    if (pantryItems.length === 0)
-      items.push({ icon: "inventory_2", text: "A kamra feltöltésre vár", sub: "Adj hozzá alapanyagokat", href: "/kamra" });
+    if (plannedDaysCount < 7) {
+      items.push({
+        icon: "restaurant",
+        text: `${7 - plannedDaysCount} nap még üres`,
+        sub: "Egészítsd ki a heti tervet",
+        href: "#planner",
+      });
+    }
+    if (shoppingItems.length > 0) {
+      items.push({
+        icon: "shopping_basket",
+        text: `${shoppingItems.length} tétel vár bevásárlásra`,
+        sub: "Nézd át a listát",
+        href: "/bevasarlas",
+      });
+    }
+    if (pantryItems.length === 0) {
+      items.push({
+        icon: "inventory_2",
+        text: "A kamra még üres",
+        sub: "Tölts fel pár alapanyagot",
+        href: "/kamra",
+      });
+    }
     return items;
   }, [plannedDaysCount, shoppingItems.length, pantryItems.length]);
+
+  const missingItems = shoppingItems.length > 0 ? shoppingItems.slice(0, 5) : ["Csirkemell", "Paradicsom", "Tejszín", "Tészta", "Brokkoli"];
 
   return (
     <div className="hidden min-h-screen w-full px-3 py-3 md:block">
       <div className="mx-auto flex min-h-[calc(100vh-24px)] max-w-[1780px] flex-col rounded-[32px] bg-[linear-gradient(180deg,rgba(246,235,216,0.78)_0%,rgba(248,240,226,0.86)_15%,rgba(250,244,234,0.92)_40%)] px-6 py-6 shadow-[0_44px_120px_-72px_rgba(50,34,14,0.56),inset_0_0_0_1px_rgba(175,140,88,0.13)] backdrop-blur-[22px] 2xl:px-8 2xl:py-7">
-
-        {/* ══ FULL-WIDTH HEADER ════════════════════════════════════════════════ */}
-        <header className="mb-5 flex items-center justify-between gap-4 2xl:mb-6">
-          <Link
-            href="/beallitasok"
-            aria-label="Profil és beállítások"
-            className="flex items-center gap-3.5 rounded-[20px] px-1 py-1 transition-colors hover:bg-[rgba(255,248,232,0.60)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
-          >
-            <div
-              aria-hidden
-              className="h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-[rgba(255,246,228,0.9)] bg-cover bg-center shadow-[0_10px_24px_-14px_rgba(61,49,34,0.32)]"
-              style={{ backgroundImage: "url(https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80)" }}
-            />
-            <div>
-              <h1 className="text-[18px] font-extrabold tracking-[-0.025em] text-[var(--ff-text)]">
-                {getGreeting(USER_NAME)}
-              </h1>
-              <p className="text-[11px] font-semibold text-[var(--ff-text-muted)]">Étkezés tervező</p>
-            </div>
-          </Link>
-
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={onOpenRecipeLibrary}
-              aria-label="Recepttár megnyitása"
-              className="flex items-center gap-2 rounded-full border border-[rgba(170,135,84,0.18)] bg-[rgba(255,248,232,0.94)] px-4 py-2.5 text-[13px] font-extrabold text-[var(--ff-primary)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,242,215,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
-            >
-              <Icon name="menu_book" className="text-[18px]" />
-              Recepttár
-            </button>
-
-            {/* Notification bell + popover */}
-            <div className="relative" ref={notifRef}>
+        <WelcomeHeader
+          description="Mit főzzünk ma?"
+          actions={
+            <>
               <button
-                onClick={() => setShowNotifPopover((v) => !v)}
-                aria-label={`Értesítések${notifItems.length > 0 ? ` — ${notifItems.length} új` : ""}`}
-                aria-expanded={showNotifPopover}
-                className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(170,135,84,0.16)] bg-[rgba(255,248,232,0.94)] text-[var(--ff-text)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,243,218,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
+                onClick={onOpenRecipeLibrary}
+                aria-label="Recepttár megnyitása"
+                className="flex items-center gap-2 rounded-full border border-[rgba(170,135,84,0.18)] bg-[rgba(255,248,232,0.94)] px-4 py-2.5 text-[13px] font-extrabold text-[var(--ff-primary)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,242,215,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
               >
-                <Icon name="notifications" className="text-[20px]" />
-                {notifItems.length > 0 && (
-                  <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#e8821e] shadow-[0_0_0_1.5px_rgba(248,239,224,0.95)]" />
-                )}
+                <Icon name="menu_book" className="text-[18px]" />
+                Recepttár
               </button>
-              {showNotifPopover && (
-                <NotificationPopover items={notifItems} onClose={() => setShowNotifPopover(false)} />
-              )}
-            </div>
 
-            <Link
-              href="/beallitasok"
-              aria-label="Beállítások"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(170,135,84,0.16)] bg-[rgba(255,248,232,0.94)] text-[var(--ff-text)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,243,218,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
-            >
-              <Icon name="settings" className="text-[20px]" />
-            </Link>
-          </div>
-        </header>
-
-        {/* ══ TWO-COLUMN GRID ══════════════════════════════════════════════════ */}
-        <div className="grid flex-1 grid-cols-[minmax(0,1fr)_360px] gap-5 2xl:grid-cols-[minmax(0,1fr)_400px] 2xl:gap-6">
-
-          {/* ── LEFT COLUMN ─────────────────────────────────────────────────── */}
-          <section className="min-w-0">
-
-            {/* ── Hero ────────────────────────────────────────────────────────── */}
-            <section className="relative min-h-[280px] overflow-hidden rounded-[26px] shadow-[0_30px_64px_-36px_rgba(36,20,6,0.56)] 2xl:min-h-[312px]">
-              <div className="absolute inset-0">
-                <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${HERO_IMAGE})` }} />
+              <div className="relative" ref={notifRef}>
+                <button
+                  onClick={() => setShowNotifPopover((value) => !value)}
+                  aria-label={`Értesítések${notifItems.length > 0 ? ` — ${notifItems.length} új` : ""}`}
+                  aria-expanded={showNotifPopover}
+                  className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(170,135,84,0.16)] bg-[rgba(255,248,232,0.94)] text-[var(--ff-text)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,243,218,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
+                >
+                  <Icon name="notifications" className="text-[20px]" />
+                  {notifItems.length > 0 && (
+                    <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#e8821e] shadow-[0_0_0_1.5px_rgba(248,239,224,0.95)]" />
+                  )}
+                </button>
+                {showNotifPopover && <NotificationPopover items={notifItems} onClose={() => setShowNotifPopover(false)} />}
               </div>
-              <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(28,14,4,0.88)_0%,rgba(44,24,6,0.54)_44%,rgba(26,12,2,0.18)_100%)]" />
 
-              <div className="relative flex min-h-[280px] flex-col justify-between px-8 py-7 2xl:min-h-[312px] 2xl:px-10 2xl:py-8">
-                <p className="flex items-center gap-2 text-[12.5px] font-bold text-[rgba(255,234,190,0.88)]">
-                  <Icon name="restaurant_menu" className="text-[18px] text-[#f0ae1c]" />
-                  Étkezés tervező
-                </p>
+              <Link
+                href="/beallitasok"
+                aria-label="Beállítások"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(170,135,84,0.16)] bg-[rgba(255,248,232,0.94)] text-[var(--ff-text)] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.22)] transition-all hover:bg-[rgba(255,243,218,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] focus-visible:ring-offset-2"
+              >
+                <Icon name="settings" className="text-[20px]" />
+              </Link>
+            </>
+          }
+        />
 
-                <div>
-                  <h2 className="max-w-[520px] text-[42px] font-extrabold leading-[0.94] tracking-[-0.055em] text-[rgba(255,252,242,1)] 2xl:text-[50px]">
-                    Mit főzzünk<br />ezen a héten?
+        <div className="grid flex-1 grid-cols-[minmax(0,1fr)_360px] gap-6 2xl:grid-cols-[minmax(0,1fr)_392px]">
+          <section className="min-w-0">
+            <section className="relative overflow-hidden rounded-[30px] border border-[rgba(170,135,84,0.12)] shadow-[0_30px_64px_-36px_rgba(36,20,6,0.56)]">
+              <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${HERO_IMAGE})` }} />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(34,18,5,0.8)_0%,rgba(34,18,5,0.48)_42%,rgba(34,18,5,0.14)_100%)]" />
+              <div className="relative flex min-h-[295px] flex-col justify-end px-10 py-9">
+                <div className="max-w-[420px]">
+                  <h2 className="text-[56px] font-extrabold leading-[0.92] tracking-[-0.06em] text-white">
+                    Mit főzzünk
+                    <br />
+                    ezen a héten?
                   </h2>
-                  <p className="mt-4 max-w-[380px] text-[16px] font-medium leading-snug text-[rgba(255,238,212,0.90)] 2xl:mt-5">
-                    Tervezd meg az étkezéseket egyszerűen, spórolj időt és energiát.
+                  <p className="mt-4 text-[18px] font-medium leading-snug text-[rgba(255,241,220,0.9)]">
+                    Tervezd meg az étkezéseket egyszerűen,
+                    <br />
+                    spórolj időt és energiát.
                   </p>
-
-                  <div className="mt-6 flex items-center gap-3">
+                  <div className="mt-7 flex items-center gap-4">
                     <button
-                      onClick={onAddMeal}
-                      aria-label="Heti étkezéstervező indítása"
-                      className="inline-flex items-center justify-between gap-5 rounded-full bg-[linear-gradient(135deg,#e8a040,#cc7c22)] py-3 pl-7 pr-2.5 text-[15px] font-extrabold text-white shadow-[0_20px_44px_-22px_rgba(200,118,28,0.82)] transition-all hover:-translate-y-0.5 hover:shadow-[0_26px_52px_-20px_rgba(200,118,28,0.94)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(40,20,5,0.6)] 2xl:py-3.5 2xl:pl-8"
+                      onClick={() => onAddMeal()}
+                      className="inline-flex items-center gap-5 rounded-full bg-[linear-gradient(135deg,#f1a533,#dc8620)] px-7 py-4 text-[16px] font-extrabold text-white shadow-[0_24px_50px_-22px_rgba(200,118,28,0.7)]"
                     >
                       Heti terv indítása
-                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#c07826]">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#ca7a20]">
                         <Icon name="add" className="text-[22px]" />
                       </span>
                     </button>
                     <button
                       onClick={onOpenRecipeLibrary}
-                      aria-label="Recepttár böngészése"
-                      className="inline-flex items-center gap-2.5 rounded-full border border-white/30 bg-[rgba(255,248,230,0.18)] py-3 pl-6 pr-5 text-[14px] font-extrabold text-[rgba(255,248,228,0.95)] backdrop-blur-sm transition-all hover:bg-[rgba(255,248,230,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/26 bg-[rgba(255,248,230,0.14)] px-6 py-4 text-[16px] font-bold text-white backdrop-blur-sm"
                     >
-                      <Icon name="menu_book" className="text-[18px] text-[rgba(255,220,150,0.95)]" />
+                      <Icon name="menu_book" className="text-[18px]" />
                       Recepttár
                     </button>
                   </div>
@@ -769,139 +549,235 @@ export default function DesktopEtkezesView({
               </div>
             </section>
 
-            {/* ── Filter + mode control bar ─────────────────────────────────────── */}
-            <div className="mt-4 flex items-center gap-3 rounded-[20px] border border-[rgba(170,135,84,0.16)] bg-[rgba(255,249,237,0.94)] px-4 py-3 shadow-[0_8px_20px_-14px_rgba(61,49,34,0.16)]">
-              <span className="shrink-0 text-[11px] font-extrabold text-[var(--ff-text-muted)]">Szűrők:</span>
-              <div className="flex items-center gap-2">
-                {FILTERS.map(({ key, icon, label }) => (
-                  <FilterChip
-                    key={key}
-                    icon={icon}
-                    label={label}
-                    selected={activeFilters.has(key)}
-                    onToggle={() => toggleFilter(key)}
-                  />
-                ))}
-                {activeFilters.size > 0 && (
-                  <button
-                    onClick={() => setActiveFilters(new Set())}
-                    className="text-[10px] font-extrabold text-[var(--ff-text-muted)] hover:text-[var(--ff-primary)] transition-colors"
-                    aria-label="Szűrők törlése"
-                  >
-                    Törlés
-                  </button>
-                )}
-              </div>
-              <div className="mx-1 h-5 w-px shrink-0 bg-[rgba(170,135,84,0.16)]" />
-              <div className="ml-auto flex items-center gap-1.5">
-                {MODES.map(({ key, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => handleModeChange(key)}
-                    aria-pressed={activeMode === key}
-                    className={`rounded-full px-3 py-1.5 text-[11px] font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)] ${
-                      activeMode === key
-                        ? "bg-[rgba(210,228,192,0.97)] text-[var(--ff-primary)]"
-                        : "text-[var(--ff-text-muted)] hover:bg-[rgba(255,248,232,0.88)]"
-                    }`}
-                  >
-                    {label}
-                  </button>
+            <section className="mt-5 rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.92)] p-5 shadow-[0_24px_50px_-34px_rgba(61,49,34,0.18)]">
+              <div className="grid gap-5 xl:grid-cols-[1.15fr_0.95fr_1.15fr]">
+                {FILTER_GROUPS.map((group) => (
+                  <div key={group.title} className="min-w-0">
+                    <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--ff-text-soft)]">
+                      {group.title}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {group.items.map((item) => (
+                        <FilterPill
+                          key={item.key}
+                          icon={item.icon}
+                          label={item.label}
+                          selected={activeFilters.has(item.key)}
+                          onClick={() =>
+                            setActiveFilters((current) => {
+                              const next = new Set(current);
+                              if (next.has(item.key)) next.delete(item.key);
+                              else next.add(item.key);
+                              return next;
+                            })
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
-            </div>
 
-            {/* ── Heti tervező ─────────────────────────────────────────────────── */}
-            <section id="planner" className="mt-5">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-[16px] font-extrabold tracking-[-0.02em] text-[var(--ff-text)]">
-                  Heti étkezéstervező
-                </h2>
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] font-extrabold text-[var(--ff-text-muted)]">
-                    {plannedDaysCount} nap tervezve · {openDaysCount} nyitott
-                  </span>
-                  <button
-                    onClick={onAddMeal}
-                    aria-label="Új étkezés hozzáadása"
-                    className="flex items-center gap-1.5 rounded-full bg-[rgba(210,228,192,0.97)] px-3 py-1.5 text-[11px] font-extrabold text-[var(--ff-primary)] transition-all hover:bg-[rgba(196,218,176,0.99)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)]"
-                  >
-                    <Icon name="add" className="text-[14px]" />
-                    Étkezés hozzáadása
-                  </button>
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <div className="flex flex-wrap gap-2">
+                  {EXTRA_FILTERS.map((item) => (
+                    <FilterPill
+                      key={item.key}
+                      icon={item.icon}
+                      label={item.label}
+                      selected={activeFilters.has(item.key)}
+                      onClick={() =>
+                        setActiveFilters((current) => {
+                          const next = new Set(current);
+                          if (next.has(item.key)) next.delete(item.key);
+                          else next.add(item.key);
+                          return next;
+                        })
+                      }
+                    />
+                  ))}
                 </div>
+                <button
+                  onClick={() => setActiveFilters(new Set())}
+                  className="inline-flex items-center gap-2 text-[13px] font-semibold text-[var(--ff-text-muted)]"
+                >
+                  <Icon name="ink_eraser" className="text-[16px]" />
+                  Szűrők törlése
+                </button>
               </div>
-              <div className="grid grid-cols-7 gap-2.5">
-                {weekDays.slice(0, 7).map((day, i) => (
-                  <WeekDayCard
+            </section>
+
+            <section id="planner" className="mt-6">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-[32px] font-bold tracking-[-0.04em] text-[var(--ff-text)]">Heti terv</h3>
+                  <p className="text-[18px] font-semibold text-[var(--ff-text-muted)]">{plannedDaysCount}/7 nap megtervezve</p>
+                  <div className="h-3 w-[290px] overflow-hidden rounded-full bg-[rgba(220,214,201,0.84)]">
+                    <div className="h-full rounded-full bg-[linear-gradient(90deg,#76985f,#8cab6f)]" style={{ width: progressRatio }} />
+                  </div>
+                </div>
+                <button className="inline-flex items-center gap-2 rounded-full bg-[rgba(225,235,210,0.9)] px-5 py-3 text-[14px] font-semibold text-[var(--ff-primary)]">
+                  <Icon name="share" className="text-[18px]" />
+                  Terv megosztása
+                </button>
+              </div>
+
+              <div className="grid grid-cols-7 gap-4">
+                {weekDays.map((day, index) => (
+                  <WeeklyDayCard
                     key={day.dateKey}
                     day={day}
-                    recipe={plannedRecipes[i]}
-                    isWeekend={HU_WEEKEND.includes(day.name)}
+                    recipe={plannedRecipes[index]}
                     onAddMeal={onAddMeal}
                     onViewRecipe={onViewRecipe}
                   />
                 ))}
               </div>
+
+              <p className="mt-4 flex items-center gap-2 text-[14px] font-medium text-[var(--ff-text-muted)]">
+                <Icon name="wb_incandescent" className="text-[18px] text-[#e0a33b]" />
+                Tipp: Használd az „1-3 napra jó” szűrőt, hogy kevesebbet főzz és több időd maradjon!
+              </p>
             </section>
 
-            {/* ── Ajánlott receptek (3 larger cards) ───────────────────────────── */}
-            <section className="mt-6">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-[18px] font-extrabold tracking-[-0.03em] text-[var(--ff-text)]">
-                    Ajánlott receptek
-                  </h2>
-                  {activeFilters.size > 0 && (
-                    <span className="rounded-full bg-[rgba(210,228,192,0.96)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--ff-primary)]">
-                      {activeFilters.size} szűrő aktív
-                    </span>
-                  )}
+            <section className="mt-7">
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <div>
+                  <h3 className="text-[34px] font-bold tracking-[-0.04em] text-[var(--ff-text)]">Ajánlott receptek</h3>
+                  <p className="text-[16px] font-medium text-[var(--ff-text-muted)]">A szűrőid és a kamrád alapján</p>
                 </div>
                 <button
                   onClick={onOpenRecipeLibrary}
-                  className="flex items-center gap-1 text-[12px] font-bold text-[var(--ff-text-muted)] transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-primary)]"
+                  className="inline-flex items-center gap-2 text-[15px] font-semibold text-[var(--ff-text-muted)]"
                 >
                   Összes recept
-                  <Icon name="chevron_right" className="text-[16px]" />
+                  <Icon name="arrow_forward" className="text-[18px]" />
                 </button>
               </div>
 
-              {filteredRecipes.length === 0 ? (
-                <div className="flex flex-col items-center gap-3 rounded-[20px] border border-[rgba(170,135,84,0.14)] bg-[rgba(255,249,237,0.80)] py-10 text-center">
-                  <Icon name="search_off" className="text-[36px] text-[var(--ff-text-muted)] opacity-40" />
-                  <p className="text-[13px] font-bold text-[var(--ff-text-muted)]">Nincs pontos találat a szűrőkre.</p>
-                  <button
-                    onClick={() => setActiveFilters(new Set())}
-                    className="rounded-full bg-[rgba(210,228,192,0.96)] px-4 py-2 text-[12px] font-extrabold text-[var(--ff-primary)]"
-                  >
-                    Szűrők törlése
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-3 gap-4 2xl:gap-5">
-                  {filteredRecipes.map((recipe) => (
-                    <RecipeCard
-                      key={recipe.id}
-                      recipe={recipe}
-                      bookmarked={savedRecipes.has(recipe.id)}
-                      onViewRecipe={onViewRecipe}
-                      onToggleBookmark={toggleBookmark}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-6 gap-4">
+                {filteredRecipes.map((recipe) => (
+                  <RecommendationCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    onViewRecipe={onViewRecipe}
+                    bookmarked={savedRecipes.has(recipe.id)}
+                    onToggleBookmark={(nextRecipe) =>
+                      setSavedRecipes((current) => {
+                        const next = new Set(current);
+                        if (next.has(nextRecipe.id)) next.delete(nextRecipe.id);
+                        else next.add(nextRecipe.id);
+                        return next;
+                      })
+                    }
+                  />
+                ))}
+              </div>
             </section>
           </section>
 
-          {/* ── RIGHT COLUMN ─────────────────────────────────────────────────── */}
-          <aside className="flex min-w-0 flex-col gap-4 2xl:gap-5">
-            <ShoppingListPanel shoppingItems={shoppingItems} onAddMeal={onAddMeal} />
-            <PantryIdeasPanel pantryItems={pantryItems} onViewRecipe={onViewRecipe} />
-            <SeasonalPanel recipe={seasonalRecipe ?? LIDL_RECIPES[0]} onStartCooking={onStartCooking} />
-          </aside>
+          <aside className="flex min-w-0 flex-col gap-5">
+            <section className="rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.94)] p-5 shadow-[0_24px_50px_-34px_rgba(61,49,34,0.18)]">
+              <div className="flex items-center justify-between">
+                <h3 className="flex items-center gap-2 text-[16px] font-bold text-[var(--ff-text)]">
+                  <Icon name="shopping_basket" className="text-[20px] text-[var(--ff-primary)]" />
+                  Kamra & Bevásárlólista
+                </h3>
+                <Icon name="chevron_right" className="text-[20px] text-[var(--ff-text-muted)]" />
+              </div>
 
-        </div>{/* end two-column grid */}
+              <div className="mt-5 flex gap-2 rounded-full bg-[rgba(248,244,236,0.96)] p-1">
+                <span className="rounded-full bg-[rgba(225,235,210,0.96)] px-4 py-2 text-[12px] font-bold text-[var(--ff-primary)]">
+                  Hiányzik ({missingItems.length})
+                </span>
+                <span className="rounded-full px-4 py-2 text-[12px] font-semibold text-[var(--ff-text-muted)]">Kevés (6)</span>
+                <span className="rounded-full px-4 py-2 text-[12px] font-semibold text-[var(--ff-text-muted)]">Van elég (31)</span>
+              </div>
+
+              <div className="mt-4 divide-y divide-[rgba(170,135,84,0.08)]">
+                {missingItems.map((item) => (
+                  <div key={item} className="flex items-center gap-3 py-4">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,248,232,0.9)] text-[var(--ff-caramel-strong)]">
+                      <Icon name="grocery" className="text-[18px]" />
+                    </span>
+                    <span className="flex-1 text-[14px] font-semibold text-[var(--ff-text)]">{item}</span>
+                    <span className="text-[13px] font-semibold text-[var(--ff-text-muted)]">1 db</span>
+                    <button className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(170,135,84,0.14)] bg-white text-[var(--ff-caramel-strong)]">
+                      <Icon name="add" className="text-[18px]" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button className="mt-5 flex w-full items-center justify-between rounded-full bg-[linear-gradient(135deg,#f1a533,#dc8620)] px-6 py-4 text-[16px] font-bold text-white shadow-[0_24px_44px_-24px_rgba(200,118,28,0.66)]">
+                Bevásárlólista megnyitása
+                <Icon name="arrow_forward" className="text-[20px]" />
+              </button>
+            </section>
+
+            <section className="overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[linear-gradient(135deg,rgba(236,245,225,0.98),rgba(243,249,234,0.95))] p-5 shadow-[0_24px_50px_-34px_rgba(61,49,34,0.16)]">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="flex items-center gap-2 text-[16px] font-bold text-[var(--ff-text)]">
+                    <Icon name="eco" className="text-[20px] text-[var(--ff-primary)]" />
+                    Okos javaslat
+                  </h3>
+                  <p className="mt-3 text-[15px] font-medium leading-snug text-[var(--ff-text-muted)]">
+                    {pantryRanked.length || 3} receptet találtunk, amihez minden alapanyagod megvan.
+                  </p>
+                  <button
+                    onClick={() => pantryRanked[0] && onViewRecipe(pantryRanked[0].recipe)}
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-[14px] font-bold text-[var(--ff-primary)]"
+                  >
+                    Megnézem
+                    <Icon name="arrow_forward" className="text-[18px]" />
+                  </button>
+                </div>
+                <div className="flex h-28 w-28 items-center justify-center rounded-[26px] bg-[rgba(255,255,255,0.55)] text-[var(--ff-caramel-strong)]">
+                  <Icon name="shopping_bag" className="text-[54px]" />
+                </div>
+              </div>
+            </section>
+
+            {quickLunchRecipe && (
+              <section className="rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.94)] p-5 shadow-[0_24px_50px_-34px_rgba(61,49,34,0.18)]">
+                <h3 className="flex items-center gap-2 text-[16px] font-bold text-[var(--ff-text)]">
+                  <Icon name="local_fire_department" className="text-[20px] text-[var(--ff-caramel-strong)]" />
+                  Mai ebéd ötlet
+                </h3>
+
+                <div className="mt-4 grid grid-cols-[120px_1fr] gap-4">
+                  <div className="overflow-hidden rounded-[18px]">
+                    <RecipeImage recipe={quickLunchRecipe} className="h-[120px] w-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="text-[28px] font-bold leading-tight tracking-[-0.04em] text-[var(--ff-text)]">
+                      {quickLunchRecipe.name}
+                    </h4>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="rounded-full bg-[rgba(225,235,210,0.92)] px-3 py-1 text-[12px] font-semibold text-[var(--ff-primary)]">
+                        {isQuickRecipe(quickLunchRecipe) ? "Gyors" : getRecipeMealTypeLabel(quickLunchRecipe)}
+                      </span>
+                      <span className="rounded-full bg-[rgba(248,244,236,0.96)] px-3 py-1 text-[12px] font-semibold text-[var(--ff-text-muted)]">
+                        {quickLunchRecipe.duration} perc
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onStartCooking(quickLunchRecipe)}
+                  className="mt-5 flex w-full items-center justify-between rounded-full border border-[rgba(170,135,84,0.14)] bg-white px-5 py-4 text-[16px] font-bold text-[var(--ff-caramel-strong)]"
+                >
+                  Hozzáadás a mai naphoz
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(170,135,84,0.16)]">
+                    <Icon name="add" className="text-[20px]" />
+                  </span>
+                </button>
+              </section>
+            )}
+          </aside>
+        </div>
       </div>
     </div>
   );

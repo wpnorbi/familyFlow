@@ -1,276 +1,377 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+type PantryStatus = "home" | "low" | "expiring";
+type CategoryId =
+  | "zoldsegek"
+  | "gyumolcsok"
+  | "tejtermekek"
+  | "szarazaruk"
+  | "hus";
+type FilterMode = "all" | "low" | "expiring";
 
-type ItemStatus = "ok" | "low" | "out";
-type FilterId = "osszes" | "szaraz" | "hutott" | "fagyaszto";
+interface PantryCategory {
+  id: CategoryId;
+  label: string;
+  icon: string;
+}
 
 interface PantryItem {
   id: string;
   name: string;
   amount: string;
-  emoji: string;
-  status: ItemStatus;
+  icon: string;
+  category: CategoryId;
+  status: PantryStatus;
 }
 
-const FILTERS: Array<{ id: FilterId; label: string }> = [
-  { id: "osszes",     label: "Összes"    },
-  { id: "szaraz",     label: "Száraz"    },
-  { id: "hutott",     label: "Hűtött"    },
-  { id: "fagyaszto",  label: "Fagyasztó" },
+interface PantryIdea {
+  id: string;
+  name: string;
+  image: string;
+  progress: number;
+}
+
+const CATEGORIES: PantryCategory[] = [
+  { id: "zoldsegek", label: "Zöldségek", icon: "grocery" },
+  { id: "gyumolcsok", label: "Gyümölcsök", icon: "nutrition" },
+  { id: "tejtermekek", label: "Tejtermékek", icon: "water_bottle" },
+  { id: "szarazaruk", label: "Szárazáruk", icon: "deployed_code" },
+  { id: "hus", label: "Hús, hal, tojás", icon: "restaurant" },
 ];
 
-const ALL_ITEMS: PantryItem[] = [
-  { id: "1", name: "Paradicsom",  amount: "1 üveg", emoji: "🍅", status: "ok"  },
-  { id: "2", name: "Spagetti",    amount: "500 g",  emoji: "🍝", status: "ok"  },
-  { id: "3", name: "Répa",        amount: "5 db",   emoji: "🥕", status: "ok"  },
-  { id: "4", name: "Tojás",       amount: "6 db",   emoji: "🥚", status: "low" },
-  { id: "5", name: "Tej",         amount: "1 l",    emoji: "🥛", status: "ok"  },
-  { id: "6", name: "Csirkemell",  amount: "2 db",   emoji: "🍗", status: "low" },
-  { id: "7", name: "Liszt",       amount: "1 kg",   emoji: "🌾", status: "ok"  },
-  { id: "8", name: "Olívaolaj",   amount: "500 ml", emoji: "🫒", status: "ok"  },
-  { id: "9", name: "Fokhagyma",   amount: "1 fej",  emoji: "🧄", status: "ok"  },
-  { id: "10",name: "Sajt",        amount: "200 g",  emoji: "🧀", status: "low" },
-  { id: "11",name: "Rizs",        amount: "500 g",  emoji: "🍚", status: "ok"  },
-  { id: "12",name: "Vaj",         amount: "125 g",  emoji: "🧈", status: "ok"  },
+const PANTRY_ITEMS: PantryItem[] = [
+  { id: "1", name: "Paradicsom", amount: "5 db", icon: "nutrition", category: "zoldsegek", status: "home" },
+  { id: "2", name: "Tej 2,8%", amount: "1 l", icon: "water_bottle", category: "tejtermekek", status: "home" },
+  { id: "3", name: "Tészta", amount: "500 g", icon: "deployed_code", category: "szarazaruk", status: "home" },
+  { id: "4", name: "Csirkemell", amount: "2 db", icon: "restaurant", category: "hus", status: "low" },
+  { id: "5", name: "Joghurt", amount: "1 db", icon: "water_bottle", category: "tejtermekek", status: "expiring" },
+  { id: "6", name: "Paprika", amount: "3 db", icon: "grocery", category: "zoldsegek", status: "home" },
+  { id: "7", name: "Alma", amount: "4 db", icon: "nutrition", category: "gyumolcsok", status: "low" },
 ];
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+const PANTRY_IDEAS: PantryIdea[] = [
+  {
+    id: "1",
+    name: "Paradicsomos tészta",
+    image:
+      "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80",
+    progress: 90,
+  },
+  {
+    id: "2",
+    name: "Tejszínes csirkés tészta",
+    image:
+      "https://images.unsplash.com/photo-1516100882582-96c3a05fe590?auto=format&fit=crop&w=800&q=80",
+    progress: 80,
+  },
+  {
+    id: "3",
+    name: "Gyümölcsös joghurt",
+    image:
+      "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80",
+    progress: 70,
+  },
+];
 
-function StatusBadge({ status }: { status: ItemStatus }) {
-  if (status === "ok") {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F0E0] px-2.5 py-1 text-[11px] font-semibold text-[#3B5C33]">
-        Van otthon
-        <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-      </span>
-    );
-  }
-  if (status === "low") {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF3E0] px-2.5 py-1 text-[11px] font-semibold text-[#B87040]">
-        Kevés
-        <span className="material-symbols-outlined text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
-      </span>
-    );
-  }
+function Icon({
+  name,
+  className = "",
+  filled = false,
+}: {
+  name: string;
+  className?: string;
+  filled?: boolean;
+}) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[#FDE8E8] px-2.5 py-1 text-[11px] font-semibold text-[#C0392B]">
-      Elfogyott
+    <span
+      className={`material-symbols-outlined ${className}`}
+      style={filled ? { fontVariationSettings: "'FILL' 1" } : undefined}
+      aria-hidden="true"
+    >
+      {name}
     </span>
   );
 }
 
-function PantryCard({ item }: { item: PantryItem }) {
+function StatusPill({ status }: { status: PantryStatus }) {
+  if (status === "home") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[rgba(225,235,210,0.9)] px-3 py-1 text-[12px] font-semibold text-[var(--ff-primary)]">
+        Van otthon
+      </span>
+    );
+  }
+
+  if (status === "low") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[rgba(255,240,219,0.95)] px-3 py-1 text-[12px] font-semibold text-[var(--ff-caramel-strong)]">
+        Kevés
+      </span>
+    );
+  }
+
   return (
-    <div className="rounded-[20px] bg-white p-3.5 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
-      <div className="flex items-start justify-between">
-        <div className="flex h-14 w-14 items-center justify-center rounded-[14px] bg-[#F5F0E8] text-[32px]">
-          {item.emoji}
-        </div>
-        <button className="text-[#9A8E82]">
-          <span className="material-symbols-outlined text-[18px]">more_vert</span>
-        </button>
-      </div>
-      <h4 className="mt-2.5 text-[14px] font-semibold text-[#1C1916]">{item.name}</h4>
-      <p className="mt-0.5 text-[12px] text-[#9A8E82]">{item.amount}</p>
-      <div className="mt-2">
-        <StatusBadge status={item.status} />
-      </div>
-    </div>
+    <span className="inline-flex items-center rounded-full bg-[rgba(255,232,226,0.95)] px-3 py-1 text-[12px] font-semibold text-[#D15F43]">
+      Hamarosan elfogy
+    </span>
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
-
 export default function KamraMobileView() {
   const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState<FilterId>("osszes");
-  const [showReminder, setShowReminder] = useState(true);
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("zoldsegek");
+  const [filterMode, setFilterMode] = useState<FilterMode>("all");
+  const [query, setQuery] = useState("");
+  const [showTip, setShowTip] = useState(true);
 
-  const items = ALL_ITEMS;
-  const pantryStatus = 85;
+  const visibleItems = useMemo(() => {
+    return PANTRY_ITEMS.filter((item) => {
+      const byCategory = item.category === activeCategory;
+      const byQuery =
+        query.trim().length === 0 ||
+        item.name.toLowerCase().includes(query.trim().toLowerCase());
+      const byMode =
+        filterMode === "all" ||
+        (filterMode === "low" && item.status === "low") ||
+        (filterMode === "expiring" && item.status === "expiring");
+
+      return byCategory && byQuery && byMode;
+    });
+  }, [activeCategory, filterMode, query]);
+
+  function cycleFilter() {
+    setFilterMode((current) =>
+      current === "all" ? "low" : current === "low" ? "expiring" : "all",
+    );
+  }
+
+  const filterLabel =
+    filterMode === "all" ? "Szűrők" : filterMode === "low" ? "Kevés" : "Lejáró";
 
   return (
-    <div className="relative min-h-screen bg-[#F7F3EE] md:hidden">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fbf7f1_0%,#f7f1e8_100%)] md:hidden">
       <main
-        className="flex min-h-screen flex-col px-4 pt-5"
-        style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}
+        className="px-5 pt-5"
+        style={{ paddingBottom: "calc(118px + env(safe-area-inset-bottom, 0px))" }}
       >
+        <MobileGreetingHeader name="Anna" notifCount={1} />
 
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <header className="mb-5 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3B5C33] text-[14px] font-bold text-white">
-            N
-          </div>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-[17px] font-bold text-[#1C1916]">Jó napot, Norbi!</h1>
-            <p className="text-[12px] text-[#9A8E82]">Kezdjünk valami finomat.</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {["search", "notifications", "settings"].map((icon) => (
-              <button
-                key={icon}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_1px_6px_rgba(0,0,0,0.08)]"
-              >
-                <span className="material-symbols-outlined text-[20px] text-[#5A4E44]">{icon}</span>
-              </button>
-            ))}
-          </div>
-        </header>
+        <div className="mb-4">
+          <h1 className="text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">Kamra</h1>
+        </div>
 
-        {/* ── Filter tabs ──────────────────────────────────────────── */}
-        <div className="mb-5 flex gap-2">
-          {FILTERS.map((f) => (
+        <section className="rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,246,0.96)] p-5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.24)]">
+          <h2 className="text-[16px] font-semibold text-[var(--ff-text)]">Kamra állapota</h2>
+
+          <div className="mt-5 flex gap-4">
+            <div className="relative flex h-[138px] w-[138px] shrink-0 items-center justify-center">
+              <svg className="absolute inset-0" viewBox="0 0 120 120" fill="none">
+                <circle cx="60" cy="60" r="44" stroke="#F0E7D8" strokeWidth="8" />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="44"
+                  stroke="#FF9800"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={`${2 * Math.PI * 44}`}
+                  strokeDashoffset={`${2 * Math.PI * 44 * 0.22}`}
+                  transform="rotate(-90 60 60)"
+                />
+              </svg>
+              <div className="text-center">
+                <div className="text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">78%</div>
+                <div className="text-[13px] text-[var(--ff-text-muted)]">tele</div>
+              </div>
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col justify-center">
+              <div className="flex items-center justify-between border-b border-[rgba(170,135,84,0.14)] py-2.5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(225,235,210,0.9)] text-[var(--ff-primary)]">
+                    <Icon name="shopping_basket" className="text-[18px]" />
+                  </span>
+                  <span className="text-[14px] text-[var(--ff-text-muted)]">Összes hozzávaló</span>
+                </div>
+                <span className="text-[15px] font-semibold text-[var(--ff-text)]">86 db</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-[rgba(170,135,84,0.14)] py-2.5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,240,219,0.95)] text-[var(--ff-caramel-strong)]">
+                    <Icon name="radio_button_unchecked" className="text-[18px]" />
+                  </span>
+                  <span className="text-[14px] text-[var(--ff-text-muted)]">Kevés</span>
+                </div>
+                <span className="text-[15px] font-semibold text-[var(--ff-text)]">8 db</span>
+              </div>
+              <div className="flex items-center justify-between py-2.5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,232,226,0.95)] text-[#D15F43]">
+                    <Icon name="calendar_today" className="text-[17px]" />
+                  </span>
+                  <span className="text-[14px] text-[var(--ff-text-muted)]">Hamarosan lejár</span>
+                </div>
+                <span className="text-[15px] font-semibold text-[var(--ff-text)]">5 db</span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => router.refresh()}
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#ffb024_0%,#ff9800_100%)] px-5 py-4 text-[18px] font-semibold text-white shadow-[0_16px_28px_-20px_rgba(255,152,0,0.75)]"
+          >
+            <Icon name="refresh" className="text-[22px]" />
+            Kamra frissítése
+          </button>
+        </section>
+
+        <div className="mt-4 flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {CATEGORIES.map((category) => (
             <button
-              key={f.id}
-              onClick={() => setActiveFilter(f.id)}
-              className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-all ${
-                activeFilter === f.id
-                  ? "bg-[#3B5C33] text-white shadow-[0_4px_12px_rgba(59,92,51,0.28)]"
-                  : "bg-white text-[#5A4E44] shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
+              key={category.id}
+              type="button"
+              onClick={() => setActiveCategory(category.id)}
+              className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-3 text-[14px] font-medium transition-all ${
+                activeCategory === category.id
+                  ? "border-[rgba(124,145,111,0.22)] bg-[rgba(225,235,210,0.95)] text-[var(--ff-primary)]"
+                  : "border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,246,0.92)] text-[var(--ff-text)]"
               }`}
             >
-              {f.label}
+              <Icon name={category.icon} className="text-[19px]" />
+              {category.label}
             </button>
           ))}
         </div>
 
-        {/* ── Quick action cards ───────────────────────────────────── */}
-        <div className="mb-4 grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-between rounded-[20px] bg-white p-4 text-left shadow-[0_1px_8px_rgba(0,0,0,0.06)] active:scale-[0.98]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#E8EEE0]">
-                <span className="material-symbols-outlined text-[22px] text-[#3B5C33]">barcode_scanner</span>
-              </div>
-              <div>
-                <p className="text-[13px] font-bold text-[#1C1916]">Vonalkód</p>
-                <p className="text-[13px] font-bold text-[#1C1916]">beolvasása</p>
-                <p className="mt-1 text-[11px] text-[#9A8E82]">Termék gyors hozzáadása</p>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-[18px] text-[#9A8E82]">chevron_right</span>
-          </button>
+        <section className="mt-4 rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,246,0.96)] p-5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.22)]">
+          <h2 className="text-[16px] font-semibold text-[var(--ff-text)]">Hozzávalók listája</h2>
 
-          <button className="flex items-center justify-between rounded-[20px] bg-white p-4 text-left shadow-[0_1px_8px_rgba(0,0,0,0.06)] active:scale-[0.98]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#F5E8DC]">
-                <span className="material-symbols-outlined text-[22px] text-[#B87040]">autorenew</span>
-              </div>
-              <div>
-                <p className="text-[13px] font-bold text-[#1C1916]">Kamra</p>
-                <p className="text-[13px] font-bold text-[#1C1916]">frissítése</p>
-                <p className="mt-1 text-[11px] text-[#9A8E82]">Készleted naprakészen tartása</p>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-[18px] text-[#9A8E82]">chevron_right</span>
-          </button>
-        </div>
-
-        {/* ── Kamra állapota ───────────────────────────────────────── */}
-        <div className="mb-4 flex items-center justify-between rounded-[20px] bg-white p-4 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E8F0E0]">
-              <span className="material-symbols-outlined text-[22px] text-[#3B5C33]">eco</span>
-            </div>
-            <div>
-              <h3 className="text-[14px] font-bold text-[#1C1916]">Kamra állapota</h3>
-              <p className="mt-0.5 text-[13px] font-semibold text-[#3B5C33]">Minden rendben</p>
-              <p className="mt-0.5 text-[11px] text-[#9A8E82]">Szépen feltöltve vagy!</p>
-              <p className="text-[11px] text-[#9A8E82]">Jó úton haladsz.</p>
-            </div>
-          </div>
-
-          {/* Circular progress */}
-          <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center">
-            <svg className="absolute inset-0" viewBox="0 0 72 72" fill="none">
-              <circle cx="36" cy="36" r="30" stroke="#E8EEE0" strokeWidth="6" />
-              <circle
-                cx="36" cy="36" r="30"
-                stroke="#3B5C33"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 30}`}
-                strokeDashoffset={`${2 * Math.PI * 30 * (1 - pantryStatus / 100)}`}
-                transform="rotate(-90 36 36)"
+          <div className="mt-4 flex gap-3">
+            <label className="flex min-w-0 flex-1 items-center gap-2 rounded-[18px] border border-[rgba(170,135,84,0.14)] bg-white/92 px-4 py-3">
+              <Icon name="search" className="text-[20px] text-[var(--ff-text-muted)]" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Keresés hozzávalók között"
+                className="w-full bg-transparent text-[14px] text-[var(--ff-text)] outline-none placeholder:text-[var(--ff-text-muted)]"
               />
-            </svg>
-            <div className="text-center">
-              <p className="text-[16px] font-bold text-[#1C1916]">{pantryStatus}%</p>
-              <p className="text-[9px] text-[#9A8E82]">Jó állapot</p>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Emlékeztető banner ───────────────────────────────────── */}
-        {showReminder && (
-          <div className="mb-5 flex items-start gap-3 rounded-[20px] bg-white p-4 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF3E0]">
-              <span className="material-symbols-outlined text-[20px] text-[#B87040]">shopping_basket</span>
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#B87040]">Emlékeztető</p>
-              <p className="mt-0.5 text-[13px] font-semibold leading-snug text-[#1C1916]">
-                Csütörtöki bevásárlás előtt frissítsd a kamrát.
-              </p>
-              <p className="mt-0.5 text-[12px] text-[#9A8E82]">Így elkerülheted a felesleges vásárlást.</p>
-            </div>
+            </label>
             <button
-              onClick={() => setShowReminder(false)}
-              className="mt-0.5 shrink-0 text-[#9A8E82]"
+              type="button"
+              onClick={cycleFilter}
+              className="flex shrink-0 items-center gap-2 rounded-[18px] border border-[rgba(170,135,84,0.14)] bg-white/92 px-4 py-3 text-[14px] font-medium text-[var(--ff-text)]"
             >
-              <span className="material-symbols-outlined text-[18px]">close</span>
-            </button>
-          </div>
-        )}
-
-        {/* ── Hozzávalók grid ──────────────────────────────────────── */}
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-[17px] font-bold text-[#1C1916]">
-              Hozzávalók ({items.length})
-            </h2>
-            <button className="flex items-center gap-1 text-[12px] text-[#9A8E82]">
-              Alacsony készlet előre
-              <span className="material-symbols-outlined text-[16px]">swap_vert</span>
+              <Icon name="tune" className="text-[20px]" />
+              {filterLabel}
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {items.map((item) => (
-              <PantryCard key={item.id} item={item} />
+          <div className="mt-4 overflow-hidden rounded-[22px] border border-[rgba(170,135,84,0.1)] bg-white/84">
+            {visibleItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => router.push(`/kamra?item=${item.id}`)}
+                className="flex w-full items-center gap-3 border-b border-[rgba(170,135,84,0.1)] px-4 py-3 text-left last:border-b-0"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[rgba(170,135,84,0.12)] bg-[rgba(255,250,243,0.96)] text-[var(--ff-caramel-strong)]">
+                  <Icon name={item.icon} className="text-[22px]" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[15px] font-medium text-[var(--ff-text)]">{item.name}</div>
+                </div>
+                <div className="w-14 shrink-0 text-[15px] font-medium text-[var(--ff-text)]">{item.amount}</div>
+                <StatusPill status={item.status} />
+                <Icon name="chevron_right" className="text-[22px] text-[var(--ff-text-muted)]" />
+              </button>
+            ))}
+          </div>
+
+          <Link
+            href="/kamra?view=all"
+            className="mt-4 inline-flex items-center gap-1 text-[15px] font-semibold text-[var(--ff-caramel-strong)]"
+          >
+            Összes megtekintése
+            <Icon name="chevron_right" className="text-[20px]" />
+          </Link>
+        </section>
+
+        <section className="mt-4 rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,246,0.96)] p-5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.22)]">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-[16px] font-semibold text-[var(--ff-text)]">Ötletek a kamrából</h2>
+            <Link
+              href="/etkezes?view=ideas"
+              className="inline-flex items-center gap-1 text-[15px] font-semibold text-[var(--ff-caramel-strong)]"
+            >
+              Összes
+              <Icon name="chevron_right" className="text-[18px]" />
+            </Link>
+          </div>
+
+          <div className="mt-4 flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {PANTRY_IDEAS.map((idea) => (
+              <Link
+                key={idea.id}
+                href="/etkezes?view=ideas"
+                className="w-[186px] shrink-0 overflow-hidden rounded-[22px] border border-[rgba(170,135,84,0.12)] bg-white/92"
+              >
+                <div
+                  className="h-[110px] bg-cover bg-center"
+                  style={{ backgroundImage: `url(${idea.image})` }}
+                />
+                <div className="p-3">
+                  <div className="line-clamp-2 text-[14px] font-medium leading-snug text-[var(--ff-text)]">
+                    {idea.name}
+                  </div>
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="rounded-full bg-[rgba(225,235,210,0.92)] px-2 py-1 text-[12px] font-semibold text-[var(--ff-primary)]">
+                      {idea.progress}% kész
+                    </span>
+                    <div className="h-1.5 flex-1 rounded-full bg-[rgba(225,219,206,0.9)]">
+                      <div
+                        className="h-1.5 rounded-full bg-[var(--ff-primary)]"
+                        style={{ width: `${idea.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
-      </main>
 
-      {/* ── Sticky bottom CTA ─────────────────────────────────────── */}
-      <div
-        className="fixed inset-x-4 z-40"
-        style={{ bottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}
-      >
-        <button
-          onClick={() => router.push("/etkezes")}
-          className="flex w-full items-center justify-between rounded-full bg-[#3B5C33] px-5 py-4 shadow-[0_8px_24px_rgba(59,92,51,0.36)]"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,255,255,0.18)]">
-              <span className="material-symbols-outlined text-[20px] text-white">lightbulb</span>
+        {showTip && (
+          <section className="mt-4 rounded-[28px] border border-[rgba(233,196,102,0.2)] bg-[linear-gradient(135deg,rgba(255,249,235,0.98),rgba(255,252,246,0.96))] p-5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.2)]">
+            <div className="flex items-start gap-4">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[rgba(255,243,206,0.92)] text-[#F0A316]">
+                <Icon name="lightbulb" className="text-[28px]" filled />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-[15px] font-semibold text-[var(--ff-text)]">Tipp a tudatos tervezéshez</h3>
+                <p className="mt-1 text-[14px] leading-6 text-[var(--ff-text-muted)]">
+                  Frissítsd rendszeresen a kamrát, így mindig pontos ötleteket és
+                  receptjavaslatokat kaphatsz.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTip(false)}
+                className="shrink-0 text-[var(--ff-text-muted)]"
+                aria-label="Tipp bezárása"
+              >
+                <Icon name="close" className="text-[22px]" />
+              </button>
             </div>
-            <div className="text-left">
-              <p className="text-[15px] font-bold text-white">Kamra ötletek</p>
-              <p className="text-[11px] text-[rgba(255,255,255,0.72)]">Receptek a meglévő hozzávalóidból</p>
-            </div>
-          </div>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.18)]">
-            <span className="material-symbols-outlined text-[20px] text-white">chevron_right</span>
-          </div>
-        </button>
-      </div>
+          </section>
+        )}
+      </main>
 
       <MobileBottomNav />
     </div>

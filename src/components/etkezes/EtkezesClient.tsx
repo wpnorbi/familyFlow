@@ -12,6 +12,7 @@ import {
 import type { MealBatch, Recipe, WeekDay } from "@/types/etkezes";
 import { useMealData } from "@/hooks/useMealData";
 import { rankRecipesForPantry } from "@/lib/recipes/pantry-match";
+import { createClient } from "@/lib/supabase";
 
 import AddMealModal from "./AddMealModal";
 import CookingSessionModal from "./CookingSessionModal";
@@ -32,6 +33,31 @@ function getNextBatch(batches: MealBatch[], todayKey: string) {
   return { recipe, batch, nextEatDate, isCookDay: batch.cookDate === nextEatDate };
 }
 
+function resolveDisplayName(input: {
+  email?: string | null;
+  userMetadata?: Record<string, unknown> | null;
+}) {
+  const metadata = input.userMetadata ?? {};
+  const candidates = [
+    metadata.full_name,
+    metadata.display_name,
+    metadata.name,
+    [metadata.first_name, metadata.last_name].filter((part) => typeof part === "string" && part.trim().length > 0).join(" "),
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+  }
+
+  if (input.email) {
+    return input.email.split("@")[0]?.trim() || "Felhasználó";
+  }
+
+  return "Felhasználó";
+}
+
 export default function EtkezesClient() {
   const router = useRouter();
   const { mealBatches: batches, shoppingItems, pantryItems, updateMealData, hydrated } =
@@ -48,6 +74,8 @@ export default function EtkezesClient() {
   const [scheduleRecipe, setScheduleRecipe] = useState<Recipe | null>(null);
   const [successData, setSuccessData] = useState<MealSuccessData | null>(null);
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+  const [selectedPlannerDay, setSelectedPlannerDay] = useState<WeekDay | null>(null);
+  const [displayName, setDisplayName] = useState("Felhasználó");
 
   // Catalog & view
   const [catalog, setCatalog] = useState<Recipe[]>([]);
@@ -59,6 +87,12 @@ export default function EtkezesClient() {
     (day) => getBatchesForDate(batches, day.dateKey).length > 0,
   ).length;
   const openDaysCount = weekDays.length - plannedDaysCount;
+
+  function openAddMeal(day?: WeekDay) {
+    setSelectedPlannerDay(day ?? null);
+    setInitialRecipe(null);
+    setIsModalOpen(true);
+  }
 
   // ── Data operations ────────────────────────────────────────────────────────
 
@@ -166,7 +200,7 @@ export default function EtkezesClient() {
     async function load() {
       try {
         const res = await fetch(
-          "/api/recipes/search?protein=mind&maxDuration=Infinity&search=&category=mind&tag=mind",
+          "/api/recipes/search?protein=mind&maxDuration=Infinity&search=&category=mind&tag=mind&limit=all",
           { cache: "no-store" },
         );
         if (!res.ok) return;
@@ -179,6 +213,34 @@ export default function EtkezesClient() {
 
     void load();
     return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadUserProfile() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase.auth.getUser();
+        if (error || cancelled) return;
+
+        const nextName = resolveDisplayName({
+          email: data.user?.email,
+          userMetadata: data.user?.user_metadata ?? null,
+        });
+
+        if (!cancelled) {
+          setDisplayName(nextName);
+        }
+      } catch {
+        // Keep fallback label.
+      }
+    }
+
+    void loadUserProfile();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -195,6 +257,7 @@ export default function EtkezesClient() {
         <>
           {/* ── Mobile view ─────────────────────────────────────── */}
           <EtkezesMobileView
+            displayName={displayName}
             nextMealData={nextMealData}
             weekDays={weekDays}
             batches={batches}
@@ -210,6 +273,7 @@ export default function EtkezesClient() {
             onViewRecipe={(recipe) => setPreviewRecipe(recipe)}
             onQuickAdd={handleQuickAdd}
             onGenerateIdeas={() => setIsModalOpen(true)}
+            onConfirmQuickSchedule={handleConfirmSchedule}
           />
 
           {/* ── Desktop view ─────────────────────────────────────── */}
@@ -229,7 +293,7 @@ export default function EtkezesClient() {
               shoppingItems={shoppingItems}
               plannedDaysCount={plannedDaysCount}
               openDaysCount={openDaysCount}
-              onAddMeal={() => setIsModalOpen(true)}
+              onAddMeal={openAddMeal}
               onOpenRecipeLibrary={() => setViewMode("recipes")}
               onRemoveBatch={handleRemoveBatch}
               onStartCooking={(recipe) => {
@@ -250,10 +314,12 @@ export default function EtkezesClient() {
         <AddMealModal
           onAdd={handleAddBatch}
           initialRecipe={initialRecipe}
+          initialDay={selectedPlannerDay}
           pantryItems={pantryItems}
           onClose={() => {
             setIsModalOpen(false);
             setInitialRecipe(null);
+            setSelectedPlannerDay(null);
           }}
         />
       )}
