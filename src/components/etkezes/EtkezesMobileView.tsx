@@ -94,20 +94,6 @@ const FILTERS: FilterDef[] = [
   { id: "glutenmentes", label: "Gluténmentes", icon: "grass",               bg: "#F5EDE3", activeBg: "#B87040", textColor: "#6A5040" },
 ];
 
-// Chips shown on the landing screen (ordered as in the screenshot)
-const LANDING_CHIPS: Array<{ id: FilterId; label: string; icon: string }> = [
-  { id: "gyors",      label: "Gyors",       icon: "bolt" },
-  { id: "gyerekbarat",label: "Gyerekbarát", icon: "sentiment_satisfied" },
-  { id: "csirke",     label: "Csirke",      icon: "egg_alt" },
-  { id: "sertes",     label: "Sertés",      icon: "nutrition" },
-  { id: "hal",        label: "Hal",         icon: "set_meal" },
-  { id: "teszta",     label: "Tészta",      icon: "ramen_dining" },
-  { id: "leves",      label: "Leves",       icon: "soup_kitchen" },
-  { id: "foetel",     label: "Főétel",      icon: "restaurant" },
-  { id: "fozelek",    label: "Főzelék",     icon: "eco" },
-  { id: "1-3napra",   label: "1–3 napra jó",icon: "calendar_month" },
-];
-
 const MOBILE_QUICK_FILTERS: FilterId[] = [
   "gyerekbarat",
   "gyors",
@@ -245,17 +231,46 @@ function DifficultyBars({ difficulty }: { difficulty: "Könnyű" | "Közepes" | 
   );
 }
 
+function getPantryMatchLabel(recipe: Recipe, pantryItems: string[]) {
+  const ingredients = recipe.ingredientGroups?.length
+    ? recipe.ingredientGroups.flatMap((group) => group.items)
+    : recipe.ingredients;
+  if (ingredients.length === 0) return null;
+
+  const pantryResult = rankRecipesForPantry([recipe], pantryItems)[0];
+  const available = ingredients.length - (pantryResult?.missingIngredients.length ?? ingredients.length);
+  const ratio = Math.max(0, Math.min(100, Math.round((available / ingredients.length) * 100)));
+
+  return `Kamrából ${ratio}% megvan`;
+}
+
+function getMealPlanTip(plannedDaysCount: number) {
+  const remaining = Math.max(7 - plannedDaysCount, 0);
+  if (plannedDaysCount === 0) {
+    return "Még 7 ebéd hiányzik. Kezdd egy 2 napra jó recepttel.";
+  }
+  if (remaining >= 4) {
+    return `Még ${remaining} ebéd hiányzik. Válassz egy 2 napra jó ebédet, és gyorsabban haladsz.`;
+  }
+  if (remaining >= 1) {
+    return `Már ${plannedDaysCount}/7 nap kész. Egy gyors ebéddel bezárhatod a hetet.`;
+  }
+  return "Szép munka! A heti ebédterv kész, már csak finomhangolni kell.";
+}
+
 // Horizontal scroll card — "Ajánlott receptek" section
 function RecommendationScrollCard({
   recipe,
   bookmarked,
   onView,
   onToggleBookmark,
+  pantryItems,
 }: {
   recipe: Recipe;
   bookmarked: boolean;
   onView: () => void;
   onToggleBookmark: () => void;
+  pantryItems: string[];
 }) {
   const tag = isKidFriendlyRecipe(recipe)
     ? "Gyerekbarát"
@@ -271,6 +286,7 @@ function RecommendationScrollCard({
 
   const diffLabel =
     recipe.difficulty === "Könnyű" ? "Egyszerű" : recipe.difficulty ?? null;
+  const pantryLabel = getPantryMatchLabel(recipe, pantryItems);
 
   return (
     <div
@@ -278,10 +294,10 @@ function RecommendationScrollCard({
       tabIndex={0}
       onClick={onView}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onView(); }}
-      className="w-39 shrink-0 cursor-pointer overflow-hidden rounded-[20px] bg-white"
-      style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.09)" }}
+      className="w-[158px] shrink-0 cursor-pointer overflow-hidden rounded-[22px] border border-[rgba(170,135,84,0.12)] bg-white"
+      style={{ boxShadow: "0 10px 24px -22px rgba(61,49,34,0.22)" }}
     >
-      <div className="relative h-34 w-full overflow-hidden">
+      <div className="relative h-28 w-full overflow-hidden">
         <RecipeImage recipe={recipe} className="h-full w-full object-cover" />
         <span className="absolute left-2 top-2 rounded-full bg-[rgba(28,25,22,0.72)] px-2.5 py-1 text-[11px] font-semibold text-white">
           {tag}
@@ -304,7 +320,7 @@ function RecommendationScrollCard({
       </div>
       <div className="px-3 pb-3 pt-2.5">
         <h4 className="line-clamp-2 text-[13px] font-semibold leading-snug text-[#1C1916]">{recipe.name}</h4>
-        <div className="mt-1.5 flex items-center gap-2.5 text-[11px] text-[#9A8E82]">
+        <div className="mt-2 flex items-center gap-2.5 text-[11px] text-[#9A8E82]">
           <span className="flex items-center gap-0.5">
             <span className="material-symbols-outlined text-[12px]">schedule</span>
             {recipe.duration} perc
@@ -316,6 +332,13 @@ function RecommendationScrollCard({
             </span>
           )}
         </div>
+        {pantryLabel && (
+          <div className="mt-2.5">
+            <span className="rounded-full bg-[rgba(233,240,223,0.92)] px-2.5 py-1 text-[10px] font-semibold text-[var(--ff-primary)]">
+              {pantryLabel}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -555,7 +578,7 @@ function QuickFilterTile({
   );
 }
 
-const FALLBACK_HERO = "/images/recipes/categories/pasta.png";
+const FALLBACK_HERO = "/assets/recipes/images/fokhagymas-vajban-sult-csirke.png";
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -594,9 +617,15 @@ export default function EtkezesMobileView({
     [catalog, activeFilters, bookmarkedIds, pantryItems],
   );
 
-  const landingRecipes = useMemo(
-    () => filterRecipes(catalog, new Set(), bookmarkedIds, pantryItems).slice(0, 8),
+  const lunchFocusedRecipes = useMemo(
+    () =>
+      filterRecipes(catalog, new Set<FilterId>(["foetel"]), bookmarkedIds, pantryItems),
     [catalog, bookmarkedIds, pantryItems],
+  );
+
+  const landingRecipes = useMemo(
+    () => (lunchFocusedRecipes.length > 0 ? lunchFocusedRecipes : filterRecipes(catalog, new Set(), bookmarkedIds, pantryItems)).slice(0, 8),
+    [catalog, bookmarkedIds, pantryItems, lunchFocusedRecipes],
   );
 
   const favoriteRecipes = useMemo(() => {
@@ -619,11 +648,14 @@ export default function EtkezesMobileView({
     return filteredRecipes;
   }, [filteredRecipes, recipeSort]);
 
-  const heroImage = catalog[0] ? getRecipeImageSrc(catalog[0]) : FALLBACK_HERO;
+  const heroRecipe = landingRecipes[0] ?? catalog[0] ?? null;
+  const heroImage = heroRecipe ? getRecipeImageSrc(heroRecipe) : FALLBACK_HERO;
   const resultCount = filteredRecipes.length;
   const hasFilters = activeFilters.size > 0;
   const weekProgress = `${Math.max((plannedDaysCount / 7) * 100, plannedDaysCount > 0 ? 14 : 0)}%`;
   const quickPlanDays = weekDays.slice(0, 5);
+  const missingLunches = Math.max(7 - plannedDaysCount, 0);
+  const planningTip = getMealPlanTip(plannedDaysCount);
 
   useEffect(() => {
     if (selectedRecipe && !chooserRecipes.some((recipe) => recipe.id === selectedRecipe.id)) {
@@ -683,7 +715,7 @@ export default function EtkezesMobileView({
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#F7F3EE] md:hidden">
       <main
-        className="relative flex min-h-screen flex-col px-4 pt-5"
+        className="relative flex min-h-screen flex-col px-4 pt-2"
         style={{ paddingBottom: "calc(108px + env(safe-area-inset-bottom, 0px))" }}
       >
 
@@ -697,38 +729,45 @@ export default function EtkezesMobileView({
             />
 
             {/* Page title */}
-            <div className="mt-5">
+            <div className="mt-2">
               <h1 className="text-[30px] font-bold tracking-[-0.03em] text-[#1C1916]">Étkezés</h1>
               <p className="mt-1 text-[14px] text-[#9A8E82]">
-                Tervezd meg a heti ebédeket gyorsan és egyszerűen.
+                Tervezd meg gyorsan a heti ebédeket.
               </p>
             </div>
 
             {/* Hero banner */}
             <section
-              className="relative mt-5 overflow-hidden rounded-3xl"
-              style={{ boxShadow: "0 8px 28px rgba(0,0,0,0.18)" }}
+              className="relative mt-2 overflow-hidden rounded-3xl"
+              style={{ boxShadow: "0 14px 28px -20px rgba(0,0,0,0.24)" }}
             >
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${heroImage})` }}
               />
-              <div className="absolute inset-0 bg-linear-to-b from-black/20 via-black/10 to-black/65" />
-              <div className="relative flex flex-col justify-end px-5 pb-5 pt-25">
-                <h2 className="text-[26px] font-bold leading-[1.1] tracking-[-0.03em] text-white">
+              <div className="absolute inset-0 bg-linear-to-b from-black/28 via-black/18 to-black/70" />
+              <div className="relative flex min-h-[252px] flex-col justify-end px-5 pb-4 pt-16">
+                <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(255,248,235,0.18)] px-3 py-1.5 text-[12px] font-semibold text-[#FFE8BF] backdrop-blur-sm">
+                  <span className="material-symbols-outlined text-[15px]">lunch_dining</span>
+                  Heti ebédterv
+                </span>
+                <h2 className="text-[24px] font-bold leading-[1.08] tracking-[-0.03em] text-white">
                   Mit főzzünk<br />ezen a héten?
                 </h2>
-                <div className="mt-4 flex gap-2.5">
+                <p className="mt-2 max-w-[240px] text-[14px] leading-5 text-white/88">
+                  {missingLunches > 0 ? `${missingLunches} ebéd még hiányzik a heti tervből.` : "A heti ebédterv kész, már csak finomhangolni kell."}
+                </p>
+                <div className="mt-3 flex gap-2.5">
                   <button
                     onClick={() => openQuickAdd()}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#C88840] py-3 text-[14px] font-semibold text-white shadow-[0_4px_16px_rgba(200,136,64,0.42)]"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#D88F2C] py-3 text-[14px] font-semibold text-white shadow-[0_10px_24px_-18px_rgba(216,143,44,0.72)]"
                   >
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
                       <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                         add
                       </span>
                     </span>
-                    Gyors étel hozzáadása
+                    Ebéd hozzáadása
                   </button>
                   <button
                     onClick={onOpenRecipeLibrary}
@@ -741,29 +780,13 @@ export default function EtkezesMobileView({
               </div>
             </section>
 
-            {/* Filter chips — 2 rows flex-wrap */}
-            <section className="mt-4">
-              <div className="flex flex-wrap gap-2">
-                {LANDING_CHIPS.map((chip) => (
-                  <button
-                    key={chip.id}
-                    onClick={() => goToIdeasWithPresets([chip.id])}
-                    className="flex items-center gap-1.5 rounded-full border border-[#E0D8CE] bg-white px-3 py-1.5 text-[12px] font-medium text-[#4A3C32] active:bg-[#F0EAE0]"
-                  >
-                    <span className="material-symbols-outlined text-[14px]">{chip.icon}</span>
-                    {chip.label}
-                  </button>
-                ))}
-              </div>
-            </section>
-
             {/* Heti terv */}
             <section
-              className="mt-6 overflow-hidden rounded-3xl bg-white px-4 pb-4 pt-4"
-              style={{ boxShadow: "0 1px 10px rgba(0,0,0,0.07)" }}
+              className="mt-4 overflow-hidden rounded-3xl bg-white px-4 pb-4 pt-4"
+              style={{ boxShadow: "0 10px 26px -24px rgba(61,49,34,0.24)" }}
             >
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-[17px] font-bold text-[#1C1916]">Heti terv</h3>
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="text-[17px] font-bold text-[#1C1916]">Heti ebédterv</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-[12px] text-[#9A8E82]">
                     {plannedDaysCount}/7 nap megtervezve
@@ -807,7 +830,7 @@ export default function EtkezesMobileView({
                         <>
                           <button
                             onClick={() => openQuickAdd()}
-                            className="flex h-15 w-15 items-center justify-center rounded-[14px] border-2 border-dashed border-[#DDD5CB] active:bg-[#F5EDE3]"
+                            className="flex h-15 w-15 items-center justify-center rounded-[14px] border-2 border-dashed border-[#D7CEC2] bg-[rgba(255,252,246,0.88)] active:bg-[#F5EDE3]"
                           >
                             <span className="material-symbols-outlined text-[22px] text-[#C0B8B0]">add</span>
                           </button>
@@ -823,7 +846,7 @@ export default function EtkezesMobileView({
             {/* Tip banner */}
             <button
               onClick={() => goToIdeasWithPresets(["1-3napra"])}
-              className="mt-4 flex w-full items-center gap-3 rounded-[18px] bg-[#F5EDE3] px-4 py-3.5 text-left"
+              className="mt-4 flex w-full items-center gap-3 rounded-[18px] border border-[rgba(192,136,64,0.14)] bg-[#F5EDE3] px-4 py-3 text-left"
             >
               <span
                 className="material-symbols-outlined text-[22px] text-[#C08840]"
@@ -832,13 +855,13 @@ export default function EtkezesMobileView({
                 lightbulb
               </span>
               <p className="flex-1 text-[13px] leading-snug text-[#6A5040]">
-                Tipp: Ha 3 napra előre tervezel, kevesebb lesz a napi döntés.
+                {planningTip}
               </p>
               <span className="material-symbols-outlined text-[18px] text-[#C08840]">chevron_right</span>
             </button>
 
             {/* Ajánlott receptek */}
-            <section className="mt-6">
+            <section className="mt-5">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-[18px] font-bold tracking-[-0.02em] text-[#1C1916]">
                   Ajánlott receptek
@@ -860,6 +883,7 @@ export default function EtkezesMobileView({
                       bookmarked={bookmarkedIds.includes(recipe.id)}
                       onView={() => onViewRecipe(recipe)}
                       onToggleBookmark={() => toggleBookmark(recipe)}
+                      pantryItems={pantryItems}
                     />
                   ))
                 ) : (
