@@ -35,7 +35,9 @@ function getDashboardData(batches: MealBatch[]) {
 }
 
 function getReminderData(events: ScheduleEvent[]) {
-  const reminders = events.slice(0, 4);
+  const reminders = events
+    .filter((event) => getEventState(event) !== "done")
+    .slice(0, 4);
   return {
     count: reminders.length,
     nextLabel: reminders[0]?.label ?? "Nincs mai teendő",
@@ -81,6 +83,29 @@ function getShoppingEmoji(item: string) {
   if (value.includes("csirke")) return "🍗";
   if (value.includes("tej")) return "🥛";
   return "🛒";
+}
+
+function getHeroHeadline(missingLunches: number, plannedDaysCount: number) {
+  if (missingLunches > 0) {
+    return `${missingLunches} ebéd még hiányzik`;
+  }
+  if (plannedDaysCount === 0) {
+    return "Még nincs kész a heted";
+  }
+  if (plannedDaysCount < 7) {
+    return "Még nincs kész a heted";
+  }
+  return "A heti terv összeállt";
+}
+
+function getHeroSubline(missingLunches: number, shoppingMissingCount: number) {
+  if (missingLunches > 0) {
+    return "Egy gyors döntés, és közelebb lesz a teljes heti terv.";
+  }
+  if (shoppingMissingCount > 0) {
+    return "A terv megvan, most a hiányzó hozzávalókra érdemes figyelni.";
+  }
+  return "Minden fontos családi információ egy helyen.";
 }
 
 // ─── Notification bottom sheet ────────────────────────────────────────────────
@@ -193,7 +218,7 @@ export default function MobileDashboardView() {
     note: index === 0 ? "Nyilvántartva a kamrában" : "Elérhető alapanyag",
     icon: index === 0 ? "🥫" : "🥣",
   }));
-  const todoRows = todayEvents
+  const allTodayRows = todayEvents
     .slice()
     .sort((a, b) => timeToMinutes(getEventStartTime(a)) - timeToMinutes(getEventStartTime(b)))
     .slice(0, 4)
@@ -202,11 +227,19 @@ export default function MobileDashboardView() {
       time: formatEventTime(event),
       state: getEventState(event),
     }));
-  const completedTodoCount = todoRows.filter((item) => item.state === "done").length;
-  const totalTodoCount = todoRows.length;
+  const todoRows = allTodayRows.filter((item) => item.state !== "done");
+  const completedTodoCount = allTodayRows.filter((item) => item.state === "done").length;
+  const totalTodoCount = allTodayRows.length;
   const heroMealMissing = Math.max(0, 1 - dashboardData.todayMeals.length);
   const heroShoppingMissing = shoppingItems.length;
   const weekendDateLabel = nextWeekendEvent ? "Hétvége" : null;
+  const heroHeadline = getHeroHeadline(heroMealMissing, dashboardData.plannedDaysCount);
+  const heroSubline = getHeroSubline(heroMealMissing, heroShoppingMissing);
+  const nextTodo = todoRows.find((item) => item.state === "current" || item.state === "upcoming") ?? null;
+  const shoppingSummary = shoppingItems.length
+    ? `Legfontosabbak: ${shoppingItems.slice(0, 3).join(", ")}`
+    : "Most nincs hiányzó tétel a listán.";
+  const pantrySummaryCount = pantryItems.length;
 
   // Build notification items from live state
   const notifItems = useMemo<NotifItem[]>(() => {
@@ -232,55 +265,55 @@ export default function MobileDashboardView() {
           notifCount={notifItems.length}
         />
 
-        <section className="relative overflow-hidden rounded-[32px] border border-[rgba(170,135,84,0.14)] bg-[rgba(255,252,245,0.94)] shadow-[0_28px_60px_-28px_rgba(36,20,6,0.42)]">
+        <section className="relative overflow-hidden rounded-[30px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.94)] shadow-[0_24px_44px_-28px_rgba(36,20,6,0.34)]">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${todayPrimaryMeal?.image ?? DASHBOARD_HERO_IMAGE})` }} />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,14,8,0.18),rgba(22,14,8,0.48)_45%,rgba(22,14,8,0.76)_100%)]" />
-          <div className="relative px-5 pb-5 pt-5">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,14,8,0.24),rgba(22,14,8,0.54)_48%,rgba(22,14,8,0.76)_100%)]" />
+          <div className="relative px-5 pb-5 pt-4.5">
             <p className="flex items-center gap-2 text-[13px] font-bold text-[rgba(255,211,118,0.96)]">
               <span className="material-symbols-outlined text-[18px]">calendar_month</span>
-              Heted áttekintése
+              Heti állapot
             </p>
-            <h2 className="mt-6 max-w-[240px] text-[28px] font-semibold leading-tight tracking-[-0.05em] text-white">
-              Heted áttekintése
+            <h2 className="mt-4 max-w-[260px] text-[26px] font-semibold leading-tight tracking-[-0.05em] text-white">
+              {heroHeadline}
             </h2>
-            <p className="mt-3 max-w-[255px] text-[16px] leading-relaxed text-[rgba(255,244,231,0.92)]">
-              Minden, amire a családnak szüksége van, egy helyen.
+            <p className="mt-2 max-w-[270px] text-[14px] leading-relaxed text-[rgba(255,244,231,0.9)]">
+              {heroSubline}
             </p>
 
-            <div className="mt-6 rounded-[28px] bg-[rgba(255,251,244,0.96)] p-4 shadow-[0_18px_36px_-24px_rgba(36,20,6,0.32)]">
-              <div className="grid grid-cols-3 gap-3">
+            <div className="mt-4 rounded-[26px] bg-[rgba(255,251,244,0.96)] p-4 shadow-[0_16px_28px_-20px_rgba(36,20,6,0.28)]">
+              <div className="grid grid-cols-3 gap-2">
                 <div className="text-center">
-                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,239,212,0.9)] text-[var(--ff-caramel-strong)]">
-                    <span className="material-symbols-outlined text-[20px]">restaurant</span>
+                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,239,212,0.9)] text-[var(--ff-caramel-strong)]">
+                    <span className="material-symbols-outlined text-[18px]">restaurant</span>
                   </span>
-                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroMealMissing}</p>
-                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">ebéd hiányzik</p>
+                  <p className="mt-2 text-[24px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroMealMissing}</p>
+                  <p className="mt-1 text-[12px] leading-4 text-[var(--ff-text-soft)]">ebéd hiányzik</p>
                 </div>
                 <div className="border-x border-[rgba(74,67,54,0.08)] text-center">
-                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(230,241,218,0.9)] text-[var(--ff-primary)]">
-                    <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(230,241,218,0.9)] text-[var(--ff-primary)]">
+                    <span className="material-symbols-outlined text-[18px]">calendar_month</span>
                   </span>
-                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{dashboardData.plannedDaysCount}/7</p>
-                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">nap megtervezve</p>
+                  <p className="mt-2 text-[24px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{dashboardData.plannedDaysCount}/7</p>
+                  <p className="mt-1 text-[12px] leading-4 text-[var(--ff-text-soft)]">nap megtervezve</p>
                 </div>
                 <div className="text-center">
-                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,236,230,0.9)] text-[#d56f4b]">
-                    <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,236,230,0.9)] text-[#d56f4b]">
+                    <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
                   </span>
-                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroShoppingMissing}</p>
-                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">hozzávaló hiányzik</p>
+                  <p className="mt-2 text-[24px] font-semibold leading-none tracking-[-0.05em] text-[var(--ff-text)]">{heroShoppingMissing}</p>
+                  <p className="mt-1 text-[12px] leading-4 text-[var(--ff-text-soft)]">hozzávaló hiányzik</p>
                 </div>
               </div>
 
               <Link
                 href="/etkezes"
-                className="mt-4 flex items-center justify-between rounded-full bg-[linear-gradient(135deg,#eea433,#d6841e)] px-5 py-4 text-white shadow-[0_18px_36px_-20px_rgba(210,130,33,0.56)]"
+                className="mt-3.5 flex items-center justify-between rounded-full bg-[linear-gradient(135deg,#eea433,#d6841e)] px-5 py-3.5 text-white shadow-[0_16px_28px_-18px_rgba(210,130,33,0.48)]"
               >
-                <span className="flex-1 text-center text-[18px] font-bold tracking-[-0.02em]">
+                <span className="flex-1 text-center text-[17px] font-bold tracking-[-0.02em]">
                   {dashboardData.todayMeals.length > 0 ? "Heti terv megnyitása" : "Ebéd választása"}
                 </span>
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#cf7f1e]">
-                  <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#cf7f1e]">
+                  <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                 </span>
               </Link>
             </div>
@@ -289,7 +322,7 @@ export default function MobileDashboardView() {
 
         <Link
           href="/programok"
-          className="mt-5 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-4.5 shadow-[0_16px_30px_-24px_rgba(61,49,34,0.18)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -306,15 +339,26 @@ export default function MobileDashboardView() {
             </div>
           </div>
 
-          {!hasCustomSchedule || todoRows.length === 0 ? (
+          {!hasCustomSchedule || totalTodoCount === 0 ? (
             <div className="mt-4 rounded-[22px] bg-[rgba(255,248,236,0.82)] px-4 py-5 text-center">
               <p className="text-[15px] font-semibold text-[var(--ff-text)]">Még nincs beállítva semmi.</p>
               <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A napi rutin eseményeit a Beállítások oldalon tudod felvenni.</p>
             </div>
+          ) : todoRows.length === 0 ? (
+            <div className="mt-4 rounded-[22px] bg-[rgba(233,241,220,0.82)] px-4 py-5 text-center">
+              <p className="text-[15px] font-semibold text-[var(--ff-text)]">Mára minden kész.</p>
+              <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A mai teendőid mind lezárultak.</p>
+            </div>
           ) : (
             <div className="mt-4 divide-y divide-[rgba(74,67,54,0.08)]">
+              {nextTodo && (
+                <div className="mb-3 rounded-[18px] bg-[rgba(255,248,236,0.9)] px-3.5 py-3">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-[var(--ff-caramel-strong)]">Következő</p>
+                  <p className="mt-1 text-[15px] font-semibold text-[var(--ff-text)]">{nextTodo.label}</p>
+                </div>
+              )}
               {todoRows.map((item) => (
-                <div key={`${item.label}-${item.time}`} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <div key={`${item.label}-${item.time}`} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
                   <span className={`flex h-7 w-7 items-center justify-center rounded-full ${
                     item.state === "done"
                       ? "bg-[rgba(230,241,218,0.98)] text-[var(--ff-primary)]"
@@ -328,7 +372,7 @@ export default function MobileDashboardView() {
                     {item.label}
                   </span>
                   {item.state === "current" ? (
-                    <span className="rounded-full bg-[rgba(255,239,212,0.96)] px-2.5 py-1 text-[11px] font-bold text-[var(--ff-caramel-strong)]">
+                    <span className="rounded-full bg-[rgba(255,239,212,0.86)] px-2.5 py-0.5 text-[10px] font-bold tracking-[0.08em] text-[var(--ff-caramel-strong)]">
                       MOST
                     </span>
                   ) : null}
@@ -341,7 +385,7 @@ export default function MobileDashboardView() {
 
         <Link
           href="/etkezes"
-          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-4.5 shadow-[0_16px_30px_-24px_rgba(61,49,34,0.18)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -364,26 +408,32 @@ export default function MobileDashboardView() {
               <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A bevásárlólista jelenleg üres.</p>
             </div>
           ) : (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <>
+              <div className="mt-3 rounded-[18px] bg-[rgba(255,248,236,0.9)] px-3.5 py-3">
+                <p className="text-[15px] font-semibold text-[var(--ff-text)]">{shoppingItems.length} hiányzó tétel</p>
+                <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">{shoppingSummary}</p>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
               {shoppingPreview.map((item) => (
-                <span key={item} className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-4 py-3 text-[15px] font-medium text-[var(--ff-text)]">
+                <span key={item} className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-3.5 py-2.5 text-[14px] font-medium text-[var(--ff-text)]">
                   <span>{getShoppingEmoji(item)}</span>
                   {item}
                 </span>
               ))}
               {extraShoppingCount > 0 && (
-                <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-4 py-3 text-[15px] font-medium text-[var(--ff-text-soft)]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(255,248,236,0.94)] px-3.5 py-2.5 text-[14px] font-medium text-[var(--ff-text-soft)]">
                   <span className="material-symbols-outlined text-[18px]">add</span>
                   +{extraShoppingCount} további
                 </span>
               )}
-            </div>
+              </div>
+            </>
           )}
         </Link>
 
         <Link
           href="/programok"
-          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-4.5 shadow-[0_16px_30px_-24px_rgba(61,49,34,0.18)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -407,18 +457,18 @@ export default function MobileDashboardView() {
             </div>
           ) : (
             <div className="mt-4 flex gap-4">
-              <div className="h-[94px] w-[146px] shrink-0 overflow-hidden rounded-[20px]">
+              <div className="h-[88px] w-[132px] shrink-0 overflow-hidden rounded-[18px]">
                 <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${WEEKEND_IMAGE})` }} />
               </div>
               <div className="min-w-0">
-                <p className="text-[22px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">
+                <p className="text-[21px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">
                   {nextWeekendEvent.label}
                 </p>
                 <p className="mt-2 flex items-center gap-1.5 text-[15px] text-[var(--ff-text-soft)]">
                   <span className="material-symbols-outlined text-[16px]">schedule</span>
                   {formatEventTime(nextWeekendEvent)}
                 </p>
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-[14px] text-[var(--ff-text-muted)]">
+                <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[14px] text-[var(--ff-text-muted)]">
                   {nextWeekendEvent.category ? (
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">event</span>{nextWeekendEvent.category}</span>
                   ) : null}
@@ -433,7 +483,7 @@ export default function MobileDashboardView() {
 
         <Link
           href="/kamra"
-          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-5 shadow-[0_18px_36px_-24px_rgba(61,49,34,0.20)]"
+          className="mt-4 block overflow-hidden rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,245,0.96)] p-4.5 shadow-[0_16px_30px_-24px_rgba(61,49,34,0.18)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -444,7 +494,7 @@ export default function MobileDashboardView() {
             </div>
             <div className="flex items-center gap-3">
               <span className="rounded-full bg-[rgba(255,239,212,0.98)] px-3 py-1 text-[14px] font-semibold text-[var(--ff-caramel-strong)]">
-                {pantryItems.length} tétel
+                {pantrySummaryCount} tétel
               </span>
               <span className="material-symbols-outlined text-[20px] text-[var(--ff-text-soft)]">chevron_right</span>
             </div>
@@ -456,14 +506,14 @@ export default function MobileDashboardView() {
               <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">A kamrában még nincs rögzített alapanyag.</p>
             </div>
           ) : (
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-3 grid grid-cols-2 gap-3">
               {pantryCards.map((item) => (
-                <div key={item.title} className="rounded-[22px] bg-[rgba(255,248,236,0.94)] p-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[28px] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.18)]">
+                <div key={item.title} className="rounded-[20px] bg-[rgba(255,248,236,0.94)] p-3.5">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[24px] shadow-[0_8px_18px_-12px_rgba(61,49,34,0.18)]">
                     {item.icon}
                   </div>
-                  <p className="mt-3 text-[16px] font-semibold leading-tight text-[var(--ff-text)]">{item.title}</p>
-                  <p className="mt-1 text-[14px] text-[var(--ff-text-soft)]">{item.note}</p>
+                  <p className="mt-2.5 text-[15px] font-semibold leading-tight text-[var(--ff-text)]">{item.title}</p>
+                  <p className="mt-1 text-[13px] text-[var(--ff-text-soft)]">{item.note}</p>
                 </div>
               ))}
             </div>

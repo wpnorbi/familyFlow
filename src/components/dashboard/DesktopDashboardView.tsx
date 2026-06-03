@@ -58,7 +58,29 @@ function getDashboardSnapshot(batches: MealBatch[]): DashboardSnapshot {
 }
 
 function getReminderData(events: ScheduleEvent[]) {
-  return events.slice(0, 3);
+  return events
+    .filter((event) => getEventState(event) !== "done")
+    .slice(0, 3);
+}
+
+function getEventStartTime(event: ScheduleEvent) {
+  return event.startTime ?? event.time;
+}
+
+function timeToMinutes(time: string) {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function getEventState(event: ScheduleEvent) {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const startMinutes = timeToMinutes(getEventStartTime(event));
+  const endMinutes = event.endTime ? timeToMinutes(event.endTime) : startMinutes + 45;
+
+  if (currentMinutes >= endMinutes) return "done";
+  if (currentMinutes >= startMinutes) return "current";
+  return "upcoming";
 }
 
 function Icon({ name, className = "text-[20px]" }: { name: string; className?: string }) {
