@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 
 const WEATHER_DAYS = [
@@ -82,10 +81,8 @@ export default function ProgramokMobileView() {
     <div className="relative min-h-screen bg-[var(--ff-bg)] md:hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.98),transparent_26%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.8),transparent_28%),linear-gradient(180deg,#fffdf8_0%,#f8f2e8_100%)]" />
 
-      <main className="relative mx-auto flex min-h-screen max-w-[430px] flex-col px-4 pb-32 pt-4">
-        <MobileGreetingHeader />
-
-        <h1 className="mt-2 text-[26px] font-semibold tracking-[-0.05em] text-[var(--ff-text)]">Programok</h1>
+      <main className="relative mx-auto flex min-h-screen max-w-[430px] flex-col px-4" style={{ paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))" }}>
+        <MobileGreetingHeader mode="title" title="Programok" subtitle="Közös családi tervek" />
 
         <section className="relative mt-4 overflow-hidden rounded-[30px] border border-[rgba(170,135,84,0.14)] shadow-[0_28px_60px_-28px_rgba(36,20,6,0.42)]">
           <div
@@ -259,7 +256,6 @@ export default function ProgramokMobileView() {
         </section>
       </main>
 
-      <MobileBottomNav />
     </div>
   );
 }

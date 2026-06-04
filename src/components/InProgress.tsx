@@ -1,5 +1,3 @@
-import MobileBottomNav from "@/components/MobileBottomNav";
-
 interface InProgressProps {
   title: string;
   icon: string;
@@ -13,7 +11,7 @@ export default function InProgress({
 }: InProgressProps) {
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 p-6 pb-32 md:p-8 lg:p-10">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 p-6 pb-10 md:p-8 lg:p-10">
         <div className="flex items-center gap-4">
           <div className="ff-glass-card flex h-12 w-12 items-center justify-center rounded-[var(--ff-radius-md)] text-[var(--ff-primary)]">
             <span className="material-symbols-outlined">{icon}</span>
@@ -51,7 +49,6 @@ export default function InProgress({
         </div>
       </div>
 
-      <MobileBottomNav />
     </>
   );
 }

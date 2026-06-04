@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import { getBatchesForDate } from "@/lib/etkezes-data";
@@ -602,7 +601,6 @@ export default function EtkezesMobileView({
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
   const [toast, setToast] = useState<string | null>(null);
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [recipeSort, setRecipeSort] = useState<"recommended" | "time">("recommended");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
@@ -657,7 +655,6 @@ export default function EtkezesMobileView({
   const weekProgress = `${Math.max((plannedDaysCount / 7) * 100, plannedDaysCount > 0 ? 14 : 0)}%`;
   const missingLunches = Math.max(7 - plannedDaysCount, 0);
   const planningTip = getMealPlanTip(plannedDaysCount);
-  const showBottomNav = screen === "landing";
 
   useEffect(() => {
     if (selectedRecipe && !chooserRecipes.some((recipe) => recipe.id === selectedRecipe.id)) {
@@ -729,8 +726,8 @@ export default function EtkezesMobileView({
         style={{
           paddingBottom:
             screen === "landing"
-              ? "calc(108px + env(safe-area-inset-bottom, 0px))"
-              : "calc(156px + env(safe-area-inset-bottom, 0px))",
+              ? "calc(28px + env(safe-area-inset-bottom, 0px))"
+              : "calc(108px + env(safe-area-inset-bottom, 0px))",
         }}
       >
 
@@ -738,22 +735,15 @@ export default function EtkezesMobileView({
         {screen === "landing" && (
           <>
             <MobileGreetingHeader
-              name={displayName}
-              onAvatarClick={() => setIsAccountOpen(true)}
+              mode="title"
+              title="Étkezés"
+              subtitle="He­ti ebédterv és receptek"
               onNotificationClick={() => setIsNotificationsOpen(true)}
             />
 
-            {/* Page title */}
-            <div className="mt-2">
-              <h1 className="text-[30px] font-bold tracking-[-0.03em] text-[#1C1916]">Étkezés</h1>
-              <p className="mt-1 text-[14px] text-[#9A8E82]">
-                Tervezd meg gyorsan a heti ebédeket.
-              </p>
-            </div>
-
             {/* Hero banner */}
             <section
-              className="relative mt-2 overflow-hidden rounded-3xl"
+              className="relative overflow-hidden rounded-3xl"
               style={{ boxShadow: "0 14px 28px -20px rgba(0,0,0,0.24)" }}
             >
               <div
@@ -1276,21 +1266,6 @@ export default function EtkezesMobileView({
       </main>
 
       {/* ── Sheets ────────────────────────────────────────────────── */}
-      {isAccountOpen && (
-        <MobileSheet title="Profil és fiók" onClose={() => setIsAccountOpen(false)}>
-          <button
-            onClick={() => { setIsAccountOpen(false); router.push("/beallitasok"); }}
-            className="flex w-full items-center justify-between rounded-[18px] bg-[#EDE8DF] px-4 py-4"
-          >
-            <span>
-              <span className="block text-[15px] font-semibold text-[#1C1916]">Fiók megnyitása</span>
-              <span className="mt-1 block text-[13px] text-[#7A6E64]">Profil és beállítások</span>
-            </span>
-            <span className="material-symbols-outlined text-[20px] text-[#9A8E82]">chevron_right</span>
-          </button>
-        </MobileSheet>
-      )}
-
       {isNotificationsOpen && (
         <MobileSheet title="Értesítések" onClose={() => setIsNotificationsOpen(false)}>
           <div className="space-y-2.5">
@@ -1319,7 +1294,7 @@ export default function EtkezesMobileView({
       {(screen === "chooser" && hasFilters) || (screen === "schedule" && selectedRecipe) ? (
         <div
           className="fixed inset-x-4 z-70 md:hidden"
-          style={{ bottom: `calc(${showBottomNav ? 92 : 16}px + env(safe-area-inset-bottom, 0px))` }}
+          style={{ bottom: "calc(16px + env(safe-area-inset-bottom, 0px))" }}
         >
           <button
             type="button"
@@ -1349,8 +1324,6 @@ export default function EtkezesMobileView({
           </button>
         </div>
       ) : null}
-
-      {showBottomNav ? <MobileBottomNav /> : null}
     </div>
   );
 }

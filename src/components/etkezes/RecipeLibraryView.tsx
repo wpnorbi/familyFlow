@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import RecipeImage from "@/components/etkezes/RecipeImage";
 import RecipeImageSourceBadge from "@/components/recipes/RecipeImageSourceBadge";
 import {
@@ -209,7 +208,7 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
   }, [childFriendly, initialCatalog, maxDuration, mealType, protein, quickOnly, search, timeBucket]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[var(--ff-bg)] px-4 pb-28 pt-5 md:px-8 md:pb-8 md:pt-6">
+    <div className="relative min-h-screen overflow-hidden bg-[var(--ff-bg)] px-4 pb-8 pt-5 md:px-8 md:pb-8 md:pt-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.94),transparent_30%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.78),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(255,240,227,0.66),transparent_26%)]" />
       <div className="relative mx-auto max-w-7xl">
         <header className="rounded-[34px] border border-white/72 bg-[linear-gradient(145deg,rgba(255,252,244,0.96),rgba(246,235,216,0.78))] px-5 py-5 shadow-[0_28px_60px_-40px_rgba(61,49,34,0.28)] md:px-7">
@@ -426,9 +425,6 @@ export default function RecipeLibraryView({ initialCatalog, onBack, onViewRecipe
             </button>
           </section>
         )}
-      </div>
-      <div className="md:hidden">
-        <MobileBottomNav />
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 
 type PantryStatus = "home" | "low" | "expiring";
@@ -157,14 +156,10 @@ export default function KamraMobileView() {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf7f1_0%,#f7f1e8_100%)] md:hidden">
       <main
-        className="px-5 pt-5"
-        style={{ paddingBottom: "calc(118px + env(safe-area-inset-bottom, 0px))" }}
+        className="px-5"
+        style={{ paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))" }}
       >
-        <MobileGreetingHeader name="Anna" notifCount={1} />
-
-        <div className="mb-4">
-          <h1 className="text-[28px] font-semibold tracking-[-0.04em] text-[var(--ff-text)]">Kamra</h1>
-        </div>
+        <MobileGreetingHeader mode="title" title="Kamra" subtitle="Alapanyagok és készlet" notifCount={1} />
 
         <section className="rounded-[28px] border border-[rgba(170,135,84,0.12)] bg-[rgba(255,252,246,0.96)] p-5 shadow-[0_18px_40px_-32px_rgba(61,49,34,0.24)]">
           <h2 className="text-[16px] font-semibold text-[var(--ff-text)]">Kamra állapota</h2>
@@ -373,7 +368,6 @@ export default function KamraMobileView() {
         )}
       </main>
 
-      <MobileBottomNav />
     </div>
   );
 }

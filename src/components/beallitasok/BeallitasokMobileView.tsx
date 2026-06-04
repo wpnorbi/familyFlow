@@ -1,7 +1,6 @@
 "use client";
 
 import LogoutButton from "@/components/auth/LogoutButton";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 import ScheduleEditor from "@/components/beallitasok/ScheduleEditor";
 import { getUserImportedRecipes } from "@/lib/recipes/user-import.provider";
@@ -23,8 +22,8 @@ export default function BeallitasokMobileView() {
     <div className="relative min-h-screen bg-[var(--ff-bg)] md:hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.98),transparent_24%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.82),transparent_30%),linear-gradient(180deg,#fffdf8_0%,#f8f2e8_100%)]" />
 
-      <main className="relative mx-auto flex min-h-screen max-w-[430px] flex-col px-4 pb-32 pt-4">
-        <MobileGreetingHeader />
+      <main className="relative mx-auto flex min-h-screen max-w-[430px] flex-col px-4" style={{ paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))" }}>
+        <MobileGreetingHeader mode="title" title="Beállítások" subtitle="Profil és napi rutin" />
 
         <section className="mb-6 flex items-center gap-5 rounded-[32px] border border-white/84 bg-[linear-gradient(145deg,rgba(255,252,244,0.98),rgba(255,248,235,0.94))] px-5 py-6 shadow-[0_22px_40px_-28px_rgba(61,49,34,0.2)]">
           <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-[linear-gradient(145deg,rgba(238,243,231,0.98),rgba(255,240,227,0.92))] text-[34px] font-semibold text-[var(--ff-primary)]">
@@ -104,7 +103,6 @@ export default function BeallitasokMobileView() {
         </LogoutButton>
       </main>
 
-      <MobileBottomNav />
     </div>
   );
 }

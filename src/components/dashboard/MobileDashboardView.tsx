@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileGreetingHeader from "@/components/mobile/MobileGreetingHeader";
 import { useMealData } from "@/hooks/useMealData";
 import { useSchedule } from "@/hooks/useSchedule";
@@ -259,8 +258,10 @@ export default function MobileDashboardView() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,249,237,0.98),transparent_24%),radial-gradient(circle_at_top_right,rgba(238,243,231,0.82),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(246,228,203,0.56),transparent_24%),linear-gradient(180deg,#fffdf8_0%,#f8f2e8_100%)]" />
 
       {/* Scrollable content */}
-      <div className="relative mx-auto max-w-[430px] px-4 pt-5" style={{ paddingBottom: "calc(120px + env(safe-area-inset-bottom, 0px))" }}>
+      <div className="relative mx-auto max-w-[430px] px-4" style={{ paddingBottom: "calc(28px + env(safe-area-inset-bottom, 0px))" }}>
         <MobileGreetingHeader
+          mode="greeting"
+          subtitle="Gyors családi áttekintés"
           onNotificationClick={() => setShowNotifSheet(true)}
           notifCount={notifItems.length}
         />
@@ -520,8 +521,6 @@ export default function MobileDashboardView() {
           )}
         </Link>
       </div>
-
-      <MobileBottomNav />
 
       {/* Notification bottom sheet */}
       {showNotifSheet && (
